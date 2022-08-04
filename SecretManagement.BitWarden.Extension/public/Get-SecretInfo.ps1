@@ -6,19 +6,19 @@ function Get-SecretInfo {
         [hashtable] $AdditionalParameters
     )
 
-    [System.Collections.Generic.List[string]]$SearchParams = @("list","items")
+    [System.Collections.Generic.List[string]]$SearchParams = @( "list", "items" )
 
     if ( $Filter ) {
         $SearchParams.Add( '--search' )
-        $SearchParams.Add( $Name )
+        $SearchParams.Add( $Filter )
     }
 
-    if ( $AdditionalParameters.ContainsKey('url')) {
+    if ( $AdditionalParameters.ContainsKey('url') ) {
         $SearchParams.Add( '--url' )
         $SearchParams.Add( $AdditionalParameters['url'] )
     }
 
-    if ($AdditionalParameters.ContainsKey('folderName')) {
+    if ( $AdditionalParameters.ContainsKey('folderName') ) {
         $folder = Invoke-BitwardenCLI get folder "$($AdditionalParameters.folderName)"
         $SearchParams.Add( '--folderid' )
         $SearchParams.Add( $folder.id )
@@ -26,8 +26,8 @@ function Get-SecretInfo {
 
     $vaultSecretInfos = Invoke-BitwardenCLI @SearchParams
 
-    foreach ($vaultSecretInfo in $vaultSecretInfos) {
-        if ($vaultSecretInfo.type -eq [BitwardenItemType]::Login) {
+    foreach ( $vaultSecretInfo in $vaultSecretInfos ) {
+        if ( $vaultSecretInfo.type -eq [BitwardenItemType]::Login ) {
             $type = [Microsoft.PowerShell.SecretManagement.SecretType]::PSCredential
         }
         else { 
@@ -35,7 +35,7 @@ function Get-SecretInfo {
         }
 
         $hashtable = [ordered]@{}
-        foreach($property in ($vaultSecretInfo | Select-Object -ExcludeProperty login,name,type)) {
+        foreach( $property in ($vaultSecretInfo | Select-Object -ExcludeProperty notes,login,name,type | Get-Member -MemberType NoteProperty).Name ) {
             $hashtable[$property] = $vaultSecretInfo.$property
         }
 

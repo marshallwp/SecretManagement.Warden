@@ -2,12 +2,19 @@ function Remove-Secret {
     [CmdletBinding()]
     param (
         [Parameter(ValueFromPipelineByPropertyName)]
-        [string] $Name,
+        [Alias('ID')][string] $Name,
         [Parameter(ValueFromPipelineByPropertyName)]
         [string] $VaultName,
         [Parameter(ValueFromPipelineByPropertyName)]
         [hashtable] $AdditionalParameters
     )
 
-    Invoke-BitwardenCLI delete item "$Name"
+    [System.Collections.Generic.List[string]]$SearchParams = @("delete","item","$Name")
+
+    if ( $AdditionalParameters.ContainsKey('organizationid')) {
+        $SearchParams.Add( '--organizationid' )
+        $SearchParams.Add( $AdditionalParameters['organizationid'] )
+    }
+
+    Invoke-BitwardenCLI @SearchParams
 }
