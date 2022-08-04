@@ -12,15 +12,11 @@ function Get-Secret {
         [Parameter(ValueFromPipelineByPropertyName)]
         [string] $VaultName,
         [Parameter(ValueFromPipelineByPropertyName)]
-        [hashtable] $AdditionalParameters
+        [hashtable] $AdditionalParameters,
+        [switch] $AsPlainText
     )
 
-    [System.Collections.Generic.List[string]]$SearchParams = @("get")
-    
-    if($AdditionalParameters.ContainsKey('ObjectType') -and $AdditionalParameters.ObjectType -in @("item", "username", "password", "uri", "totp", "notes",
-    "attachment", "folder", "collection", "org-collection", "organization", "template", "fingerprint", "send")) {
-        $SearchParams.Add($AdditionalParameters.ObjectType)
-    }
+    [System.Collections.Generic.List[string]]$SearchParams = @("get","item")
     
     if ( $Name ) {
         $SearchParams.Add( $Name )
@@ -31,7 +27,7 @@ function Get-Secret {
         $SearchParams.Add( $AdditionalParameters['organizationid'] )
     }
 
-    $Result = Invoke-BitwardenCLI @SearchParams
+    $Result = Invoke-BitwardenCLI @SearchParams -AsPlainText:$AsPlainText
 
     if ( ! $Result ) {
         throw [System.Management.Automation.ItemNotFoundException]"No results returned"
@@ -40,18 +36,17 @@ function Get-Secret {
     }
 
     switch ($Result.type) {
-        [BitwardenItemType]::SecureNote {return $Result.notes; break}
-        [BitwardenItemType]::Login {
-            if($null -ne $Result.login.credential) {
-                # Credential is PSCredential
-                return $Result.login.credential
-            } elseif($null -ne $Result.login.password) {
-                # Password is SecureString
-                return $Result.login.password
-            } else {
-                throw [System.Management.Automation.PropertyNotFoundException]"Item was found, but neither credential nor password exist."
+        "SecureNote" { return $Result.notes; break }
+        "Login" {
+            # Output login as an ordered hashtable.  This allows us to support credentials that lack a username and therefore cannot output a PSCredential.
+            $login = [ordered]@{}
+            foreach($property in ($Result.login | Get-Member -MemberType NoteProperty).Name) {
+                $login[$property] = $Result.login.$property
             }
+            return $login
         }
         default {throw [System.NotImplementedException]"Somehow you got to a place that doesn't exist."; break}
     }
 }
+
+# [BitwardenItemType]::SecureNote {return $Result.notes; break}

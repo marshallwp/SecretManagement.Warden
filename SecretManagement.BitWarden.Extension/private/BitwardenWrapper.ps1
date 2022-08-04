@@ -91,7 +91,7 @@ $__HasCompleter    = 'list get create edit delete restore confirm import config 
  bw --help
 
 #>
-function Invoke-BitwardenCLI {
+function Invoke-BitwardenCLI ([switch]$AsPlainText) {
     begin {
         if ( -not $BitwardenCLI ) {
             throw "Bitwarden CLI is not installed!"
@@ -188,15 +188,23 @@ More than one result was found. Try getting a specific object by `id` instead. T
                     }
                 }
 
+                if ( $_.notes -and !$AsPlainText) {
+                    if ( ![String]::IsNullOrEmpty($_.notes) ) { $_.notes = ConvertTo-SecureString -String $_.notes -AsPlainText -Force }
+                    else { $_.notes = New-Object System.Security.SecureString }
+                }
+
                 if ( $_.login ) {
-                    if ( $null -ne $_.login.password ) {
+                    if ( ![String]::IsNullOrEmpty($_.login.password) -and !$AsPlainText ) {
                         $_.login.password = ConvertTo-SecureString -String $_.login.password -AsPlainText -Force
-                    } else {
-                        $_.login.password = [System.Security.SecureString]::new()
+                    } elseif ( !$AsPlainText ) {
+                        $_.login.password = New-Object System.Security.SecureString
                     }
 
                     if ( $_.login.username -and $_.login.password ) {
-                        $_.login | Add-Member -MemberType NoteProperty -Name credential -Value ([pscredential]::new( $_.login.username, $_.login.password ))
+                        if($AsPlainText){ $pass = ConvertTo-SecureString -String $_.login.password -AsPlainText -Force }
+                        else { $pass = $_.login.password }
+
+                        $_.login | Add-Member -MemberType NoteProperty -Name Credential -Value ([PSCredential]::new( $_.login.username, $pass ))
                     }
 
                     $_.login.uris.ForEach({ [BitwardenUriMatchType]$_.match = [int]$_.match })
@@ -209,14 +217,14 @@ More than one result was found. Try getting a specific object by `id` instead. T
                     })#>
                 }
 
-                if ( $_.identity.ssn ) {
+                if ( $_.identity.ssn -and !$AsPlainText) {
                     $_.identity.ssn = ConvertTo-SecureString -String $_.identity.ssn -AsPlainText -Force
                 }
 
                 if ( $_.fields ) {
                     $_.fields.ForEach({
                         [BitwardenFieldType]$_.type = [int]$_.type
-                        if ( $_.type -eq [BitwardenFieldType]::Hidden ) {
+                        if ( $_.type -eq [BitwardenFieldType]::Hidden -and !$AsPlainText ) {
                             $_.value = ConvertTo-SecureString -String $_.value -AsPlainText -Force
                         }
                     })
@@ -229,7 +237,7 @@ More than one result was found. Try getting a specific object by `id` instead. T
             if ( $Result -and $Result -like '*--session*' ) {
                 $env:BW_SESSION = $Result.Trim().Split(' ')[-1]
                 return $Result[0]
-            } elseif ($ps.StartInfo.ArgumentList.Contains('password')) {
+            } elseif ($ps.StartInfo.ArgumentList.Contains('password') -and !$AsPlainText) {
                 return ConvertTo-SecureString -String ($Result -join ' ') -AsPlainText -Force
             } else {
                 return $Result
