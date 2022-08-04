@@ -1,10 +1,12 @@
 # SecretManagement extension for BitWarden
 
-> **NOTE: This is not a maintained project and it's specifically not maintained _by_ BitWarden.**
+> **NOTE: This is not an official Bitwarden project.**
 > **I work on it in my free time because I use BitWarden personally.**
 
 > **Special Thanks to @TylerLeonhardt for publishing a baseline for this module extention **
-> **Please check out his [`LastPass Extention`](https://github.com/TylerLeonhardt/SecretManagement.LastPass) **
+> **Please check out his [`LastPass Extention`](https://github.com/TylerLeonhardt/SecretManagement.LastPass)**
+
+> **Special thanks to @realslacker for his excellent [bitwarden cli wrapper](https://github.com/realslacker/BitwardenWrapper).  A stripped down and heavily modified version of it was utilized to replace `Invoke-bwcmd`.
 
 ## Prerequisites
 

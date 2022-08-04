@@ -1,5 +1,12 @@
 @{
-    ModuleVersion = '0.1.0'
+    ModuleVersion = '0.2.0'
     RootModule = 'SecretManagement.BitWarden.Extension.psm1'
-    FunctionsToExport = @('Set-Secret','Get-Secret','Remove-Secret','Get-SecretInfo','Test-SecretVault','Unlock-BWSession','Get-SecretTemplate')
+    FunctionsToExport = @(
+        'Get-Secret',
+        'Get-SecretInfo',
+        'Remove-Secret',
+        'Set-Secret',
+        'Test-SecretVault',
+        'Unlock-SecretVault'
+        )
 }
