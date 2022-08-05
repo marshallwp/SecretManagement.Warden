@@ -9,12 +9,12 @@ function Remove-Secret {
         [hashtable] $AdditionalParameters
     )
 
-    [System.Collections.Generic.List[string]]$SearchParams = @("delete","item","$Name")
+    [System.Collections.Generic.List[string]]$CmdParams = @("delete","item",$Name)
 
     if ( $AdditionalParameters.ContainsKey('organizationid')) {
-        $SearchParams.Add( '--organizationid' )
-        $SearchParams.Add( $AdditionalParameters['organizationid'] )
+        $CmdParams.Add( '--organizationid' )
+        $CmdParams.Add( $AdditionalParameters['organizationid'] )
     }
 
-    Invoke-BitwardenCLI @SearchParams
+    Invoke-BitwardenCLI @CmdParams
 }
