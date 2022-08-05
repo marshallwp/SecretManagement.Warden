@@ -20,19 +20,19 @@ function Get-BWCredential {
         $MultipleAction = 'Error'
     )
 
-    [System.Collections.Generic.List[string]]$SearchParams = 'list', 'items'
+    [System.Collections.Generic.List[string]]$CmdParams = 'list', 'items'
 
     if ( $UserName ) {
-        $SearchParams.Add( '--search' )
-        $SearchParams.Add( $UserName )
+        $CmdParams.Add( '--search' )
+        $CmdParams.Add( $UserName )
     }
 
     if ( $Url ) {
-        $SearchParams.Add( '--url' )
-        $SearchParams.Add( $Url )
+        $CmdParams.Add( '--url' )
+        $CmdParams.Add( $Url )
     }
 
-    $Result = Invoke-BitwardenCLI @SearchParams | Where-Object { $_.login.credential }
+    $Result = Invoke-BitwardenCLI @CmdParams | Where-Object { $_.login.credential }
 
     if ( -not $Result ) {
         Write-Error 'No results returned'

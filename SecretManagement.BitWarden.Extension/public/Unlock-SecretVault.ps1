@@ -10,14 +10,8 @@ function Unlock-SecretVault {
         Invoke-BitwardenCLI unlock "$(ConvertFrom-SecureString $Password -AsPlainText)"
     }
     catch {
-        $Msg = "$VaultName Vault Unlock operation failed with error: $_"
-
-        $errorRecord = [System.Management.Automation.ErrorRecord]::new(
-            [System.Security.Authentication.AuthenticationException]::new($Msg),
-            "BitwardenUnlockFailed",
-            [System.Management.Automation.ErrorCategory]::AuthenticationError,
-            $null)
-        Write-Error -ErrorRecord $errorRecord
+        $ex = New-Object System.Security.Authentication.AuthenticationException "$VaultName Vault Unlock operation failed with error: $_"
+        Write-Error -Exception $ex -ErrorId "BitwardenUnlockFailed" -Category AuthenticationError -ErrorAction Stop
     }
 
     Write-Verbose $env:BW_SESSION

@@ -6,25 +6,30 @@ function Get-SecretInfo {
         [hashtable] $AdditionalParameters
     )
 
-    [System.Collections.Generic.List[string]]$SearchParams = @( "list", "items" )
+    [System.Collections.Generic.List[string]]$CmdParams = @( "list", "items" )
 
     if ( $Filter ) {
-        $SearchParams.Add( '--search' )
-        $SearchParams.Add( $Filter )
+        $CmdParams.Add( '--search' )
+        $CmdParams.Add( $Filter )
     }
 
     if ( $AdditionalParameters.ContainsKey('url') ) {
-        $SearchParams.Add( '--url' )
-        $SearchParams.Add( $AdditionalParameters['url'] )
+        $CmdParams.Add( '--url' )
+        $CmdParams.Add( $AdditionalParameters['url'] )
     }
 
     if ( $AdditionalParameters.ContainsKey('folderName') ) {
         $folder = Invoke-BitwardenCLI get folder "$($AdditionalParameters.folderName)"
-        $SearchParams.Add( '--folderid' )
-        $SearchParams.Add( $folder.id )
+        $CmdParams.Add( '--folderid' )
+        $CmdParams.Add( $folder.id )
     }
 
-    $vaultSecretInfos = Invoke-BitwardenCLI @SearchParams
+    $vaultSecretInfos = Invoke-BitwardenCLI @CmdParams
+
+    if ( ! $Result ) {
+        $ex = New-Object System.Management.Automation.ItemNotFoundException "Revise your search filter so it matches a secret in the vault."
+        Write-Error -Exception $ex -Category ObjectNotFound -CategoryActivity 'Invoke-BitwardenCLI @CmdParams' -CategoryTargetName '$vaultSecretInfos' -CategoryTargetType 'PSCustomObject[]'
+    }
 
     foreach ( $vaultSecretInfo in $vaultSecretInfos ) {
         if ( $vaultSecretInfo.type -eq [BitwardenItemType]::Login ) {
