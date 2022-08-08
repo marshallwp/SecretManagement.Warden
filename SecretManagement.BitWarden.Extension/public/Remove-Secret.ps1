@@ -9,7 +9,8 @@ function Remove-Secret {
         [hashtable] $AdditionalParameters
     )
 
-    [System.Collections.Generic.List[string]]$CmdParams = @("delete","item",$Name)
+    [System.Collections.Generic.List[string]]$CmdParams = @("delete","item")
+    $CmdParams.Add($Name)
 
     if ( $AdditionalParameters.ContainsKey('organizationid')) {
         $CmdParams.Add( '--organizationid' )
