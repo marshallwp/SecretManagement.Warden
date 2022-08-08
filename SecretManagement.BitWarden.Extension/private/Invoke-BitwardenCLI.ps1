@@ -132,28 +132,10 @@ function Invoke-BitwardenCLI ([switch]$AsPlainText) {
         $ps.Start() | Out-Null
         $Result = $ps.StandardOutput.ReadToEnd()
         $BWError = $ps.StandardError.ReadToEnd()
-        $ps.WaitForExit(1000) | Out-Null
-
-
+        $ps.WaitForExit()
+        
         if ($BWError) {
             switch -Wildcard ($BWError) {
-                '*session*' {
-                    Write-Verbose "Wrong Password, Try again $PSBoundParameters"
-                    Invoke-BitwardenCLI login
-                }
-                'You are not logged in.' {
-                    if($null -ne $env:BW_CLIENTID -and $null -ne $env:BW_CLIENTSECRET) {
-                        Invoke-BitwardenCLI login --apikey
-                    }
-                    else { Invoke-BitwardenCLI login }
-                }
-                'Session key is invalid.' {
-                    Write-Verbose $BWError
-                }
-                'Vault is locked.' {
-                    Write-Warning $BWError
-                    Unlock-SecretVault
-                }
                 'More than one result was found*' {
                     $errparse = @()
                     $BWError.Split("`n") | Select-Object -Skip 1 | ForEach-Object {
@@ -164,11 +146,16 @@ More than one result was found. Try getting a specific object by `id` instead. T
                     $($errparse  | Format-Table ID, Name | Out-String )
 "@ -ErrorAction Stop
                 }
-                default { Write-Error $BWError }
+                default { Write-Error $BWError -ErrorAction Stop }
             }
         }
 
-        if ( $ps.StartInfo.ArgumentList.Contains('--raw')) { return $Result }
+        # As passing exit codes to the parent process does not seem to be working, we pass $true and $false instead.
+        if ( $ps.StartInfo.ArgumentList.Contains('--quiet') ) { 
+            if($ps.ExitCode -eq 0) { return $true } else { return $false }
+         }
+
+        if ( $ps.StartInfo.ArgumentList.Contains('--raw') ) { return $Result }
 
         try {
             [object[]]$JsonResult = $Result | ConvertFrom-Json -ErrorAction SilentlyContinue
@@ -213,9 +200,12 @@ More than one result was found. Try getting a specific object by `id` instead. T
 
                 if ( $_.passwordHistory ) {
                     [BitwardenPasswordHistory[]]$_.passwordHistory = $_.passwordHistory
-                    <#$_.passwordHistory.ForEach({
-                        $_.password = ConvertTo-SecureString -String $_.password -AsPlainText -Force
-                    })#>
+                    
+                    if( !$AsPlainText ) {
+                        $_.passwordHistory.ForEach({
+                            $_.password = ConvertTo-SecureString -String $_.password -AsPlainText -Force
+                        })
+                    }
                 }
 
                 if ( $_.identity.ssn -and !$AsPlainText) {

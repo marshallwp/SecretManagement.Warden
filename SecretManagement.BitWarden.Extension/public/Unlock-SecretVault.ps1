@@ -2,7 +2,7 @@ function Unlock-SecretVault {
     [CmdletBinding()]
     param (
         [SecureString] $Password,
-        [string] $VaultName,
+        [string] $VaultName = (Get-SecretVault | Where-Object {$_.IsDefault} | Select-Object -ExpandProperty Name),
         [hashtable] $AdditionalParameters
     )
 

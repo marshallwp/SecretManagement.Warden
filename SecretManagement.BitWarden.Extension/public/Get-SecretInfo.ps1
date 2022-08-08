@@ -13,11 +13,6 @@ function Get-SecretInfo {
         $CmdParams.Add( $Filter )
     }
 
-    if ( $AdditionalParameters.ContainsKey('url') ) {
-        $CmdParams.Add( '--url' )
-        $CmdParams.Add( $AdditionalParameters['url'] )
-    }
-
     if ( $AdditionalParameters.ContainsKey('folderName') ) {
         $folder = Invoke-BitwardenCLI get folder "$($AdditionalParameters.folderName)"
         $CmdParams.Add( '--folderid' )
@@ -26,7 +21,7 @@ function Get-SecretInfo {
 
     $vaultSecretInfos = Invoke-BitwardenCLI @CmdParams
 
-    if ( ! $Result ) {
+    if ( !$vaultSecretInfos ) {
         $ex = New-Object System.Management.Automation.ItemNotFoundException "Revise your search filter so it matches a secret in the vault."
         Write-Error -Exception $ex -Category ObjectNotFound -CategoryActivity 'Invoke-BitwardenCLI @CmdParams' -CategoryTargetName '$vaultSecretInfos' -CategoryTargetType 'PSCustomObject[]'
     }

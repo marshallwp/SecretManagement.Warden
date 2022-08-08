@@ -7,11 +7,17 @@ function Test-SecretVault {
         [hashtable] $AdditionalParameters
     )
 
-    if((Invoke-BitwardenCLI login --check --quiet) -and (Invoke-BitwardenCLI unlock --check --quiet)) {
-        return $true
+    if(!(Invoke-BitwardenCLI login --check --quiet)) {
+        Write-Error "You are not logged into $VaultName vault."
+        return $false
+    }
+    #* Bitwarden CLI has a bug in the check unlocked code that makes it nearly always report that the vault is locked.  Attempting to list folders is the workaround.
+    # https://github.com/bitwarden/clients/issues/2729
+    elseif(!(Invoke-BitwardenCLI list folders --quiet)) {
+        Write-Error "The $VaultName vault is locked."
+        return $false
     }
     else {
-        Write-Error "The $VaultName vault is currently $((Invoke-BitwardenCLI status).status)"
-        return $false
+        return $true
     }
 }

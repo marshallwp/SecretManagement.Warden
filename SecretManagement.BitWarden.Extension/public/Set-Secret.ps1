@@ -8,35 +8,33 @@ function Set-Secret
         [string] $VaultName,
         [hashtable] $AdditionalParameters
     )
-    # UTF8 With BOM is supported in all versions of PowerShell.  Only Powershell 6+ supports UTF-8 Without BOM.
-    $EncodingOfSecrets = if($AdditionalParameters.EncodingOfSecrets) {$AdditionalParameters.EncodingOfSecrets} else {"utf8BOM"}
+    # UTF8 with BOM is supported in all versions of PowerShell.  Only Powershell 6+ supports UTF-8 Without BOM.
+    # In Windows Powershell, UTF8 with BOM is called 'UTF8'.  In Powershell 6+ it is called 'utf8BOM'.
+    $EncodingOfSecrets = if($AdditionalParameters.EncodingOfSecrets) {$AdditionalParameters.EncodingOfSecrets}
+        elseif($PSEdition -eq "Desktop") { "UTF8" }
+        else { "utf8BOM" }
     $ExportObjectsToSecureNotesAs = if($AdditionalParameters.ExportObjectsToSecureNotesAs) {$AdditionalParameters.ExportObjectsToSecureNotesAs} else {"JSON"}
-    $MaximumObjectDepth = if($AdditionalParameters.MaximumObjectDepth) {$AdditionalParameters.MaximumObjectDepth} else {2}
+    $MaximumObjectDepth = if($AdditionalParameters.MaximumObjectDepth) {$AdditionalParameters.MaximumObjectDepth} else {4}
 
     $OldSecret = Get-FullSecret -Name $Name -VaultName $VaultName -AdditionalParameters $AdditionalParameters
-    $IsNewSecret = $false
+    $IsNewItem = $false
 
-    # If OldSecret does not exist, assume this is a new secret.
+    # If OldSecret does not exist, assume this is a new secret and retrieve a secret template.
     if( ! $OldSecret ) {
-        $IsNewSecret = $true
-        $OldSecret = Invoke-BitwardenCLI get template item -AsPlainText
-        $OldSecret.name = $Name
+        $IsNewItem = $true
 
         switch( $Secret.GetType().Name ) {
             "PSCredential" {
-                $OldSecret.type = [BitwardenItemType]::Login
-                $OldSecret.login = Invoke-BitwardenCLI get template item.login -AsPlainText
+                $OldSecret = New-Secret -Name $Name -SecretType Login
                 break
             }
             { "String","SecureString" -contains $Secret.GetType().Name } {
-                $Field = Read-Host -Prompt "Is this $($Secret.GetType().Name) a UserName, Password or SecureNote?"
+                $Field = Read-Host -Prompt "Is this $($Secret.GetType().Name) a UserName, Password, TOTP, URIs, or SecureNote?"
                 
-                if( $Field -iin "UserName","Password" ) {
-                    $OldSecret.type = [BitwardenItemType]::Login
-                    $OldSecret.login = Invoke-BitwardenCLI get template item.login -AsPlainText
+                if( $Field -iin "UserName","Password","TOTP","URIs" ) {
+                    $OldSecret = New-Secret -Name $Name -SecretType Login
                 } elseif( $Field -ieq "SecureNote" ) {
-                    $OldSecret.type = [BitwardenItemType]::SecureNote
-                    $OldSecret.securenote = Invoke-BitwardenCLI get template item.securenote -AsPlainText
+                    $OldSecret = New-Secret -Name $Name -SecretType SecureNote
                 } else {
                     $ex = New-Object System.Management.Automation.Host.PromptingException "$Field is not a valid option!"
                     Write-Error -Exception $ex -Category InvalidArgument -ErrorId "InvalidUserInput" -ErrorAction Stop
@@ -44,19 +42,18 @@ function Set-Secret
                 break
             }
             "HashTable" {
-                if ( ![String]::IsNullOrEmpty( $Secret.UserName ) -or $null -ne $Secret.Password ) {
-                    $OldSecret.type = [BitwardenItemType]::Login
-                    $OldSecret.login = Invoke-BitwardenCLI get template item.login -AsPlainText
-                    break
+                if( Test-KeysInHashtable $Secret @("UserName","Password") ) {
+                    $OldSecret = New-Secret -Name $Name -SecretType Login
                 }
-                # elseif ( ![String]::IsNullOrEmpty( $Secret.UserName ) -or $null -ne $Secret.Password ) {
-                #     $ex = New-Object System.Management.Automation.PSInvalidCastException "Input [HashTable]Secret looks like a Login, but does not include both UserName and Password."
-                #     Write-Error -Exception $ex -Category InvalidOperation -CategoryReason "Hashtable is missing either UserName or Password and cannot be created." -ErrorAction Stop
-                # }
+                elseif( Test-KeysInHashtable $Secret @("cardholderName","brand","number","expMonth","expYear","code") ) {
+                    $OldSecret = New-Secret -Name $Name -SecretType Card
+                }
+                # Identity also includes a username field, but as that more strongly implies a login it is not used to detect an identity.
+                elseif( Test-KeysInHashtable $Secret @("address1","address2","address3","city","company","country","email","firstName","lastName","licenseNumber","middleName","passportNumber","phone","postalCode","ssn","state","title") ) {
+                    $OldSecret = New-Secret -Name $Name -SecretType Identity
+                }
                 else {
-                    $OldSecret.type = [BitwardenItemType]::SecureNote
-                    $OldSecret.securenote = Invoke-BitwardenCLI get template item.securenote -AsPlainText
-                    break
+                    $OldSecret = New-Secret -Name $Name -SecretType SecureNote
                 }
                 break
             }
@@ -65,20 +62,28 @@ function Set-Secret
 
     # Do things differently based on what type of secret we're editing.
     switch($OldSecret.type) {
-        [BitwardenItemType]::Login {
+        "Login" {
             # Do things differently based on what type of information the new secret is.
             switch($Secret.GetType().Name) {
                 "PSCredential" {
-                    $OldSecret.login.username = $Secret.UserName
-                    $OldSecret.login.password = ConvertFrom-SecureString $Secret.Password -AsPlainText
+                    if($Secret.UserName -or $IsNewItem) { $OldSecret.login.username = $Secret.UserName }
+                    if($Secret.Password -or $IsNewItem) { $OldSecret.login.password = ConvertFrom-SecureString $Secret.Password -AsPlainText }
                     break
                 }
                 "HashTable" {
-                    if ( ![String]::IsNullOrEmpty( $Secret.UserName ) -or $null -ne $Secret.Password ) {
-                        if ( ![String]::IsNullOrEmpty( $Secret.UserName ) ) { $OldSecret.login.username = $Secret.UserName }
-                        if ( $null -ne $Secret.Password ) {
-                            $OldSecret.login.password = if($Secret.Password.GetType().Name -eq "SecureString") 
-                                { ConvertFrom-SecureString $Secret.Password -AsPlainText } else { $Secret.Password }
+                    if ( Test-KeysInHashtable $Secret @("userName","password","uris","totp") ) {
+                        if($Secret.UserName -or $IsNewItem) {
+                            $OldSecret.login.username = if($Secret.UserName -and $Secret.UserName.GetType().Name -eq "SecureString")
+                                { ConvertFrom-SecureString $Secret.UserName -AsPlainText } else { [string]$Secret.UserName }
+                        }
+                        if($Secret.Password -or $IsNewItem) {
+                            $OldSecret.login.password = if($Secret.Password -and $Secret.Password.GetType().Name -eq "SecureString") 
+                                { ConvertFrom-SecureString $Secret.Password -AsPlainText } else { [string]$Secret.Password }
+                        }
+                        if($Secret.uris) { $OldSecret.login.uris = @([string]$Secret.uris) } elseif($IsNewItem) { $OldSecret.login.uris = @() }
+                        if($Secret.totp -or $IsNewItem) {
+                            $OldSecret.login.totp = if($Secret.totp -and $Secret.totp.GetType().Name -eq "SecureString")
+                                { ConvertFrom-SecureString $Secret.totp -AsPlainText } else { [string]$Secret.totp }
                         }
                     }
                     else {
@@ -87,15 +92,28 @@ function Set-Secret
                     }
                     break
                 }
-                { "String","SecureString" -contains $Secret.GetType().Name } {
-                    $Field = Read-Host -Prompt "Does this $($Secret.GetType().Name) update the UserName or the Password?"
-                    
-                    if($Field -iin "UserName","Password") {
+                { "String","SecureString" -contains $_ } {
+                    # Only prompt if the user hasn't answered this question before.
+                    if( !$Field ) {
+                        $Field = Read-Host -Prompt "Does this $($Secret.GetType().Name) update the UserName, Password, TOTP, or URIs field?"
+                    }
+
+                    if( $Field -iin "UserName","Password","TOTP" ) {
                         $OldSecret.login.$Field = if( $Secret.GetType().Name -eq "SecureString" )  { ConvertFrom-SecureString $Secret -AsPlainText } else { $Secret }
+                    }
+                    elseif( $Field -ieq "URIs" ) {
+                        $OldSecret.login.uris = @( if( $Secret.GetType().Name -eq "SecureString" )  { ConvertFrom-SecureString $Secret -AsPlainText } else { $Secret } )
                     }
                     else {
                         $ex = New-Object System.Management.Automation.Host.PromptingException "$Field is not a valid option!"
                         Write-Error -Exception $ex -Category InvalidArgument -ErrorId "InvalidUserInput" -ErrorAction Stop
+                    }
+
+                    # If this is a new item, clear out all the default values.
+                    if($IsNewItem) { 
+                        ($OldSecret.login | Get-Member -MemberType NoteProperty).Name | Where-Object { $_ -ine $Field } | ForEach-Object { 
+                            if($_ -ine "URIs") { $OldSecret.login.$_ = $null } else { $OldSecret.logon.uris = $() }
+                        }
                     }
                     break
                 }
@@ -105,8 +123,9 @@ function Set-Secret
                     break
                 }
             }
+            break
         }
-        [BitwardenItemType]::SecureNote {
+        "SecureNote" {
             # Do things differently based on what type of information the new secret is.
             switch($Secret.GetType().Name) {
                 "String" { $OldSecret.notes = $Secret; break }
@@ -139,10 +158,64 @@ function Set-Secret
                     break
                 }
             }
+            break
+        }
+        "Card" {
+            switch($Secret.GetType().Name) {
+                "HashTable" {
+                    $cardFields = "cardholderName","brand","number","expMonth","expYear","code"
+                    if ( Test-KeysInHashtable $Secret $cardFields ) {
+                        $cardFields | ForEach-Object {
+                            if($Secret.$_ -or $IsNewItem) {
+                                $OldSecret.card.$_ = if($Secret.$_ -and $Secret.$_.GetType().Name -eq "SecureString")
+                                { ConvertFrom-SecureString $Secret.$_ -AsPlainText } else { [string]$Secret.$_ }
+                            }
+                        }
+                    }
+                    else {
+                        $ex = New-Object System.Management.Automation.PSInvalidCastException "Input [HashTable]Secret could not be cast to any part of a Bitwarden Card."
+                        Write-Error -Exception $ex -Category InvalidOperation -CategoryReason "Hashtable missing any relevant information." -ErrorAction Stop
+                    }
+                    break
+                }
+                default { 
+                    $ex = New-Object System.Management.Automation.PSInvalidCastException "Casting data of $($Secret.GetType().Name) type to a Bitwarden Card is not supported."
+                    Write-Error -Exception $ex -Category InvalidType -ErrorId "InvalidCast" -ErrorAction Stop
+                    break
+                }
+            }
+            break
+        }
+        "Identity" {
+            switch($Secret.GetType().Name) {
+                "HashTable" {
+                    $identFields = "address1","address2","address3","city","company","country","email","firstName","lastName","licenseNumber","middleName","passportNumber","phone","postalCode","ssn","state","title","userName"
+                    if ( Test-KeysInHashtable $Secret.Keys $identFields ) {
+                        $identFields | ForEach-Object {
+                            if($Secret.$_ -or $IsNewItem) {
+                                $OldSecret.identity.$_ = if($Secret.$_ -and $Secret.$_.GetType().Name -eq "SecureString")
+                                { ConvertFrom-SecureString $Secret.$_ -AsPlainText } else { [string]$Secret.$_ }
+                            }
+                        }
+                    }
+                    else {
+                        $ex = New-Object System.Management.Automation.PSInvalidCastException "Input [HashTable]Secret could not be cast to any part of a Bitwarden Identity."
+                        Write-Error -Exception $ex -Category InvalidOperation -CategoryReason "Hashtable missing any relevant information." -ErrorAction Stop
+                    }
+                    break
+                }
+                default { 
+                    $ex = New-Object System.Management.Automation.PSInvalidCastException "Casting data of $($Secret.GetType().Name) type to a Bitwarden Identity is not supported."
+                    Write-Error -Exception $ex -Category InvalidType -ErrorId "InvalidCast" -ErrorAction Stop
+                    break
+                }
+            }
+            break
         }
     }
 
-    [System.Collections.Generic.List[string]]$CmdParams = @("edit","item",$Name)
+    if( $IsNewItem ) { [System.Collections.Generic.List[string]]$CmdParams = @("create","item") }
+                else { [System.Collections.Generic.List[string]]$CmdParams = @("edit","item"); $CmdParams.Add($Name) }
 
     $NewSecret = $OldSecret | ConvertTo-Json -Depth 4 -Compress | ConvertTo-BWEncoding
     $CmdParams.Add( $NewSecret )
@@ -151,6 +224,8 @@ function Set-Secret
         $CmdParams.Add( '--organizationid' )
         $CmdParams.Add( $AdditionalParameters['organizationid'] )
     }
+
+    Write-Verbose ($CmdParams -join " ")
 
     Invoke-BitwardenCLI @CmdParams
 }

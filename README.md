@@ -19,7 +19,7 @@ Download and Install
 
 ## Installation
 
-You an install this module from the PowerShell Gallery:
+You can install this module from the PowerShell Gallery:
 
 Using PowerShellGet v2:
 
@@ -65,8 +65,8 @@ When registering the vault you can include a HashTable of vault parameters to co
 
 | Name | Description | Type | Possible Values | Default |
 | ---- | ----------- | -----| --------------- | ------- |
-| **ExportObjectsToSecureNotesAs** | Changes what PowerShell Objects are converted into so they can be stored as a Secure Note in the vault.<br><br>Defaults to JSON for interoperability with other languages.  However, CliXml has superior type support and compatability with older versions of PowerShell.  It can be used to store an *exact* copy of the object, including custom typing, in the vault. See [Export-Clixml](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/export-clixml) for details. | String | CliXml, JSON | JSON |
-| **EncodingOfSecrets** | Changes the character encoding of secrets for functions that support it. This should be set to match the encoding of your vault storage (or be a subset, i.e. ASCII is a subset of UTF-8). Supports all [PowerShell supported character encodings](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_character_encoding). | [Encoding](https://docs.microsoft.com/en-us/dotnet/api/system.text.encoding) | ascii, bigedianunicode, bigendianutf32, oem, unicode, utf7 utf8, utf8BOM, utf8NoBom\*, utf32 | utf8BOM |
+| **ExportObjectsToSecureNotesAs** | Changes what PowerShell HashTables are converted into so they can be stored as a Secure Note in the vault.<br><br>Defaults to JSON for interoperability with other languages.  However, CliXml has superior type support and compatibility with older versions of PowerShell.  It can be used to store an *exact* copy of the object, including custom typing, in the vault. See [Export-Clixml](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/export-clixml) for details. | String | CliXml, JSON | JSON |
+| **EncodingOfSecrets** | Changes the character encoding of secrets for functions that support it. This should be set to match the encoding of your vault storage (or be a subset, i.e. ASCII is a subset of UTF-8). Supports all [PowerShell supported character encodings](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_character_encoding). | String | ascii, bigedianunicode, bigendianutf32, oem, unicode, utf7 utf8, utf8BOM, utf8NoBom\*, utf32 | utf8BOM |
 | **MaximumObjectDepth** | Specifies how many levels of contained objects are included in the CliXml/JSON representation. | Int32 | 1–100 | 2 |
 
 \* Unsupported on Powershell 5.x
