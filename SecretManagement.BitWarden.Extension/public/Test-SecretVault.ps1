@@ -18,6 +18,7 @@ function Test-SecretVault {
         return $false
     }
     else {
+        Invoke-BitwardenCLI sync | Out-Null
         return $true
     }
 }

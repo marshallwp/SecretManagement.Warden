@@ -9,6 +9,11 @@ function Remove-Secret {
         [hashtable] $AdditionalParameters
     )
 
+    $ResyncCacheIfOlderThan = if($AdditionalParameters.ResyncCacheIfOlderThan) {$AdditionalParameters.ResyncCacheIfOlderThan} else {New-TimeSpan -Minutes 5}
+    if((New-TimeSpan -Start (Invoke-BitwardenCLI sync --last | Get-Date)).TotalSeconds -gt $ResyncCacheIfOlderThan.TotalSeconds) {
+        Invoke-BitwardenCLI sync --quiet | Out-Null
+    }
+
     [System.Collections.Generic.List[string]]$CmdParams = @("delete","item")
     $CmdParams.Add($Name)
 

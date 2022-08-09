@@ -136,15 +136,22 @@ function Invoke-BitwardenCLI ([switch]$AsPlainText) {
         
         if ($BWError) {
             switch -Wildcard ($BWError) {
+                'Not found.' {
+                    $ex = New-Object System.DirectoryServices.AccountManagement.NoMatchingPrincipalException "Not found."
+                    Write-Error $ex -Category ObjectNotFound -ErrorAction Stop
+                }
                 'More than one result was found*' {
                     $errparse = @()
                     $BWError.Split("`n") | Select-Object -Skip 1 | ForEach-Object {
                         $errparse += Invoke-BitwardenCLI get item $_
                     }
-                    Write-Error @"
-More than one result was found. Try getting a specific object by `id` instead. The following objects were found:
-                    $($errparse  | Format-Table ID, Name | Out-String )
-"@ -ErrorAction Stop
+                    $msg = @"
+More than one result was found. Try getting a specific object by `id` instead.
+The following objects were found:
+$($errparse  | Format-Table ID, Name | Out-String )
+"@
+                    $ex = New-Object System.DirectoryServices.AccountManagement.MultipleMatchesException $msg
+                    Write-Error -Exception $ex -Category InvalidResult -ErrorId "MultipleMatchesReturned" -ErrorAction Stop
                 }
                 default { Write-Error $BWError -ErrorAction Stop }
             }
@@ -189,7 +196,8 @@ More than one result was found. Try getting a specific object by `id` instead. T
                     }
 
                     if ( $_.login.username -and $_.login.password ) {
-                        if($AsPlainText){ $pass = ConvertTo-SecureString -String $_.login.password -AsPlainText -Force }
+                        # If AsPlainText was passed, convert password to secure string to prep for creating a PSCredential.  Otherwise use the existing secure string.
+                        if( $AsPlainText ){ $pass = ConvertTo-SecureString -String $_.login.password -AsPlainText -Force }
                         else { $pass = $_.login.password }
 
                         $_.login | Add-Member -MemberType NoteProperty -Name Credential -Value ([PSCredential]::new( $_.login.username, $pass ))

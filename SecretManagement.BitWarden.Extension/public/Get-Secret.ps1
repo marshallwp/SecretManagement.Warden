@@ -21,6 +21,11 @@ function Get-Secret {
     $EncodingOfSecrets = if($AdditionalParameters.EncodingOfSecrets) {$AdditionalParameters.EncodingOfSecrets}
         elseif($PSEdition -eq "Desktop") { "UTF8" }
         else { "utf8BOM" }
+    
+    $ResyncCacheIfOlderThan = if($AdditionalParameters.ResyncCacheIfOlderThan) {$AdditionalParameters.ResyncCacheIfOlderThan} else {New-TimeSpan -Minutes 5}
+    if((New-TimeSpan -Start (Invoke-BitwardenCLI sync --last | Get-Date)).TotalSeconds -gt $ResyncCacheIfOlderThan.TotalSeconds) {
+        Invoke-BitwardenCLI sync | Out-Null
+    }
 
     [System.Collections.Generic.List[string]]$CmdParams = @("get","item")
     $CmdParams.Add( $Name ) #* Do not combine with the above line.  For some reason that causes the function to fail in production.
@@ -31,11 +36,11 @@ function Get-Secret {
     }
 
     $Result = Invoke-BitwardenCLI @CmdParams -AsPlainText:$AsPlainText
-
-    if ( !$Result ) {
-        $ex = New-Object System.Management.Automation.ItemNotFoundException "Revise your search filter so it matches a secret in the vault."
-        Write-Error -Exception $ex -Category ObjectNotFound -CategoryActivity 'Invoke-BitwardenCLI @CmdParams' -CategoryTargetName '$Result' -CategoryTargetType 'PSCustomObject' -ErrorAction Stop
-    }
+    
+    # if ( !$Result ) {
+    #     $ex = New-Object System.Management.Automation.ItemNotFoundException "Revise your search filter so it matches a secret in the vault."
+    #     Write-Error -Exception $ex -Category ObjectNotFound -CategoryActivity 'Invoke-BitwardenCLI @CmdParams' -CategoryTargetName '$Result' -CategoryTargetType 'PSCustomObject' -ErrorAction Stop
+    # }
 
     switch ( $Result.type ) {
         "SecureNote" {
