@@ -1,0 +1,5 @@
+{
+	// Normalize tab handling.
+	"editor.tabSize": 4,
+	"editor.insertSpaces": true
+}
