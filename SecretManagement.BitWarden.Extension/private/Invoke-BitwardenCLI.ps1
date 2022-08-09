@@ -90,9 +90,8 @@ $__HasCompleter    = 'list get create edit delete restore confirm import config 
  Most features that you find in other Bitwarden client applications (Desktop, Browser Extension, etc.) are available
  from the CLI. The Bitwarden CLI is self-documented. From the command line, learn about the available commands using:
  bw --help
-
 #>
-function Invoke-BitwardenCLI ([switch]$AsPlainText) {
+function Invoke-BitwardenCLI {
     begin {
         if ( -not $BitwardenCLI ) {
             throw "Bitwarden CLI is not installed!"
@@ -183,22 +182,9 @@ $($errparse  | Format-Table ID, Name | Out-String )
                     }
                 }
 
-                if ( $_.notes -and !$AsPlainText) {
-                    if ( ![String]::IsNullOrEmpty($_.notes) ) { $_.notes = ConvertTo-SecureString -String $_.notes -AsPlainText -Force }
-                    else { $_.notes = New-Object System.Security.SecureString }
-                }
-
                 if ( $_.login ) {
-                    if ( ![String]::IsNullOrEmpty($_.login.password) -and !$AsPlainText ) {
-                        $_.login.password = ConvertTo-SecureString -String $_.login.password -AsPlainText -Force
-                    } elseif ( !$AsPlainText ) {
-                        $_.login.password = New-Object System.Security.SecureString
-                    }
-
                     if ( $_.login.username -and $_.login.password ) {
-                        # If AsPlainText was passed, convert password to secure string to prep for creating a PSCredential.  Otherwise use the existing secure string.
-                        if( $AsPlainText ){ $pass = ConvertTo-SecureString -String $_.login.password -AsPlainText -Force }
-                        else { $pass = $_.login.password }
+                        $pass = ConvertTo-SecureString -String $_.login.password -AsPlainText -Force
 
                         $_.login | Add-Member -MemberType NoteProperty -Name Credential -Value ([PSCredential]::new( $_.login.username, $pass ))
                     }
@@ -208,26 +194,8 @@ $($errparse  | Format-Table ID, Name | Out-String )
 
                 if ( $_.passwordHistory ) {
                     [BitwardenPasswordHistory[]]$_.passwordHistory = $_.passwordHistory
-                    
-                    if( !$AsPlainText ) {
-                        $_.passwordHistory.ForEach({
-                            $_.password = ConvertTo-SecureString -String $_.password -AsPlainText -Force
-                        })
-                    }
                 }
 
-                if ( $_.identity.ssn -and !$AsPlainText) {
-                    $_.identity.ssn = ConvertTo-SecureString -String $_.identity.ssn -AsPlainText -Force
-                }
-
-                if ( $_.fields ) {
-                    $_.fields.ForEach({
-                        [BitwardenFieldType]$_.type = [int]$_.type
-                        if ( $_.type -eq [BitwardenFieldType]::Hidden -and !$AsPlainText ) {
-                            $_.value = ConvertTo-SecureString -String $_.value -AsPlainText -Force
-                        }
-                    })
-                }
                 $_
             })
 
@@ -236,8 +204,6 @@ $($errparse  | Format-Table ID, Name | Out-String )
             if ( $Result -and $Result -like '*--session*' ) {
                 $env:BW_SESSION = $Result.Trim().Split(' ')[-1]
                 return $Result[0]
-            } elseif ($ps.StartInfo.ArgumentList.Contains('password') -and !$AsPlainText) {
-                return ConvertTo-SecureString -String ($Result -join ' ') -AsPlainText -Force
             } else {
                 return $Result
             }

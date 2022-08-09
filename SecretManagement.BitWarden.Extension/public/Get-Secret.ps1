@@ -12,20 +12,23 @@ function Get-Secret {
         [Parameter(ValueFromPipelineByPropertyName)]
         [string] $VaultName,
         [Parameter(ValueFromPipelineByPropertyName)]
-        [hashtable] $AdditionalParameters,
-        [switch] $AsPlainText
+        [hashtable] $AdditionalParameters
     )
 
     # UTF8 with BOM is supported in all versions of PowerShell.  Only Powershell 6+ supports UTF-8 Without BOM.
     # In Windows Powershell, UTF8 with BOM is called 'UTF8'.  In Powershell 6+ it is called 'utf8BOM'.
-    $EncodingOfSecrets = if($AdditionalParameters.EncodingOfSecrets) {$AdditionalParameters.EncodingOfSecrets}
-        elseif($PSEdition -eq "Desktop") { "UTF8" }
+    $EncodingOfSecrets = if($AdditionalParameters.EncodingOfSecrets -ieq "utf8BOM" -and $PSEdition -eq "Desktop") { "UTF8" }
+        elseif($AdditionalParameters.EncodingOfSecrets -ieq "UTF8" -and $PSEdition -eq "Core") { "utf8BOM" }
+        elseif($AdditionalParameters.EncodingOfSecrets) { $AdditionalParameters.EncodingOfSecrets }
+        elseif($PSEdition -ieq "Desktop") { "UTF8" }
         else { "utf8BOM" }
-    
+    $OutputSimpleCreds = if($AdditionalParameters.OutputSimpleCreds) {$AdditionalParameters.OutputSimpleCreds} else {$false}
+
     $ResyncCacheIfOlderThan = if($AdditionalParameters.ResyncCacheIfOlderThan) {$AdditionalParameters.ResyncCacheIfOlderThan} else {New-TimeSpan -Hours 3}
     if((New-TimeSpan -Start (Invoke-BitwardenCLI sync --last | Get-Date)).TotalSeconds -gt $ResyncCacheIfOlderThan.TotalSeconds) {
         Invoke-BitwardenCLI sync | Out-Null
     }
+
 
     [System.Collections.Generic.List[string]]$CmdParams = @("get","item")
     $CmdParams.Add( $Name ) #* Do not combine with the above line.  For some reason that causes the function to fail in production.
@@ -35,12 +38,7 @@ function Get-Secret {
         $CmdParams.Add( $AdditionalParameters['organizationid'] )
     }
 
-    $Result = Invoke-BitwardenCLI @CmdParams -AsPlainText:$AsPlainText
-    
-    # if ( !$Result ) {
-    #     $ex = New-Object System.Management.Automation.ItemNotFoundException "Revise your search filter so it matches a secret in the vault."
-    #     Write-Error -Exception $ex -Category ObjectNotFound -CategoryActivity 'Invoke-BitwardenCLI @CmdParams' -CategoryTargetName '$Result' -CategoryTargetType 'PSCustomObject' -ErrorAction Stop
-    # }
+    $Result = Invoke-BitwardenCLI @CmdParams
 
     switch ( $Result.type ) {
         "SecureNote" {
@@ -74,7 +72,7 @@ function Get-Secret {
         { "Login","Card","Identity" -icontains $_ } {
             # Output login as a hashtable. This allows us to support credentials that lack a username and therefore cannot output a PSCredential.
             #* Unlike Get-SecretInfo, Get-Secret does not support ordered hashtables.
-            return $Result.$_ | ConvertTo-HashTable
+            return $Result.$_ | ConvertTo-Hashtable
             break
         }
         default {throw [System.NotImplementedException]"Somehow you got to a place that doesn't exist."; break}
