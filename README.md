@@ -19,19 +19,10 @@ Download and Install
 
 ## Installation
 
-You can install this module from the PowerShell Gallery:
+This module has not yet been published to the PowerShell Gallery.  To install, clone/download the repo and specify it directly when registering the vault.
 
-Using PowerShellGet v2:
-
-```pwsh
-Install-Module SecretManagement.BitWarden
-```
-
-Using PowerShellGet v3:
-
-```pwsh
-Install-PSResource SecretManagement.BitWarden
-```
+Example:
+`Register-SecretVault -Name "warden" -ModuleName "C:\Git\SecretManagement.BitWarden"`
 
 ## Registration
 
