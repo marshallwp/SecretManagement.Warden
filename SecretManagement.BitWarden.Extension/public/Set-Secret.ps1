@@ -11,8 +11,10 @@ function Set-Secret
 
     # UTF8 with BOM is supported in all versions of PowerShell.  Only Powershell 6+ supports UTF-8 Without BOM.
     # In Windows Powershell, UTF8 with BOM is called 'UTF8'.  In Powershell 6+ it is called 'utf8BOM'.
-    $EncodingOfSecrets = if($AdditionalParameters.EncodingOfSecrets) {$AdditionalParameters.EncodingOfSecrets}
-        elseif($PSEdition -eq "Desktop") { "UTF8" }
+    $EncodingOfSecrets = if($AdditionalParameters.EncodingOfSecrets -ieq "utf8BOM" -and $PSEdition -eq "Desktop") { "UTF8" }
+        elseif($AdditionalParameters.EncodingOfSecrets -ieq "UTF8" -and $PSEdition -eq "Core") { "utf8BOM" }
+        elseif($AdditionalParameters.EncodingOfSecrets) { $AdditionalParameters.EncodingOfSecrets }
+        elseif($PSEdition -ieq "Desktop") { "UTF8" }
         else { "utf8BOM" }
     $ExportObjectsToSecureNotesAs = if($AdditionalParameters.ExportObjectsToSecureNotesAs) {$AdditionalParameters.ExportObjectsToSecureNotesAs} else {"JSON"}
     $MaximumObjectDepth = if($AdditionalParameters.MaximumObjectDepth) {$AdditionalParameters.MaximumObjectDepth} else {4}
@@ -21,7 +23,6 @@ function Set-Secret
     if((New-TimeSpan -Start (Invoke-BitwardenCLI sync --last | Get-Date)).TotalSeconds -gt $ResyncCacheIfOlderThan.TotalSeconds) {
         Invoke-BitwardenCLI sync | Out-Null
     }
-
 
     $OldSecret = Get-FullSecret -Name $Name -VaultName $VaultName -AdditionalParameters $AdditionalParameters
     $IsNewItem = $false

@@ -26,11 +26,6 @@ function Get-SecretInfo {
 
     $vaultSecretInfos = Invoke-BitwardenCLI @CmdParams
 
-    # if ( !$vaultSecretInfos ) {
-    #     $ex = New-Object System.Management.Automation.ItemNotFoundException "Revise your search filter so it matches a secret in the vault."
-    #     Write-Error -Exception $ex -Category ObjectNotFound -CategoryActivity 'Invoke-BitwardenCLI @CmdParams' -CategoryTargetName '$vaultSecretInfos' -CategoryTargetType 'PSCustomObject[]'
-    # }
-
     foreach ( $vaultSecretInfo in $vaultSecretInfos ) {
         if ( $vaultSecretInfo.type -eq [BitwardenItemType]::Login ) {
             $type = [Microsoft.PowerShell.SecretManagement.SecretType]::PSCredential

@@ -21,28 +21,28 @@ function New-Secret {
         [string] $SecretType
     )
 
-    $Secret = Invoke-BitwardenCLI get template item -AsPlainText
+    $Secret = Invoke-BitwardenCLI get template item
     $Secret.name = $Name
 
     switch($SecretType) {
         "Login" {
             $Secret.type = [BitwardenItemType]::Login
-            $Secret.login = Invoke-BitwardenCLI get template item.login -AsPlainText
+            $Secret.login = Invoke-BitwardenCLI get template item.login
             break
         }
         "SecureNote" {
             $Secret.type = [BitwardenItemType]::SecureNote
-            $Secret.securenote = Invoke-BitwardenCLI get template item.securenote -AsPlainText
+            $Secret.securenote = Invoke-BitwardenCLI get template item.securenote
             break
         }
         "Card" {
             $Secret.type = [BitwardenItemType]::Card
-            $Secret.card = Invoke-BitwardenCLI get template item.card -AsPlainText
+            $Secret.card = Invoke-BitwardenCLI get template item.card
             break
         }
         "Identity" {
             $Secret.type = [BitwardenItemType]::Identity
-            $Secret.identity = Invoke-BitwardenCLI get template item.identity -AsPlainText
+            $Secret.identity = Invoke-BitwardenCLI get template item.identity
             break
         }
     }
