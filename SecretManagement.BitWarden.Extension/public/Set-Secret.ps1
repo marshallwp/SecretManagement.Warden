@@ -17,7 +17,7 @@ function Set-Secret
     $ExportObjectsToSecureNotesAs = if($AdditionalParameters.ExportObjectsToSecureNotesAs) {$AdditionalParameters.ExportObjectsToSecureNotesAs} else {"JSON"}
     $MaximumObjectDepth = if($AdditionalParameters.MaximumObjectDepth) {$AdditionalParameters.MaximumObjectDepth} else {4}
     
-    $ResyncCacheIfOlderThan = if($AdditionalParameters.ResyncCacheIfOlderThan) {$AdditionalParameters.ResyncCacheIfOlderThan} else {New-TimeSpan -Minutes 5}
+    $ResyncCacheIfOlderThan = if($AdditionalParameters.ResyncCacheIfOlderThan) {$AdditionalParameters.ResyncCacheIfOlderThan} else {New-TimeSpan -Hours 3}
     if((New-TimeSpan -Start (Invoke-BitwardenCLI sync --last | Get-Date)).TotalSeconds -gt $ResyncCacheIfOlderThan.TotalSeconds) {
         Invoke-BitwardenCLI sync | Out-Null
     }
