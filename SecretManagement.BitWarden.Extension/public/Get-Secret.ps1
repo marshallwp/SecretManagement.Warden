@@ -22,7 +22,6 @@ function Get-Secret {
         elseif($AdditionalParameters.EncodingOfSecrets) { $AdditionalParameters.EncodingOfSecrets }
         elseif($PSEdition -ieq "Desktop") { "UTF8" }
         else { "utf8BOM" }
-    $OutputSimpleCreds = if($AdditionalParameters.OutputSimpleCreds) {$AdditionalParameters.OutputSimpleCreds} else {$false}
 
     $ResyncCacheIfOlderThan = if($AdditionalParameters.ResyncCacheIfOlderThan) {$AdditionalParameters.ResyncCacheIfOlderThan} else {New-TimeSpan -Hours 3}
     if((New-TimeSpan -Start (Invoke-BitwardenCLI sync --last | Get-Date)).TotalSeconds -gt $ResyncCacheIfOlderThan.TotalSeconds) {
