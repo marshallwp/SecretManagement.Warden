@@ -68,8 +68,14 @@ When registering the vault you can include a HashTable of vault parameters to co
 | **ExportObjectsToSecureNotesAs** | Changes what PowerShell HashTables are converted into so they can be stored as a Secure Note in the vault.<br><br>Defaults to JSON for interoperability with other languages.  However, CliXml has superior type support and compatibility with older versions of PowerShell.  It can be used to store an *exact* copy of the object, including custom typing, in the vault. See [Export-Clixml](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/export-clixml) for details. | String | CliXml, JSON | JSON |
 | **EncodingOfSecrets** | Changes the character encoding of secrets for functions that support it. This should be set to match the encoding of your vault storage (or be a subset, i.e. ASCII is a subset of UTF-8). Supports all [PowerShell supported character encodings](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_character_encoding). | String | ascii, bigedianunicode, bigendianutf32, oem, unicode, utf7 utf8, utf8BOM, utf8NoBom\*, utf32 | utf8BOM |
 | **MaximumObjectDepth** | Specifies how many levels of contained objects are included in the CliXml/JSON representation. | Int32 | 1–100 | 2 |
+| **ResyncCacheIfOlderThan** | A System.TimeSpan object indicating the amount of time that is allowed to pass before the local cache is considered expired.  After expiry, the vault will be synced before running any further commands. | Int32 | [System.TimeSpan](https://docs.microsoft.com/en-us/dotnet/api/system.timespan) | `New-TimeSpan -Hours 3` |
 
 \* Unsupported on Powershell 5.x
+
+## Vault Syncing
+The Bitwarden CLI always writes data directly to the vault, however it always retrieves data from a cache.  That cache is automatically refreshed everytime you login, but must be manually refreshed otherwise.
+
+Within this module you can force a sync by running `Unlock-SecretVault` or `Test-SecretVault`.  Otherwise sync is governed by the `ResyncCacheIfOlderThan` setting.
 
 ## Special Thanks
 Special Thanks to @TylerLeonhardt for publishing a baseline for this module extension. Please check out his [`LastPass Extention`](https://github.com/TylerLeonhardt/SecretManagement.LastPass)

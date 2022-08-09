@@ -16,11 +16,11 @@ function ConvertTo-HashTable
 
     process
     {
-        if ($null -eq $InputObject) { return $null }
-
-        if ($InputObject -is [hashtable] -or $InputObject.GetType().Name -eq 'OrderedDictionary') { return $InputObject }
-
-        if ($InputObject -is [System.Collections.IEnumerable] -and $InputObject -isnot [string])
+        if ($null -eq $InputObject) {
+            return $null
+        }
+        elseif ($InputObject -is [System.Collections.IEnumerable] -and $InputObject -isnot [string] `
+            -and $InputObject -isnot [hashtable] -and $InputObject -isnot [System.Collections.Specialized.OrderedDictionary])
         {
             $collection = @(
                 foreach ($object in $InputObject) { ConvertTo-HashTable $object }
@@ -28,7 +28,7 @@ function ConvertTo-HashTable
 
             Write-Output $collection -NoEnumerate
         }
-        elseif ($InputObject -is [psobject])
+        elseif ($InputObject -is [PSObject] -and $InputObject -isnot [SecureString])
         {
             $hash = @{}
 

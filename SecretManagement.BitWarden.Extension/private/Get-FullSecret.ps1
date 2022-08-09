@@ -15,20 +15,20 @@ function Get-FullSecret {
     [System.Collections.Generic.List[string]]$CmdParams = @("get","item")
     $CmdParams.Add($Name)
 
-    if ( $AdditionalParameters.ContainsKey('organizationid')) {
-        $CmdParams.Add( '--organizationid' )
-        $CmdParams.Add( $AdditionalParameters['organizationid'] )
+    if ( $AdditionalParameters.ContainsKey('organizationid') ) {
+        $CmdParams.Add('--organizationid')
+        $CmdParams.Add($AdditionalParameters['organizationid'])
     }
 
     $CmdParams.Add('--raw')
     try {
         $Result = Invoke-BitwardenCLI @CmdParams -AsPlainText
     }
-    catch {
-        if($_.Exception.Message -eq "Not found.") { return $null } else { throw $_ }
+    catch [System.Management.Automation.ItemNotFoundException] {
+        return $null
     }
     if ( ! $Result ) {
-        $ex = New-Object System.Management.Automation.ItemNotFoundException "Revise your search filter so it matches a secret in the vault."
+        $ex = New-Object System.DirectoryServices.AccountManagement.NoMatchingPrincipalException "Revise your search filter so it matches a secret in the vault."
         Write-Error -Exception $ex -Category ObjectNotFound -CategoryActivity 'Invoke-BitwardenCLI @CmdParams' -CategoryTargetName '$Result' -CategoryTargetType 'PSCustomObject' -ErrorAction Stop
     }
 

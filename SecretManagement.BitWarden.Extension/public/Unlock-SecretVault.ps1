@@ -8,6 +8,7 @@ function Unlock-SecretVault {
 
     try {
         Invoke-BitwardenCLI unlock "$(ConvertFrom-SecureString $Password -AsPlainText)"
+        Invoke-BitwardenCLI sync | Out-Null
     }
     catch {
         $ex = New-Object System.Security.Authentication.AuthenticationException "$VaultName Vault Unlock operation failed with error: $_"
