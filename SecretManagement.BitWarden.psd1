@@ -4,7 +4,7 @@
     # RootModule = ''
     
     # Version number of this module.
-    ModuleVersion = '0.2.1'
+    ModuleVersion = '0.2.2'
     
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -22,7 +22,7 @@
     Copyright = '© 2022 Industrial Info Resources, Inc. All rights reserved.'
     
     # Description of the functionality provided by this module
-    # Description = ''
+    Description = 'Bitwarden/Vaultwarden extension for the PowerShell SecretManager allowing you to Get, Set, and Remove secrets in a standardized way.'
     
     # Minimum version of the PowerShell engine required by this module
     PowerShellVersion = '5.1'
