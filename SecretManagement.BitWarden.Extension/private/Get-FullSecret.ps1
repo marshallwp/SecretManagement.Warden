@@ -22,14 +22,11 @@ function Get-FullSecret {
 
     $CmdParams.Add('--raw')
     try {
-        $Result = Invoke-BitwardenCLI @CmdParams -AsPlainText
+        $Result = Invoke-BitwardenCLI @CmdParams
     }
-    catch [System.Management.Automation.ItemNotFoundException] {
+    # Ignore just errors about not finding anything.
+    catch [System.Management.Automation.ItemNotFoundException],[System.DirectoryServices.AccountManagement.NoMatchingPrincipalException] {
         return $null
-    }
-    if ( ! $Result ) {
-        $ex = New-Object System.DirectoryServices.AccountManagement.NoMatchingPrincipalException "Revise your search filter so it matches a secret in the vault."
-        Write-Error -Exception $ex -Category ObjectNotFound -CategoryActivity 'Invoke-BitwardenCLI @CmdParams' -CategoryTargetName '$Result' -CategoryTargetType 'PSCustomObject' -ErrorAction Stop
     }
 
     return $Result
