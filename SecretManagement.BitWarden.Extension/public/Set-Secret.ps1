@@ -9,17 +9,11 @@ function Set-Secret
         [hashtable] $AdditionalParameters
     )
 
-    # UTF8 with BOM is supported in all versions of PowerShell.  Only Powershell 6+ supports UTF-8 Without BOM.
-    # In Windows Powershell, UTF8 with BOM is called 'UTF8'.  In Powershell 6+ it is called 'utf8BOM'.
-    $EncodingOfSecrets = if($AdditionalParameters.EncodingOfSecrets -ieq "utf8BOM" -and $PSEdition -eq "Desktop") { "UTF8" }
-        elseif($AdditionalParameters.EncodingOfSecrets -ieq "UTF8" -and $PSEdition -eq "Core") { "utf8BOM" }
-        elseif($AdditionalParameters.EncodingOfSecrets) { $AdditionalParameters.EncodingOfSecrets }
-        elseif($PSEdition -ieq "Desktop") { "UTF8" }
-        else { "utf8BOM" }
-    $ExportObjectsToSecureNotesAs = if($AdditionalParameters.ExportObjectsToSecureNotesAs) {$AdditionalParameters.ExportObjectsToSecureNotesAs} else {"JSON"}
-    $MaximumObjectDepth = if($AdditionalParameters.MaximumObjectDepth) {$AdditionalParameters.MaximumObjectDepth} else {4}
+    $EncodingOfSecrets = $AdditionalParameters.EncodingOfSecrets ?? "utf8"
+    $ExportObjectsToSecureNotesAs = $AdditionalParameters.ExportObjectsToSecureNotesAs ?? "JSON"
+    $MaximumObjectDepth = $AdditionalParameters.MaximumObjectDepth ?? 4
     
-    $ResyncCacheIfOlderThan = if($AdditionalParameters.ResyncCacheIfOlderThan) {$AdditionalParameters.ResyncCacheIfOlderThan} else {New-TimeSpan -Hours 3}
+    $ResyncCacheIfOlderThan = $AdditionalParameters.ResyncCacheIfOlderThan ?? (New-TimeSpan -Hours 3)
     if((New-TimeSpan -Start (Invoke-BitwardenCLI sync --last | Get-Date)).TotalSeconds -gt $ResyncCacheIfOlderThan.TotalSeconds) {
         Invoke-BitwardenCLI sync | Out-Null
     }
@@ -81,16 +75,16 @@ function Set-Secret
                 "HashTable" {
                     if ( Test-KeysInHashtable $Secret @("userName","password","uris","totp") ) {
                         if($Secret.UserName -or $IsNewItem) {
-                            $OldSecret.login.username = if($Secret.UserName -and $Secret.UserName.GetType().Name -eq "SecureString")
+                            $OldSecret.login.username = if($Secret.UserName -is [SecureString])
                                 { ConvertFrom-SecureString $Secret.UserName -AsPlainText } else { [string]$Secret.UserName }
                         }
                         if($Secret.Password -or $IsNewItem) {
-                            $OldSecret.login.password = if($Secret.Password -and $Secret.Password.GetType().Name -eq "SecureString") 
+                            $OldSecret.login.password = if($Secret.Password -is [SecureString]) 
                                 { ConvertFrom-SecureString $Secret.Password -AsPlainText } else { [string]$Secret.Password }
                         }
                         if($Secret.uris) { $OldSecret.login.uris = @([string]$Secret.uris) } elseif($IsNewItem) { $OldSecret.login.uris = @() }
                         if($Secret.totp -or $IsNewItem) {
-                            $OldSecret.login.totp = if($Secret.totp -and $Secret.totp.GetType().Name -eq "SecureString")
+                            $OldSecret.login.totp = if($Secret.totp -is [SecureString])
                                 { ConvertFrom-SecureString $Secret.totp -AsPlainText } else { [string]$Secret.totp }
                         }
                     }
@@ -107,10 +101,10 @@ function Set-Secret
                     }
 
                     if( $Field -iin "UserName","Password","TOTP" ) {
-                        $OldSecret.login.$Field = if( $Secret.GetType().Name -eq "SecureString" )  { ConvertFrom-SecureString $Secret -AsPlainText } else { $Secret }
+                        $OldSecret.login.$Field = if( $Secret -is [SecureString] )  { ConvertFrom-SecureString $Secret -AsPlainText } else { $Secret }
                     }
                     elseif( $Field -ieq "URIs" ) {
-                        $OldSecret.login.uris = @( if( $Secret.GetType().Name -eq "SecureString" )  { ConvertFrom-SecureString $Secret -AsPlainText } else { $Secret } )
+                        $OldSecret.login.uris = @( if( $Secret -is [SecureString] )  { ConvertFrom-SecureString $Secret -AsPlainText } else { $Secret } )
                     }
                     else {
                         $ex = New-Object System.Management.Automation.Host.PromptingException "$Field is not a valid option!"
@@ -175,7 +169,7 @@ function Set-Secret
                     if ( Test-KeysInHashtable $Secret $cardFields ) {
                         $cardFields | ForEach-Object {
                             if($Secret.$_ -or $IsNewItem) {
-                                $OldSecret.card.$_ = if($Secret.$_ -and $Secret.$_.GetType().Name -eq "SecureString")
+                                $OldSecret.card.$_ = if($Secret.$_ -is [SecureString])
                                 { ConvertFrom-SecureString $Secret.$_ -AsPlainText } else { [string]$Secret.$_ }
                             }
                         }
@@ -201,7 +195,7 @@ function Set-Secret
                     if ( Test-KeysInHashtable $Secret.Keys $identFields ) {
                         $identFields | ForEach-Object {
                             if($Secret.$_ -or $IsNewItem) {
-                                $OldSecret.identity.$_ = if($Secret.$_ -and $Secret.$_.GetType().Name -eq "SecureString")
+                                $OldSecret.identity.$_ = if($Secret.$_ -is [SecureString])
                                 { ConvertFrom-SecureString $Secret.$_ -AsPlainText } else { [string]$Secret.$_ }
                             }
                         }
