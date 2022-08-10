@@ -6,7 +6,7 @@ function Get-SecretInfo {
         [hashtable] $AdditionalParameters
     )
 
-    $ResyncCacheIfOlderThan = if($AdditionalParameters.ResyncCacheIfOlderThan) {$AdditionalParameters.ResyncCacheIfOlderThan} else {New-TimeSpan -Hours 3}
+    $ResyncCacheIfOlderThan = $AdditionalParameters.ResyncCacheIfOlderThan ?? (New-TimeSpan -Hours 3)
     if((New-TimeSpan -Start (Invoke-BitwardenCLI sync --last | Get-Date)).TotalSeconds -gt $ResyncCacheIfOlderThan.TotalSeconds) {
         Invoke-BitwardenCLI sync | Out-Null
     }
