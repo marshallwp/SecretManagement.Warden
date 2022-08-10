@@ -14,14 +14,10 @@ function Get-Secret {
         [Parameter(ValueFromPipelineByPropertyName)]
         [hashtable] $AdditionalParameters
     )
-
-    $EncodingOfSecrets = $AdditionalParameters.EncodingOfSecrets ?? "utf8"
-
-    $ResyncCacheIfOlderThan = $AdditionalParameters.ResyncCacheIfOlderThan ?? (New-TimeSpan -Hours 3)
-    if((New-TimeSpan -Start (Invoke-BitwardenCLI sync --last | Get-Date)).TotalSeconds -gt $ResyncCacheIfOlderThan.TotalSeconds) {
-        Invoke-BitwardenCLI sync | Out-Null
-    }
-
+    # Enable Verbose Mode inside this script if passed from the wrapper.
+    if($AdditionalParameters.ContainsKey('Verbose') -and ($AdditionalParameters['Verbose'] -eq $true)) {$script:VerbosePreference = 'Continue'}
+    $AdditionalParameters = Get-Defaults $AdditionalParameters
+    Sync-BitwardenVault $AdditionalParameters.ResyncCacheIfOlderThan
 
     [System.Collections.Generic.List[string]]$CmdParams = @("get","item")
     $CmdParams.Add( $Name ) #* Do not combine with the above line.  For some reason that causes the function to fail in production.
@@ -41,8 +37,8 @@ function Get-Secret {
             }
             elseif( $ObjType -ieq "CliXml" ) {
                 $tmp = New-TemporaryFile
-                $Result.notes.Remove(0,$Result.notes.IndexOf("`n")+1) | Out-File -Encoding $EncodingOfSecrets -FilePath $tmp
-                $obj = Import-Clixml -Encoding $EncodingOfSecrets -Path $tmp
+                $Result.notes.Remove(0,$Result.notes.IndexOf("`n")+1) | Out-File -Encoding $AdditionalParameters.EncodingOfSecrets -FilePath $tmp
+                $obj = Import-Clixml -Encoding $AdditionalParameters.EncodingOfSecrets -Path $tmp
                 Remove-Item $tmp -Force
                 return $obj
             }
