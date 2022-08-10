@@ -12,7 +12,7 @@ if ( $env:BITWARDEN_CLI_PATH ) {
 }
 
 if ( -not $BitwardenCLI ) {
-    if([System.Environment]::OSVersion.Platform -eq "Win32NT") { $platform = "windows" }
+    if($IsWindows) { $platform = "windows" }
     elseif ($IsMacOS) { $platform = "macos" }
     else { $platform = "linux" }
 
