@@ -9,10 +9,10 @@ function Remove-Secret {
         [hashtable] $AdditionalParameters
     )
 
-    $ResyncCacheIfOlderThan = $AdditionalParameters.ResyncCacheIfOlderThan ?? (New-TimeSpan -Hours 3)
-    if((New-TimeSpan -Start (Invoke-BitwardenCLI sync --last | Get-Date)).TotalSeconds -gt $ResyncCacheIfOlderThan.TotalSeconds) {
-        Invoke-BitwardenCLI sync --quiet | Out-Null
-    }
+    # Enable Verbose Mode inside this script if passed from the wrapper.
+    if($AdditionalParameters.ContainsKey('Verbose') -and ($AdditionalParameters['Verbose'] -eq $true)) {$script:VerbosePreference = 'Continue'}
+    $AdditionalParameters = Get-Defaults $AdditionalParameters
+    Sync-BitwardenVault $AdditionalParameters.ResyncCacheIfOlderThan
 
     [System.Collections.Generic.List[string]]$CmdParams = @("delete","item")
     $CmdParams.Add($Name)

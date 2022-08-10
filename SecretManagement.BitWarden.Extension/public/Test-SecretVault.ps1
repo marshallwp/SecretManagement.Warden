@@ -6,6 +6,8 @@ function Test-SecretVault {
         [Parameter(ValueFromPipelineByPropertyName)]
         [hashtable] $AdditionalParameters
     )
+    # Enable Verbose Mode inside this script if passed from the wrapper.
+    if($AdditionalParameters.ContainsKey('Verbose') -and ($AdditionalParameters['Verbose'] -eq $true)) {$script:VerbosePreference = 'Continue'}
 
     if(!(Invoke-BitwardenCLI login --check --quiet)) {
         Write-Error "You are not logged into $VaultName vault."
@@ -18,7 +20,7 @@ function Test-SecretVault {
         return $false
     }
     else {
-        Invoke-BitwardenCLI sync | Out-Null
+        Sync-BitwardenVault -Force
         return $true
     }
 }

@@ -5,10 +5,12 @@ function Unlock-SecretVault {
         [string] $VaultName,
         [hashtable] $AdditionalParameters
     )
+    # Enable Verbose Mode inside this script if passed from the wrapper.
+    if($AdditionalParameters.ContainsKey('Verbose') -and ($AdditionalParameters['Verbose'] -eq $true)) {$script:VerbosePreference = 'Continue'}
 
     try {
         Invoke-BitwardenCLI unlock "$(ConvertFrom-SecureString $Password -AsPlainText)"
-        Invoke-BitwardenCLI sync | Out-Null
+        Sync-BitwardenVault -Force
     }
     catch {
         $ex = New-Object System.Security.Authentication.AuthenticationException "$VaultName Vault Unlock operation failed with error: $_"
