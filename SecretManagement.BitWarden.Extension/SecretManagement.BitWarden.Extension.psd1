@@ -7,6 +7,7 @@
         'Remove-Secret',
         'Set-Secret',
         'Test-SecretVault',
-        'Unlock-SecretVault'
+        'Unlock-SecretVault',
+        'Unregister-SecretVault'
         )
 }
