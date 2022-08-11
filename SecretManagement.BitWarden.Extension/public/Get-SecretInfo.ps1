@@ -24,23 +24,24 @@ function Get-SecretInfo {
         $CmdParams.Add( $folder.id )
     }
 
-    $vaultSecretInfos = Invoke-BitwardenCLI @CmdParams
+    $Results = Invoke-BitwardenCLI @CmdParams
 
-    foreach ( $vaultSecretInfo in $vaultSecretInfos ) {
-        if ( $vaultSecretInfo.type -eq [BitwardenItemType]::Login ) {
-            $type = [Microsoft.PowerShell.SecretManagement.SecretType]::PSCredential
+    foreach ( $secretInfo in $Results ) {
+        if ( $secretInfo.type -eq [BitwardenItemType]::SecureNote -and !($Result.notes | Select-String -Pattern "(?<=PowerShellObjectRepresentation: )[^\n]*") ) {
+            $type = [Microsoft.PowerShell.SecretManagement.SecretType]::SecureString
         }
         else {
-            $type = [Microsoft.PowerShell.SecretManagement.SecretType]::SecureString
+            $type = [Microsoft.PowerShell.SecretManagement.SecretType]::Hashtable
         }
 
         $hashtable = [ordered]@{}
-        foreach( $property in ($vaultSecretInfo | Select-Object -ExcludeProperty notes,login,name,type | Get-Member -MemberType NoteProperty).Name ) {
-            $hashtable[$property] = $vaultSecretInfo.$property
+        if($secretInfo.login) { $hashtable['username'] = $secretInfo.login.username }
+        foreach( $property in ($secretInfo | Select-Object -ExcludeProperty notes,login,id,type | Get-Member -MemberType NoteProperty).Name ) {
+            $hashtable[$property] = $secretInfo.$property
         }
 
         [Microsoft.PowerShell.SecretManagement.SecretInformation]::new(
-            $vaultSecretInfo.Name,
+            $secretInfo.id,
             $type,
             $VaultName,
             $hashtable
