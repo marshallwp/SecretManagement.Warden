@@ -28,7 +28,7 @@ function Set-Secret
             }
             { "String","SecureString" -contains $Secret.GetType().Name } {
                 $Field = Read-Host -Prompt "Is this $($Secret.GetType().Name) a UserName, Password, TOTP, URIs, or SecureNote?"
-                
+
                 if( $Field -iin "UserName","Password","TOTP","URIs" ) {
                     $OldSecret = New-Secret -Name $Name -SecretType Login
                 } elseif( $Field -ieq "SecureNote" ) {
@@ -75,7 +75,7 @@ function Set-Secret
                                 { ConvertFrom-SecureString $Secret.UserName -AsPlainText } else { [string]$Secret.UserName }
                         }
                         if($Secret.Password -or $IsNewItem) {
-                            $OldSecret.login.password = if($Secret.Password -is [SecureString]) 
+                            $OldSecret.login.password = if($Secret.Password -is [SecureString])
                                 { ConvertFrom-SecureString $Secret.Password -AsPlainText } else { [string]$Secret.Password }
                         }
                         if($Secret.uris) { $OldSecret.login.uris = @([string]$Secret.uris) } elseif($IsNewItem) { $OldSecret.login.uris = @() }
@@ -108,14 +108,14 @@ function Set-Secret
                     }
 
                     # If this is a new item, clear out all the default values.
-                    if($IsNewItem) { 
-                        ($OldSecret.login | Get-Member -MemberType NoteProperty).Name | Where-Object { $_ -ine $Field } | ForEach-Object { 
+                    if($IsNewItem) {
+                        ($OldSecret.login | Get-Member -MemberType NoteProperty).Name | Where-Object { $_ -ine $Field } | ForEach-Object {
                             if($_ -ine "URIs") { $OldSecret.login.$_ = $null } else { $OldSecret.logon.uris = $() }
                         }
                     }
                     break
                 }
-                default { 
+                default {
                     $ex = New-Object System.Management.Automation.PSInvalidCastException "Casting data of $($Secret.GetType().Name) type to a Bitwarden Login is not supported."
                     Write-Error -Exception $ex -Category InvalidType -ErrorId "InvalidCast" -ErrorAction Stop
                     break
@@ -176,7 +176,7 @@ function Set-Secret
                     }
                     break
                 }
-                default { 
+                default {
                     $ex = New-Object System.Management.Automation.PSInvalidCastException "Casting data of $($Secret.GetType().Name) type to a Bitwarden Card is not supported."
                     Write-Error -Exception $ex -Category InvalidType -ErrorId "InvalidCast" -ErrorAction Stop
                     break
@@ -202,7 +202,7 @@ function Set-Secret
                     }
                     break
                 }
-                default { 
+                default {
                     $ex = New-Object System.Management.Automation.PSInvalidCastException "Casting data of $($Secret.GetType().Name) type to a Bitwarden Identity is not supported."
                     Write-Error -Exception $ex -Category InvalidType -ErrorId "InvalidCast" -ErrorAction Stop
                     break
