@@ -16,7 +16,7 @@ function Get-Secret {
     )
     # Enable Verbose Mode inside this script if passed from the wrapper.
     if($AdditionalParameters.ContainsKey('Verbose') -and ($AdditionalParameters['Verbose'] -eq $true)) {$script:VerbosePreference = 'Continue'}
-    $AdditionalParameters = Get-Defaults $AdditionalParameters
+    $AdditionalParameters = Merge-Defaults $AdditionalParameters
     Sync-BitwardenVault $AdditionalParameters.ResyncCacheIfOlderThan
 
     [System.Collections.Generic.List[string]]$CmdParams = @("get","item")
