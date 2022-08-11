@@ -100,7 +100,7 @@ function Invoke-BitwardenCLI {
     process {
         $ps = New-Object System.Diagnostics.Process
         $ps.StartInfo.Filename = $BitwardenCLI
-        
+
         $args | ForEach-Object {
             Write-Verbose "Argument: $_"
             $ps.StartInfo.ArgumentList.Add($_)
@@ -132,7 +132,7 @@ function Invoke-BitwardenCLI {
         $Result = $ps.StandardOutput.ReadToEnd()
         $BWError = $ps.StandardError.ReadToEnd()
         $ps.WaitForExit()
-        
+
         if ($BWError) {
             switch -Wildcard ($BWError) {
                 'Not found.' {
@@ -157,7 +157,7 @@ $($errparse  | Format-Table ID, Name | Out-String )
         }
 
         # As passing exit codes to the parent process does not seem to be working, we pass $true and $false instead.
-        if ( $ps.StartInfo.ArgumentList.Contains('--quiet') ) { 
+        if ( $ps.StartInfo.ArgumentList.Contains('--quiet') ) {
             if($ps.ExitCode -eq 0) { return $true } else { return $false }
          }
 
@@ -256,7 +256,7 @@ $BitwardenCLIArgumentCompleter = {
             return $__CommandAutoComplete[ $ArgumentsArray[-1] ].Split(' ') |
                 Where-Object { $_ -like "$WordToComplete*" }
         }
-    
+
         # if it doesn't have a key then we just want to pause for user input
         # so we return an empty string. this pauses auto-complete until the
         # user provides input.
