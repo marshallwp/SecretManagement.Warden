@@ -1,5 +1,12 @@
 {
 	// Normalize tab handling.
 	"editor.tabSize": 4,
-	"editor.insertSpaces": true
+	"editor.insertSpaces": true,
+	"powershell.codeFormatting.addWhitespaceAroundPipe": true,
+	"powershell.codeFormatting.useCorrectCasing": true,
+	"powershell.codeFormatting.autoCorrectAliases": true,
+	"powershell.pester.useLegacyCodeLens": false,
+
+	// Helps ensure Set-AuthenticodeSignature doesn't overwrite the last line of code.
+	"files.insertFinalNewline": true
 }
