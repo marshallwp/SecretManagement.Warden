@@ -6,7 +6,7 @@
 	"powershell.codeFormatting.useCorrectCasing": true,
 	"powershell.codeFormatting.autoCorrectAliases": true,
 	"powershell.pester.useLegacyCodeLens": false,
-
-	// Helps ensure Set-AuthenticodeSignature doesn't overwrite the last line of code.
+	"files.trimFinalNewlines": true,
+	"files.trimTrailingWhitespace": true,
 	"files.insertFinalNewline": true
 }
