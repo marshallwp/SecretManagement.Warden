@@ -5,7 +5,7 @@ function Get-SecretInfo {
         [Alias('Vault')][string] $VaultName,
         [hashtable] $AdditionalParameters
     )
-    
+
     # Enable Verbose Mode inside this script if passed from the wrapper.
     if($AdditionalParameters.ContainsKey('Verbose') -and ($AdditionalParameters['Verbose'] -eq $true)) {$script:VerbosePreference = 'Continue'}
     $AdditionalParameters = Merge-Defaults $AdditionalParameters
@@ -30,8 +30,8 @@ function Get-SecretInfo {
         if ( $vaultSecretInfo.type -eq [BitwardenItemType]::Login ) {
             $type = [Microsoft.PowerShell.SecretManagement.SecretType]::PSCredential
         }
-        else { 
-            $type = [Microsoft.PowerShell.SecretManagement.SecretType]::SecureString 
+        else {
+            $type = [Microsoft.PowerShell.SecretManagement.SecretType]::SecureString
         }
 
         $hashtable = [ordered]@{}

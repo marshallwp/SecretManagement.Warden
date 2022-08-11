@@ -3,7 +3,7 @@ function Test-KeysInHashtable {
     Param(
         # Hashtable object to search
         [hashtable]$Hashtable,
-        # List of keys 
+        # List of keys
         [string[]]$Keys,
         # If specified, test will fail if any of the keys are missing.
         [switch]$MatchAll
@@ -15,7 +15,7 @@ function Test-KeysInHashtable {
             if($Hashtable.ContainsKey($prop)) { $ContainsKey = $true }
             else { $ContainsKey = $false;  break }
         }
-        elseif($Hashtable.ContainsKey($prop)) { $ContainsKey = $true; break } 
+        elseif($Hashtable.ContainsKey($prop)) { $ContainsKey = $true; break }
     }
     return $ContainsKey
 }

@@ -32,7 +32,7 @@ function Get-Secret {
     switch ( $Result.type ) {
         "SecureNote" {
             $ObjType = ($Result.notes | Select-String -Pattern "(?<=PowerShellObjectRepresentation: )[^\n]*").Matches | Select-Object -First 1 -ExpandProperty Groups | Select-Object -First 1 -ExpandProperty Values
-            if( !$ObjType ) { 
+            if( !$ObjType ) {
                 return $Result.notes
             }
             elseif( $ObjType -ieq "CliXml" ) {
