@@ -24,23 +24,24 @@ function Get-SecretInfo {
         $CmdParams.Add( $folder.id )
     }
 
-    $vaultSecretInfos = Invoke-BitwardenCLI @CmdParams
+    $Results = Invoke-BitwardenCLI @CmdParams
 
-    foreach ( $vaultSecretInfo in $vaultSecretInfos ) {
-        if ( $vaultSecretInfo.type -eq [BitwardenItemType]::Login ) {
-            $type = [Microsoft.PowerShell.SecretManagement.SecretType]::PSCredential
+    foreach ( $secretInfo in $Results ) {
+        if ( $secretInfo.type -eq [BitwardenItemType]::SecureNote -and !($Result.notes | Select-String -Pattern "(?<=PowerShellObjectRepresentation: )[^\n]*") ) {
+            $type = [Microsoft.PowerShell.SecretManagement.SecretType]::SecureString
         }
         else {
-            $type = [Microsoft.PowerShell.SecretManagement.SecretType]::SecureString
+            $type = [Microsoft.PowerShell.SecretManagement.SecretType]::Hashtable
         }
 
         $hashtable = [ordered]@{}
-        foreach( $property in ($vaultSecretInfo | Select-Object -ExcludeProperty notes,login,name,type | Get-Member -MemberType NoteProperty).Name ) {
-            $hashtable[$property] = $vaultSecretInfo.$property
+        if($secretInfo.login) { $hashtable['username'] = $secretInfo.login.username }
+        foreach( $property in ($secretInfo | Select-Object -ExcludeProperty notes,login,id,type | Get-Member -MemberType NoteProperty).Name ) {
+            $hashtable[$property] = $secretInfo.$property
         }
 
         [Microsoft.PowerShell.SecretManagement.SecretInformation]::new(
-            $vaultSecretInfo.Name,
+            $secretInfo.id,
             $type,
             $VaultName,
             $hashtable
@@ -51,8 +52,8 @@ function Get-SecretInfo {
 # SIG # Begin signature block
 # MIInAQYJKoZIhvcNAQcCoIIm8jCCJu4CAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQU5MR7gqXpKTvm8/6f/HzQYT6R
-# mEaggiARMIIFbzCCBFegAwIBAgIQSPyTtGBVlI02p8mKidaUFjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUy39Ogz49eu2FPXcgn5cmiRS+
+# nS2ggiARMIIFbzCCBFegAwIBAgIQSPyTtGBVlI02p8mKidaUFjANBgkqhkiG9w0B
 # AQwFADB7MQswCQYDVQQGEwJHQjEbMBkGA1UECAwSR3JlYXRlciBNYW5jaGVzdGVy
 # MRAwDgYDVQQHDAdTYWxmb3JkMRowGAYDVQQKDBFDb21vZG8gQ0EgTGltaXRlZDEh
 # MB8GA1UEAwwYQUFBIENlcnRpZmljYXRlIFNlcnZpY2VzMB4XDTIxMDUyNTAwMDAw
@@ -227,35 +228,35 @@ function Get-SecretInfo {
 # Y3RpZ28gTGltaXRlZDErMCkGA1UEAxMiU2VjdGlnbyBQdWJsaWMgQ29kZSBTaWdu
 # aW5nIENBIFIzNgIRAPQbCCfcuboB1FpiBQ3KD8gwCQYFKw4DAhoFAKB4MBgGCisG
 # AQQBgjcCAQwxCjAIoAKAAKECgAAwGQYJKoZIhvcNAQkDMQwGCisGAQQBgjcCAQQw
-# HAYKKwYBBAGCNwIBCzEOMAwGCisGAQQBgjcCARUwIwYJKoZIhvcNAQkEMRYEFJoj
-# nm6v1uZIcDBiIhRl8ineCt3VMA0GCSqGSIb3DQEBAQUABIICAIET8T69isjUGZFN
-# zX4+NXtBzoTIl7NWM0XLqtELW+YQiQwXe7kp9S8VZfbxoY6j7eaOn1flPgMDDJLB
-# plt30T1UsreLceGnVVJAxeBrhAw13TRHrU5oIp78zFeNj0/XywR2rN3d6/cnI4wY
-# fS6RH0GJBdCZwRZzOlsB+bVKA/d9PC3aALwdWAJPoyusMA05FB0B0Y4NEfhG53SP
-# xmQJfgVLity5qZ8+M1f6aaDgKWesQoLWuRCBD4k20LsbWJ+g5R5GyqtawLQFySpT
-# BGBz+EjAA1+ZWPJ6G4EMZmIQsBGh0v6P4ITX35ikr4Fwm9CluEwsYA76W4lfEkfr
-# bomIxEBMtfvxFMtx1VfKAmpAiJP6X26bvpeYD2LGrAleaxf5122EiZ08eF76UlRF
-# wSzut1h8g8T0aZ+aEwtGFv1eNEIPiKV3Yqk4DvESzbH72GU2KZU+Pjy9H5PlU0QV
-# gXlWcPpFpdIu+1C8iH4cxNbKgcXy/ejnEk1jjqo++Ypiyk4ipolfmz1MMrTy+yzC
-# TEJ620bcQ9jH4lTyUBCDuViVYrG4mJ9kLIt2RcLBct9GsnMsajcXV9YxoBIo2QUf
-# tEndVxQVyEVxtzfP/vU9UfodcHEOeqaOtSQ1Y6RfFywXN6PXhZskNXupaIamZhN4
-# XfttlZjdZ5m0H0OWjBNcyPQjClafoYIDTDCCA0gGCSqGSIb3DQEJBjGCAzkwggM1
+# HAYKKwYBBAGCNwIBCzEOMAwGCisGAQQBgjcCARUwIwYJKoZIhvcNAQkEMRYEFCzc
+# H24TfTr5ZNq6dF1XP+7LUPIZMA0GCSqGSIb3DQEBAQUABIICAEN1/JNCBmDNMJHV
+# PEMDbCHbTu0FinwF3zm89hAjw3sQcrGshl+N47S3HSkcU8DAZ9JpqYDRwCGUKf6a
+# N01x3xN4Q2gcMWlggvdSW5i5MgA4o3W3cLehUG7AR9oqd35TO4bPt7y4Dy9pChq0
+# v3nyOiZbZhO8elRoK2sEW/abd5Dp2jcNDVxYefqiRNYBIAQSa0XdxRWNlHSItGRL
+# 7miP7VvwuKJZh0S2Ax3G/JlbttFfNCS9+kcwr/P5Js9cBW+ZfhXHh4YRSzBzq0tw
+# hNOs/o9I/yNSwuo2HB6/XLfiCI+c1IfGi7E9c2Tvd3VnDVJnuRcTonFH6M0XpqBL
+# pfEutPdN3pdds36qXen8d2IkhzcJRbaZPW/kNfwabp/Wvcv6NCq2nx0HNYiEzdqF
+# UelVANHUQ6kXyodqCfd0abkVGlcKjDEclOV4ORu8rJe85FBJHpVn5SVo7kdomMGh
+# BDFHIrThTN4bWXlCpKgbLA03FQc1eM6pCjutZV0O18G6iJEaYEC3CieQvoiSyQUw
+# Dl5/+vyOYwpTEHy1pXGdXZAng8p9cS2FnPStcbo7H7CHlaoQFYeTTE7nroavFpfI
+# nmrsorU1gsgPSCEnuDqkGjyolFg1zFHGilvgFRPHxruscoPkAcI91c0fNxNN6ING
+# lRT2Lve+gWWiekfKI46qsmC5DhyGoYIDTDCCA0gGCSqGSIb3DQEJBjGCAzkwggM1
 # AgEBMIGSMH0xCzAJBgNVBAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0
 # ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGDAWBgNVBAoTD1NlY3RpZ28gTGltaXRlZDEl
 # MCMGA1UEAxMcU2VjdGlnbyBSU0EgVGltZSBTdGFtcGluZyBDQQIRAJA5f5rSSjoT
 # 8r2RXwg4qUMwDQYJYIZIAWUDBAICBQCgeTAYBgkqhkiG9w0BCQMxCwYJKoZIhvcN
-# AQcBMBwGCSqGSIb3DQEJBTEPFw0yMjA4MTExODU1NDNaMD8GCSqGSIb3DQEJBDEy
-# BDB63N9ZsEHfMVno7jsxfYn+PGBSMvx7r+amHR91czZ1EskrQP//1np+hEn4jytH
-# 9mgwDQYJKoZIhvcNAQEBBQAEggIAL2htGjjrOfePTCLz+k3nB4Jbp/Fq6VlJ5A/W
-# bj/7fQXtvmrW05O1+Ncya6ochX2WFrS03xF74L6fNVvcokZP5cCQVcKgx8N0TX/N
-# m6ZUShrsGd8sHNIupyvX1xVJPJ0GLkC9zFyfo9QK+8pzXkYVv8as6Dmk/9L/XeXQ
-# Ygf1Mo8mobPkIXY7Lksu7hu5YEDAvK/c8Amjdn4VWqoOEv96I2AlEDysxO3Mwxfa
-# 8WgUYYMhC0Ts7GJrdrYldWO0fSJ7OqgnNL4EG17SCusYmFu1zKA1dqSi/r1f0g43
-# CIRdVyWpQgCFTjUCMbDsxdcKsHu/htAOYdnRqsylrB1n2VCc/eJxgDAwMcspcrPK
-# Ax79TrkLOnONxN9I9asZPhKc2b0taz2H3BSxBbec1nyu9kBoM+os7H1YbF1SG6C6
-# 4mmdeD+h+wvjC2xenuc/HaGqbgrps0Wn22jpdPO7kO7VM4R2UCMWV3M9xgdhDu52
-# TIkGHxIi8EErd23SL5SZofEoSEGM5PooXU7jHiGLCk5c1uihiypUDsJc3d+ykX6F
-# pXJX5QQTBmQoLwVSQCD4KExUv3Gy+F8PZcA146SQGM5xVd+aUf8tUjA37jyX8raD
-# NBcNa+gqnNoQnewbg+8WZ/mfj794wq6SNBag3UCsPZAsYPhY8zfEqFFZzxc4RFeV
-# /6/i7uw=
+# AQcBMBwGCSqGSIb3DQEJBTEPFw0yMjA4MTEyMTU2NTFaMD8GCSqGSIb3DQEJBDEy
+# BDC1Ygu8MWH3S7xo3NNVW9qEiI4dDz2WlHFAVtk8ifzGL4xAg7y9DIS7L3NskCol
+# IHwwDQYJKoZIhvcNAQEBBQAEggIAQH1eiHFWrl3TqjbthHJrrMkqMqpJTdaiuy3Z
+# YMS20U2/gZWfZIzrc4QDdP6kXc5s1xRRad/p5hm/Dzq2o5GHHW84yqMh/NtVV7sc
+# tMpEnwdH3+VRg/dEGdGWXPuRqyUOWvoFcyAZwW98qNjcF8Tn9gDvdeM+E9j9lrnp
+# 0K1tghMOBv4Jb+1rIIDHRHV738qKFVIRLnyWq3L86LWmwIHOw8pCPKYT5PcctbGQ
+# JaFLBK2hxsuFYHpZG9M8NGH2C4hYVPZodlYVrdeCNc3AYD29BuKKJJJ6Ib8KcOIb
+# yKcqY4w8ZchKK+x9YuV7u4g5F5t/uYBrRKZqX7h/w6u9YZYsFtgRvjyzbZXnlJYQ
+# KUzFUH/cVefjW4knXcDLWUH0W+iHXE4OlDI54X0OETvb2GDg7U3cCqsnDDSiqF1L
+# Jq2vTNzDqxm0z4IjjAiJCcSTiyzP8DhLdZ45wGGPNZIp3ZXG6hAaPJs8T1dtmsLN
+# O7bniExjaGvyzwP5yjwKGa/2Lt3M660ilFeg0Ll1lIHK2AHdMAZ6zzjwM/G0hj88
+# nw77p8hQI+zJaEyM/GAs94HNhdWImq6nSjMY/l9VLewT0my2yNecz1D2AFvVB5DB
+# DIg1psXYXVd/KRQ5GG5mhm2el5V9bVN1mJ8zf3Qi7uu/E3xbKQjATMcWNQhpLj35
+# a3porhk=
 # SIG # End signature block
