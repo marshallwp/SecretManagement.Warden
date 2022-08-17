@@ -3,24 +3,29 @@
 # . '.\ConvertTo-BWEncoding.ps1'
 
 [version]$SupportedVersion = '1.16'
-
+[version]$CurrentVersion
 # check if we should use a specific bw.exe
-if ( $env:BITWARDEN_CLI_PATH ) {
-    $BitwardenCLI = Get-Command $env:BITWARDEN_CLI_PATH -CommandType Application -ErrorAction SilentlyContinue
-} else {
-    $BitwardenCLI = Get-Command -Name bw.exe -CommandType Application -ErrorAction SilentlyContinue
+if ( $env:BITWARDEN_CLI_PATH -and ($BitwardenCLI = Get-Command $env:BITWARDEN_CLI_PATH -CommandType Application -ErrorAction SilentlyContinue) ) {
+    $CurrentVersion = $BitwardenCLI.Version
 }
-
-if ( -not $BitwardenCLI ) {
-    if($IsWindows) { $platform = "windows" }
-    elseif ($IsMacOS) { $platform = "macos" }
+elseif ( $BitwardenCLI = Get-Command -Name bw.exe -CommandType Application -ErrorAction Ignore ) {
+    #? Scoop shims eliminate version numbers, so we ask scoop for the true version.
+    if( $BitwardenCLI.Version -eq '0.0.0.0' -and (Get-Command scoop -ErrorAction Ignore) ) {
+        $CurrentVersion = (scoop info bitwarden-cli).Installed ?? $BitwardenCLI.Version
+    } else {
+        $CurrentVersion = $BitwardenCLI.Version
+    }
+}
+else {
+    if( $IsWindows ) { $platform = "windows" }
+    elseif ( $IsMacOS ) { $platform = "macos" }
     else { $platform = "linux" }
 
     Write-Error "No Bitwarden CLI found in your path, either specify `$env:BITWARDEN_CLI_PATH or put bw.exe in your path.  If the CLI is not installed, you can install it using scoop, chocolatey, npm, or snap. You can also download it directly from: https://vault.bitwarden.com/download/?app=cli&platform=$platform" -ErrorAction Stop
 }
 
-if ( $BitwardenCLI -and $BitwardenCLI.Version -lt $SupportedVersion ) {
-    Write-Warning "Your Bitwarden CLI is version $($BitwardenCLI.Version) and out of date, please upgrade to at least version $SupportedVersion."
+if ( $BitwardenCLI -and $CurrentVersion -lt $SupportedVersion ) {
+    Write-Warning "Your Bitwarden CLI is version $CurrentVersion and out of date, please upgrade to at least version $SupportedVersion."
 }
 
 
