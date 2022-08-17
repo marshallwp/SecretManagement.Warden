@@ -22,7 +22,7 @@ function Get-Secret {
     [System.Collections.Generic.List[string]]$CmdParams = @("get","item")
     $CmdParams.Add( $Name ) #* Do not combine with the above line.  For some reason that causes the function to fail in production.
 
-    if ( $AdditionalParameters.ContainsKey('organizationid')) {
+    if ( $AdditionalParameters.ContainsKey('organizationid') ) {
         $CmdParams.Add( '--organizationid' )
         $CmdParams.Add( $AdditionalParameters['organizationid'] )
     }
