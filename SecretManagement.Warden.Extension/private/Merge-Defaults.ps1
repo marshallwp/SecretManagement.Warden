@@ -17,7 +17,7 @@ function Merge-Defaults {
 
         [string]$BaseDirectory = "$PSScriptRoot\.."
     )
-    $config = Import-LocalizedData -SupportedCommand New-TimeSpan -BaseDirectory $BaseDirectory -FileName "SecretManagement.Bitwarden.Extension.Config.psd1"
+    $config = Import-LocalizedData -SupportedCommand New-TimeSpan -BaseDirectory $BaseDirectory -FileName "SecretManagement.Warden.Extension.Config.psd1"
 
     foreach( $property in $config.Keys ) {
         $AdditionalParameters.$property ??= $config.$property
