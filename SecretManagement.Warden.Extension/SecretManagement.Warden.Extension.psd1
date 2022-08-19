@@ -1,6 +1,6 @@
 @{
-    ModuleVersion = '0.2.5'
-    RootModule = 'SecretManagement.BitWarden.Extension.psm1'
+    ModuleVersion = '0.2.6'
+    RootModule = 'SecretManagement.Warden.Extension.psm1'
     FunctionsToExport = @(
         'Get-Secret',
         'Get-SecretInfo',
