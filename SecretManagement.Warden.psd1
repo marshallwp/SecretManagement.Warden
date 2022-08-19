@@ -4,7 +4,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion = '0.2.5'
+    ModuleVersion = '0.2.6'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -60,7 +60,7 @@
     # FormatsToProcess = @()
 
     # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
-    NestedModules = @('./SecretManagement.BitWarden.Extension')
+    NestedModules = @('./SecretManagement.Warden.Extension')
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
     FunctionsToExport = @()
@@ -89,13 +89,13 @@
         PSData = @{
 
             # Tags applied to this module. These help with module discovery in online galleries.
-            Tags = 'SecretManagement', 'Secrets', 'BitWarden', 'MacOS', 'Linux', 'Windows'
+            Tags = 'SecretManagement', 'Secrets', 'BitWarden', 'Vaultwarden', 'MacOS', 'Linux', 'Windows'
 
             # A URL to the license for this module.
-            LicenseUri = 'https://github.com/BinaryWizard904/SecretManagement.BitWarden/blob/master/LICENSE.txt'
+            LicenseUri = 'https://gitlab.industrialinfo.com/wmarshall/SecretManagement.Warden/blob/master/LICENSE.txt'
 
             # A URL to the main website for this project.
-            ProjectUri = 'https://github.com/BinaryWizard904/SecretManagement.BitWarden'
+            ProjectUri = 'https://gitlab.industrialinfo.com/wmarshall/SecretManagement.Warden'
 
             # A URL to an icon representing this module.
             # IconUri = ''
