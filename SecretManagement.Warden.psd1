@@ -4,10 +4,10 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion = '0.2.6'
+    ModuleVersion = '0.2.7'
 
     # Supported PSEditions
-    # CompatiblePSEditions = @()
+    CompatiblePSEditions = @("Core")
 
     # ID used to uniquely identify this module
     GUID = '2b38766b-6836-4af4-8fd7-0af06e978336'
