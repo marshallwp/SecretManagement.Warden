@@ -22,7 +22,7 @@ Download and Install
 This module has not yet been published to the PowerShell Gallery.  To install, clone/download the repo and specify it directly when registering the vault.
 
 Example:
-`Register-SecretVault -Name "warden" -ModuleName "C:\Git\SecretManagement.BitWarden"`
+`Register-SecretVault -Name "warden" -ModuleName "C:\Git\SecretManagement.Warden"`
 
 ## Registration
 
@@ -30,7 +30,7 @@ Once you have it installed,
 you need to register the module as an extension:
 
 ```pwsh
-Register-SecretVault -ModuleName SecretManagement.BitWarden
+Register-SecretVault -ModuleName SecretManagement.Warden
 ```
 If you wish to use any non-default configurations, put them in a hashtable and pass that to `Register-SecretVault` with the `-VaultParameters` parameter.
 
@@ -42,7 +42,7 @@ $VaultParameters = @{
 	MaximumObjectDepth = 4
 	ResyncCacheIfOlderThan = New-TimeSpan -Hours 2
 }
-Register-SecretVault -ModuleName SecretManagement.BitWarden -VaultParameters $VaultParameters
+Register-SecretVault -ModuleName SecretManagement.Warden -VaultParameters $VaultParameters
 ```
 
 
