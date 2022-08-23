@@ -1,8 +1,10 @@
 <#
 .SYNOPSIS
-    Retrieves a single secret from the vault.
+    Retrieves a single secret from the vault or null if no secret is found.
 .DESCRIPTION
     Retrives a single secret from the vault.  Corresponds with the "bw get" functionality of the CLI.
+.NOTES
+    Per SecretManagement documentation, "The Get-Secret cmdlet writes the retrieved secret value to the output pipeline on return, or null if no secret was found. It should write an error only if an abnormal condition occurs."
 #>
 function Get-Secret {
     [CmdletBinding()]
@@ -28,7 +30,13 @@ function Get-Secret {
         $CmdParams.Add( $AdditionalParameters['organizationid'] )
     }
 
-    $Result = Invoke-BitwardenCLI @CmdParams
+    try {
+        $Result = Invoke-BitwardenCLI @CmdParams
+    }
+    # Per SecretManagement Readme, if a secret is not found, Get-Secret should return null, not an error.
+    catch [System.Management.Automation.ItemNotFoundException],[System.DirectoryServices.AccountManagement.NoMatchingPrincipalException] {
+        return $null
+    }
 
     switch ( $Result.type ) {
         "SecureNote" {
