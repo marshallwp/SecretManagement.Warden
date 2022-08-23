@@ -1,3 +1,11 @@
+<#
+.SYNOPSIS
+    Removes a secret from the secret vault.
+.DESCRIPTION
+    Removes a secret from the secret vault.
+.NOTES
+    Per SecretManagement documentation, "The… Remove-Secret… [function does] not write any data to the pipeline, i.e., [it does] not return any data."
+#>
 function Remove-Secret {
     [CmdletBinding()]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSReviewUnusedParameter", "VaultName", Justification = "Function must accept this parameter to be valid.")]

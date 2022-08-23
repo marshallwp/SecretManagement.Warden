@@ -10,11 +10,11 @@ function Unlock-SecretVault {
 
     try {
         Invoke-BitwardenCLI unlock "$(ConvertFrom-SecureString $Password -AsPlainText)"
-        Sync-BitwardenVault -Force
+        Sync-BitwardenVault
     }
     catch {
-        $ex = New-Object System.Security.Authentication.AuthenticationException "$VaultName Vault Unlock operation failed with error: $_"
-        Write-Error -Exception $ex -ErrorId "BitwardenUnlockFailed" -Category AuthenticationError -ErrorAction Stop
+        $ex = New-Object System.Security.Authentication.AuthenticationException "$_"
+        throw $ex   # In Unlock-SecretVault, throw produces nicer errors than Write-Error.
     }
 
     Write-Verbose $env:BW_SESSION

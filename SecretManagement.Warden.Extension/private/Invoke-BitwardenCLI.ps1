@@ -30,7 +30,7 @@ if ( $BitwardenCLI -and $CurrentVersion -lt $SupportedVersion ) {
 
 
 $__Commands = @{
-    login          = '--raw --method --code --sso --check --help'
+    login          = '--apikey --check --raw --method --code --sso  --help'
     logout         = '--help'
     lock           = '--help'
     unlock         = '--check --raw --help'
@@ -145,6 +145,7 @@ function Invoke-BitwardenCLI {
                 'Not found.' {
                     $ex = New-Object System.DirectoryServices.AccountManagement.NoMatchingPrincipalException "Not found."
                     Write-Error $ex -Category ObjectNotFound -ErrorAction Stop
+                    break
                 }
                 'More than one result was found*' {
                     $errparse = @()
@@ -158,24 +159,52 @@ $($errparse  | Format-Table ID, Name | Out-String )
 "@
                     $ex = New-Object System.DirectoryServices.AccountManagement.MultipleMatchesException $msg
                     Write-Error -Exception $ex -Category InvalidResult -ErrorId "MultipleMatchesReturned" -ErrorAction Stop
+                    break
                 }
-                default { Write-Error $BWError -ErrorAction Stop }
+                'You are not logged in.' {
+                    # If you are not logged in, but API Key information is present, login with that and rerun the command. This allows for silent resolution of this error when running in an automated fashion.
+                    if($null -ne $env:BW_CLIENTID -and $null -ne $env:BW_CLIENTSECRET) {
+                        Invoke-BitwardenCLI login --apikey --quiet
+                        Invoke-BitwardenCLI @args
+                        exit
+                    }
+                }
+                default { Write-Error $BWError -ErrorAction Stop; break }
             }
         }
 
-        # As passing exit codes to the parent process does not seem to be working, we pass $true and $false instead.
-        if ( $ps.StartInfo.ArgumentList.Contains('--quiet') ) {
-            if($ps.ExitCode -eq 0) { return $true } else { return $false }
-         }
-
-        if ( $ps.StartInfo.ArgumentList.Contains('--raw') ) { return $Result }
-
+#region Workaround for 'bw get' ignoring the --organizationid flag.
+        # This was moved above the check for a '--raw' argument so the workaround can work.
         try {
             [object[]]$JsonResult = $Result | ConvertFrom-Json -ErrorAction SilentlyContinue
         } catch {
             Write-Verbose "JSON Parse Message:"
             Write-Verbose $_.Exception.Message
         }
+
+        # This is the main workaround code.
+        if ( $ps.StartInfo.ArgumentList.Contains('get') -and $ps.StartInfo.ArgumentList.Contains('--organizationid') ) {
+            # This requires an ordered argument list to work.
+            [Guid]$org = [Guid]::Parse($ps.StartInfo.ArgumentList.Item($ps.StartInfo.ArgumentList.IndexOf('--organizationid')+1))
+            $JsonResult = $JsonResult | Where-Object { $_.organizationId -eq $org }
+
+            if(!$JsonResult) {
+                $ex = New-Object System.DirectoryServices.AccountManagement.NoMatchingPrincipalException "Not found."
+                Write-Error $ex -Category ObjectNotFound -ErrorAction Stop
+            }
+            elseif ( $ps.StartInfo.ArgumentList.Contains('--raw') ) {
+                return $JsonResult | ConvertTo-Json -Depth 5 -Compress
+            }
+        }
+#endregion Workaround for 'bw get' ignoring the --organizationid flag.
+
+        # As passing exit codes to the parent process does not seem to be working, we pass $true and $false instead.
+        if ( $ps.StartInfo.ArgumentList.Contains('--quiet') ) {
+            if($ps.ExitCode -eq 0) { return $true } else { return $false }
+        }
+
+        if ( $ps.StartInfo.ArgumentList.Contains('--raw') ) { return $Result }
+
 
         if ( $JsonResult -is [array] ) {
             $JsonResult.ForEach({
@@ -211,7 +240,12 @@ $($errparse  | Format-Table ID, Name | Out-String )
             if ( $Result -and $Result -like '*--session*' ) {
                 $env:BW_SESSION = $Result.Trim().Split(' ')[-1]
                 return $Result[0]
-            } else {
+            }
+            #? Is the Result an empty JSON array?  Then return an empty array.
+            elseif ( $Result -eq '[]' ) {
+                return ,@()
+            }
+            else {
                 return $Result
             }
         }

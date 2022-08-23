@@ -1,3 +1,11 @@
+<#
+.SYNOPSIS
+    Retrieves metadata about one or more secrets.  Can be piped to Get-Secret.
+.DESCRIPTION
+    Retrieves metadata about one or more secrets matching the filter.
+.NOTES
+    Per SecretManagement documentation, "The Get-SecretInfo cmdlet writes an array of Microsoft.PowerShell.SecretManagement.SecretInformation type objects to the output pipeline or an empty array if no matches were found."
+#>
 function Get-SecretInfo {
     [CmdletBinding()]
     param(
@@ -18,10 +26,9 @@ function Get-SecretInfo {
         $CmdParams.Add( $Filter )
     }
 
-    if ( $AdditionalParameters.ContainsKey('folderName') ) {
-        $folder = Invoke-BitwardenCLI get folder "$($AdditionalParameters.folderName)"
-        $CmdParams.Add( '--folderid' )
-        $CmdParams.Add( $folder.id )
+    if ( $AdditionalParameters.ContainsKey('organizationid')) {
+        $CmdParams.Add( '--organizationid' )
+        $CmdParams.Add( $AdditionalParameters['organizationid'] )
     }
 
     $Results = Invoke-BitwardenCLI @CmdParams
