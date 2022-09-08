@@ -98,7 +98,7 @@
             ProjectUri = 'https://gitlab.industrialinfo.com/wmarshall/SecretManagement.Warden'
 
             # A URL to an icon representing this module.
-            # IconUri = ''
+            IconUri = 'https://gitlab.industrialinfo.com/wmarshall/SecretManagement.Warden/images/warden_extension_logo_85x85.png'
 
             # ReleaseNotes of this module
             # ReleaseNotes = ''
