@@ -100,7 +100,7 @@ While the prompt is the only _secure_ way to use `bw login` directly, you _can_ 
 
 ## Module Installation
 
-This module has not yet been published to the PowerShell Gallery.  To install, download the latest release and extract the contents to the directory:
+This module has not yet been published to the PowerShell Gallery.  To install, download the latest [release](https://gitlab.industrialinfo.com/wmarshall/SecretManagement.Warden/-/releases) (Do not clone the repo; code is only signed during the release process) and extract the contents to the directory:
 
 * `$HOME\Documents\PowerShell\Modules\SecretManagement.Warden` (Windows)
 * `$HOME/.local/share/powershell/Modules/SecretManagement.Warden` (Linux or Mac)
