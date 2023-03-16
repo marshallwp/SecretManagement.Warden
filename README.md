@@ -1,5 +1,5 @@
 # SecretManagement extension for BitWarden
-This module is an extension vault for the PowerShell SecretManagement module. It wraps around the official [Bitwarden CLI](https://github.com/bitwarden/clients/tree/master/apps/cli) to interface with Bitwarden and Vaultwarden instances. This module works over all supported PowerShell platforms on Windows, Linux, and macOS.
+This module is an extension vault for the [Microsoft.PowerShell.SecretManagement](https://www.powershellgallery.com/packages/Microsoft.PowerShell.SecretManagement) module. It wraps around the official [Bitwarden CLI](https://github.com/bitwarden/clients/tree/master/apps/cli) to interface with Bitwarden and Vaultwarden instances. This module works over all supported PowerShell platforms on Windows, Linux, and macOS.
 
 Supported Commands:
 `Get-Secret`, `Get-SecretInfo`, `Remove-Secret`, `Set-Secret`, `Test-SecretVault`, `Unlock-SecretVault`
@@ -77,15 +77,27 @@ bw config server "https://your.bw.domain.com"
 Lastly, the `SecretManagement` module can only handle unlock operations, not login operations.  As such you will need to login before you can utilize this extension.
 
 ### (Recommended) Utilize API Key for Login
-This Module is designed for unattended usage and expects you to implement login via [API Key environmental variables](https://bitwarden.com/help/cli/#using-an-api-key).
-Once you have retrieved your API credentials, you can permanently set the required environmental variables through the GUI via Advanced System Properties or you can use the following PowerShell commands.
+This Module is designed for unattended usage and expects you to implement login via [API Key environmental variables](https://bitwarden.com/help/cli/#using-an-api-key).  If setup this way, the `SecretManagement.Warden` extension will use these credentials to silently resolve any "You are not logged in" errors.  NOTE: While this means you will effectively always be logged in, you will still need to unlock the vault with your password every session to gain access to secrets.
 
-```pwsh
-[Environment]::SetEnvironmentVariable("BW_CLIENTID",'MyClientID',"User")
-[Environment]::SetEnvironmentVariable("BW_CLIENTSECRET",'SuperSecret',"User")
-```
+To configure automatic API Key usage follow the steps below:
 
-After these are set, the `SecretManagement.Warden` extension will use these credentials to silently resolve any "You are not logged in" errors.  NOTE: While this means you will effectively always be logged in, you will still need to unlock the vault with your password every session to gain access to secrets.
+1. Retrieve your personal API Key. (See [Get your personal API key](https://bitwarden.com/help/personal-api-key/#get-your-personal-api-key) for more details than the brief below).
+	1. Open the web vault on your Bitwarden/Vaultwarden instance and login.
+	2. Select the profile icon and click _Account Settings_ from the dropdown.
+	3. Under the Account Settings menu, select the _Security_ page and _Keys_ tab.
+	4. Click the _View API Key_ button at the bottom.
+2. Permanently set the required environmental variables through the GUI via _Advanced System Properties_ or run the following PowerShell commands.
+	```pwsh
+	[Environment]::SetEnvironmentVariable("BW_CLIENTID",'MyClientID',"User")
+	[Environment]::SetEnvironmentVariable("BW_CLIENTSECRET",'SuperSecret',"User")
+	```
+
+#### Verify Proper Configuration
+Check that everything is setup correctly by running the command: `bw login --check`  If the cli tells you that you are logged in everything is working.  If not, try the following troubleshooting steps.
+
+* Open a PowerShell session.
+* Run `bw login --apikey`.  If an error about the server is returned, you likely made a typo when specifying the server URL.  Fix this by re-running `bw config server "https://your.bw.domain.com"`
+* Run `gci env:BW_CLIENT*`. This should return at least two entries: **BW_CLIENTID** and **BW_CLIENTSECRET**.  If either are missing, go through the steps detailed in [Utilize API Key for Login](#recommended-utilize-api-key-for-login) again.
 
 ### (Not Recommended) Use Bitwarden CLI to Login
 If running interactively you can run `bw login` to bring up a login prompt.  Unlike API Keys, this will only last a single session.
@@ -98,6 +110,12 @@ While the prompt is the only _secure_ way to use `bw login` directly, you _can_ 
 >   * This one can be really bad as the file is stored unencrypted long-term and `bw login` does not contain any exclusion words.
 >   * Not an issue when using the `SecretManagement` module or extensions as all public commands include the word "secret" in them and all private commands are run in a isolated session that does not store history.
 
+## Microsoft.PowerShell.SecretManagement Module
+As this module is an extension, you need to have the base module installed first.  You can install this module from the PowerShell Gallery via the command:
+```pwsh
+Install-Module -Name Microsoft.PowerShell.SecretManagement
+```
+
 ## Module Installation
 
 This module has not yet been published to the PowerShell Gallery.  To install, download the latest [release](https://gitlab.industrialinfo.com/wmarshall/SecretManagement.Warden/-/releases) (Do not clone the repo; code is only signed during the release process) and extract the contents to the directory:
@@ -107,6 +125,7 @@ This module has not yet been published to the PowerShell Gallery.  To install, d
 
 Then Register the vault with SecretManagement as usual, e.g. `Register-SecretVault -Name "warden" -ModuleName "SecretManagement.Warden"`
 
+### Optional Settings
 If you wish to use any non-default configurations, put them in a hashtable and pass that to `Register-SecretVault` with the `-VaultParameters` parameter.
 
 Example:
@@ -142,6 +161,8 @@ As a last resort you can call the Bitwarden CLI directly to force the sync with 
 
 ## Known Issues
 When you first register a vault using this extension, commands like `Test-SecretVault` or `Get-Secret` may report that it is unable to run on the registered vault.  This error message is incorrect, in actuality the vault is just locked.  To resolve the issue, run `Unlock-SecretVault`.  Future output from `Test-SecretVault` should correctly notify you that the vault is locked.
+
+`Unlock-SecretVault` will stall if you specified an invalid URL when configuring the location of the server.
 
 When automating usage of this Module use the API key for login.  This way you can assume the user is logged in and that if `Test-SecretVault` returns `false` it's because the vault is either locked or inaccessible.
 
