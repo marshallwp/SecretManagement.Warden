@@ -4,7 +4,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion = '0.2.8'
+    ModuleVersion = '0.2.10'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Core")
@@ -13,13 +13,13 @@
     GUID = '2b38766b-6836-4af4-8fd7-0af06e978336'
 
     # Author of this module
-    Author = 'William Marshall'
+    Author = 'William P. Marshall'
 
     # Company or vendor of this module
     CompanyName = 'Industrial Info Resources, Inc.'
 
     # Copyright statement for this module
-    Copyright = '© 2022 Industrial Info Resources, Inc. All rights reserved.'
+    Copyright = '© 2023 Industrial Info Resources, Inc. All rights reserved.'
 
     # Description of the functionality provided by this module
     Description = 'Bitwarden/Vaultwarden extension for the PowerShell SecretManager allowing you to Get, Set, and Remove secrets in a standardized way.'
@@ -121,5 +121,4 @@
 
     # Default prefix for commands exported from this module. Override the default prefix using Import-Module -Prefix.
     # DefaultCommandPrefix = ''
-
 }
