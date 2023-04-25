@@ -118,7 +118,7 @@ Install-Module -Name Microsoft.PowerShell.SecretManagement
 
 ## Module Installation
 
-This module has not yet been published to the PowerShell Gallery.  To install, download the latest [release](https://gitlab.industrialinfo.com/wmarshall/SecretManagement.Warden/-/releases) (Do not clone the repo; code is only signed during the release process) and extract the contents to the directory:
+This module has not yet been published to the PowerShell Gallery.  To install, download the latest [release](https://gitlab.industrialinfo.com/wmarshall/SecretManagement.Warden/-/releases) (Do not clone the repo; code is only signed during the release process).  Open the downloaded file, open the only directory therein, and extract the contents of that subdirectory to the directory:
 
 * `$HOME\Documents\PowerShell\Modules\SecretManagement.Warden` (Windows)
 * `$HOME/.local/share/powershell/Modules/SecretManagement.Warden` (Linux or Mac)
