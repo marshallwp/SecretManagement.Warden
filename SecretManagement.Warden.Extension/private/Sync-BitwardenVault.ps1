@@ -22,14 +22,13 @@ function Sync-BitwardenVault {
     if(Test-Path -Path $CacheLocation -PathType Leaf) {
         $LastSyncedTime = Get-Content -Path $CacheLocation | Get-Date
     }
-    # If the cache file does not exist or is empty query the Bitwarden CLI.
-    if (!$LastSyncedTime) {
+    else {
         New-Item $CacheLocation -Force | Out-Null # Create the missing file.
         $LastSyncedTime = Invoke-BitwardenCLI sync --last | Get-Date
     }
 
-    # Sync Cache if $Force or if time since $LastSyncedTime is greater than $ResyncCacheIfOlderThan time back.
-    if($Force -or (New-TimeSpan -Start $LastSyncedTime).TotalSeconds -gt $ResyncCacheIfOlderThan.TotalSeconds) {
+    # Sync Cache if $Force or if $LastSyncedTime is NULL or if time since $LastSyncedTime is greater than $ResyncCacheIfOlderThan time back.
+    if($Force -or !$LastSyncedTime -or (New-TimeSpan -Start $LastSyncedTime).TotalSeconds -gt $ResyncCacheIfOlderThan.TotalSeconds) {
         # If so, sync the vault.
         Invoke-BitwardenCLI sync --quiet
         # And update the cache.
