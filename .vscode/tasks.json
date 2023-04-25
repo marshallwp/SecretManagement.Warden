@@ -1,0 +1,12 @@
+{
+	// See https://go.microsoft.com/fwlink/?LinkId=733558
+	// for the documentation about the tasks.json format
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "sign-code",
+			"type": "shell",
+			"command": "$CodeSigningSecret = Get-Secret 7ff57fcd-dcf7-4ee9-8506-5d53b28c63a1; $cert = Get-PfxCertificate -FilePath $CodeSigningSecret.uris[0].uri -Password $CodeSigningSecret.password; $files = Get-ChildItem ${workspaceFolder} -Filter '*.ps1' -Recurse; $files += Get-ChildItem ${workspaceFolder} -Filter '*.psm1' -Recurse; $files | Set-AuthenticodeSignature -Certificate $cert -TimestampServer 'http://timestamp.sectigo.com'",
+		}
+	]
+}
