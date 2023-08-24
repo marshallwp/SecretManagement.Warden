@@ -59,6 +59,9 @@ Download and Install
 			<img src="https://snapcraft.io/static/images/badges/en/snap-store-black.svg" alt='Get Bitwarden CLI from the Snap Store' height="52px"/>
 		</a>
 	</td>
+	<td><a href="https://learn.microsoft.com/en-us/windows/package-manager/winget/">winget</a><br>
+		<code>winget install -e Bitwarden.CLI --source winget</code>
+	</td>
 	<td>Direct Download<br>
 		<a href="https://vault.bitwarden.com/download/?app=cli&platform=windows">Windows</a> |
 		<a href="https://vault.bitwarden.com/download/?app=cli&platform=macos">macOS</a> |
