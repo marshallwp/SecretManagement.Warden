@@ -34,7 +34,7 @@ Download and Install
 <table>
 <tbody>
 <tr>
-	<th scope="row" colspan="5">The Latest version of the Bitwarden CLI From:</th>
+	<th scope="row" colspan="6">The Latest version of the Bitwarden CLI From:</th>
 </tr>
 <tr>
 	<td>
