@@ -12,7 +12,12 @@ elseif ( $BitwardenCLI = Get-Command -Name bw.exe -CommandType Application -Erro
     #? Scoop shims eliminate version numbers, so we ask scoop for the true version.
     if( $BitwardenCLI.Version -eq '0.0.0.0' -and (Get-Command scoop -ErrorAction Ignore) ) {
         $CurrentVersion = (scoop info bitwarden-cli).Installed ?? $BitwardenCLI.Version
-    } else {
+    }
+    #? WinGet install version has invalid version numbers, and the winget cli is slow. Therefore, ask bw.exe what version it is.
+    if( $BitwardenCLI.Source -like "*\WinGet\Links\bw.exe" ) {
+        $CurrentVersion = bw --version
+    }
+    else {
         $CurrentVersion = $BitwardenCLI.Version
     }
 }
