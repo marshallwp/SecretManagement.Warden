@@ -113,15 +113,15 @@ While the prompt is the only _secure_ way to use `bw login` directly, you _can_ 
 >   * This one can be really bad as the file is stored unencrypted long-term and `bw login` does not contain any exclusion words.
 >   * Not an issue when using the `SecretManagement` module or extensions as all public commands include the word "secret" in them and all private commands are run in a isolated session that does not store history.
 
-## Microsoft.PowerShell.SecretManagement Module
-As this module is an extension, you need to have the base module installed first.  You can install this module from the PowerShell Gallery via the command:
-```pwsh
-Install-Module -Name Microsoft.PowerShell.SecretManagement
-```
-
 ## Module Installation
 
-This module has not yet been published to the PowerShell Gallery.  To install, download the latest [release](https://gitlab.industrialinfo.com/wmarshall/SecretManagement.Warden/-/releases) (Do not clone the repo; code is only signed during the release process).  Open the downloaded file, open the only directory therein, and extract the contents of that subdirectory to the directory:
+This module has been published to the PowerShell Gallery.  To install it and its PowerShell dependencies from there run:
+```pwsh
+Install-Module -Name SecretManagement.Warden
+```
+
+Alternatively, manually install Microsoft.PowerShell.SecretManagement using the command: `Install-Module -Name Microsoft.PowerShell.SecretManagement`.
+Next, download the latest [release](https://gitlab.industrialinfo.com/wmarshall/SecretManagement.Warden/-/releases) (Do not clone the repo; code is only signed during the release process).  Open the downloaded file, open the only directory therein, and extract the contents of that subdirectory to the directory:
 
 * `$HOME\Documents\PowerShell\Modules\SecretManagement.Warden` (Windows)
 * `$HOME/.local/share/powershell/Modules/SecretManagement.Warden` (Linux or Mac)
