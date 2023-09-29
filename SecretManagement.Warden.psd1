@@ -4,7 +4,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion = '1.0.0'
+    ModuleVersion = '1.0.1'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Core")
@@ -92,13 +92,13 @@
             Tags = 'SecretManagement', 'Secrets', 'BitWarden', 'Vaultwarden', 'MacOS', 'Linux', 'Windows'
 
             # A URL to the license for this module.
-            LicenseUri = 'https://github.com/BinaryWizard904/SecretManagement.Warden/blob/master/LICENSE.txt'
+            LicenseUri = 'https://github.com/BinaryWizard904/SecretManagement.Warden/blob/main/LICENSE.txt'
 
             # A URL to the main website for this project.
             ProjectUri = 'https://github.com/BinaryWizard904/SecretManagement.Warden'
 
             # A URL to an icon representing this module.
-            IconUri = 'https://github.com/BinaryWizard904/SecretManagement.Warden/images/warden_extension_logo_85x85.png'
+            IconUri = 'https://raw.githubusercontent.com/BinaryWizard904/SecretManagement.Warden/main/images/warden_extension_logo_85x85.png'
 
             # ReleaseNotes of this module
             # ReleaseNotes = ''
