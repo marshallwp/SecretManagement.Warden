@@ -4,7 +4,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion = '0.2.14'
+    ModuleVersion = '1.0.0'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Core")
@@ -22,7 +22,7 @@
     Copyright = '© 2023 Industrial Info Resources, Inc. All rights reserved.'
 
     # Description of the functionality provided by this module
-    Description = 'Bitwarden/Vaultwarden extension for the PowerShell SecretManager allowing you to Get, Set, and Remove secrets in a standardized way.'
+    Description = 'Bitwarden/Vaultwarden extension for the PowerShell SecretManager allowing you to Get, Set, and Remove secrets in a standardized way. Supports storing and retrieving PowerShell Objects as secrets.  Targets automated usage.'
 
     # Minimum version of the PowerShell engine required by this module
     PowerShellVersion = '7.0'
@@ -92,19 +92,19 @@
             Tags = 'SecretManagement', 'Secrets', 'BitWarden', 'Vaultwarden', 'MacOS', 'Linux', 'Windows'
 
             # A URL to the license for this module.
-            LicenseUri = 'https://gitlab.industrialinfo.com/wmarshall/SecretManagement.Warden/blob/master/LICENSE.txt'
+            LicenseUri = 'https://github.com/BinaryWizard904/SecretManagement.Warden/blob/master/LICENSE.txt'
 
             # A URL to the main website for this project.
-            ProjectUri = 'https://gitlab.industrialinfo.com/wmarshall/SecretManagement.Warden'
+            ProjectUri = 'https://github.com/BinaryWizard904/SecretManagement.Warden'
 
             # A URL to an icon representing this module.
-            IconUri = 'https://gitlab.industrialinfo.com/wmarshall/SecretManagement.Warden/images/warden_extension_logo_85x85.png'
+            IconUri = 'https://github.com/BinaryWizard904/SecretManagement.Warden/images/warden_extension_logo_85x85.png'
 
             # ReleaseNotes of this module
             # ReleaseNotes = ''
 
             # Prerelease string of this module
-            Prerelease = 'beta'
+            # Prerelease = ''
 
             # Flag to indicate whether the module requires explicit user acceptance for install/update/save
             # RequireLicenseAcceptance = $false
