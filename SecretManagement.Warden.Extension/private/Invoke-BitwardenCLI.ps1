@@ -14,7 +14,7 @@ elseif ( $BitwardenCLI = Get-Command -Name bw.exe -CommandType Application -Erro
         $CurrentVersion = (scoop info bitwarden-cli).Installed ?? $BitwardenCLI.Version
     }
     #? WinGet install version has invalid version numbers, and the winget cli is slow. Therefore, ask bw.exe what version it is.
-    if( $BitwardenCLI.Source -like "*\WinGet\Links\bw.exe" ) {
+    elseif( $BitwardenCLI.Source -like "*\WinGet\Links\bw.exe" ) {
         $CurrentVersion = bw --version
     }
     else {
