@@ -2,7 +2,7 @@
 # . '..\classes\BitwardenPasswordHistory.ps1'
 # . '.\ConvertTo-BWEncoding.ps1'
 
-[version]$SupportedVersion = '2022.8.0'
+[version]$MinSupportedVersion = '2022.8.0'
 [version]$CurrentVersion
 # check if we should use a specific bw.exe
 if ( $env:BITWARDEN_CLI_PATH -and ($BitwardenCLI = Get-Command $env:BITWARDEN_CLI_PATH -CommandType Application -ErrorAction SilentlyContinue) ) {
@@ -11,7 +11,7 @@ if ( $env:BITWARDEN_CLI_PATH -and ($BitwardenCLI = Get-Command $env:BITWARDEN_CL
 elseif ( $BitwardenCLI = Get-Command -Name bw.exe -CommandType Application -ErrorAction Ignore ) {
     #? Scoop shims eliminate version numbers, so we ask scoop for the true version.
     if( $BitwardenCLI.Version -eq '0.0.0.0' -and (Get-Command scoop -ErrorAction Ignore) ) {
-        $CurrentVersion = (scoop info bitwarden-cli).Installed ?? $BitwardenCLI.Version
+        $CurrentVersion = (scoop list bitwarden-cli 6> $null).Version ?? $BitwardenCLI.Version
     }
     #? WinGet install version has invalid version numbers, and the winget cli is slow. Therefore, ask bw.exe what version it is.
     elseif( $BitwardenCLI.Source -like "*\WinGet\Links\bw.exe" ) {
@@ -29,8 +29,11 @@ else {
     Write-Error "No Bitwarden CLI found in your path, either specify `$env:BITWARDEN_CLI_PATH or put bw.exe in your path.  If the CLI is not installed, you can install it using scoop, chocolatey, npm, snap, or winget. You can also download it directly from: https://vault.bitwarden.com/download/?app=cli&platform=$platform" -ErrorAction Stop
 }
 
-if ( $BitwardenCLI -and $CurrentVersion -lt $SupportedVersion ) {
-    Write-Warning "Your Bitwarden CLI is version $CurrentVersion and out of date, please upgrade to at least version $SupportedVersion."
+if ( $BitwardenCLI -and $CurrentVersion -lt $MinSupportedVersion ) {
+    Write-Warning "Your Bitwarden CLI is version $CurrentVersion and is out of date. Please upgrade to at least version $MinSupportedVersion."
+}
+elseif ( $BitwardenCLI -and $CurrentVersion -eq '2023.12.1') {
+    Write-Warning "Your Bitwarden CLI is version $CurrentVersion. This version of the CLI has a known issue affecting bw list, which is used to check if the vault is unlocked due to bug: https://github.com/bitwarden/clients/issues/2729. It is `e[3mstrongly`e[23m recomended you move to another version. Otherwise you will need to constantly logout and login again."
 }
 
 
@@ -50,7 +53,7 @@ $__Commands = @{
     confirm        = '--organizationid --help'
     import         = '--formats --help'
     export         = '--output --format --organizationid --help'
-    generate       = '--uppercase --lowercase --number --special --passphrase --length --words --separator --help'
+    generate       = '--uppercase --lowercase --capitalize --number --special --passphrase --length --words --minNumber --minSpecial --separator --includeNumber --ambiguous --help'
     encode         = '--help'
     config         = '--web-vault --api --identity --icons --notifications --events --help'
     update         = '--raw --help'
@@ -174,6 +177,10 @@ $($errparse  | Format-Table ID, Name | Out-String )
                         exit
                     }
                 }
+                '*mac failed.*' {
+                    Write-Error "bitwarden-cli is returning 'mac failed.' error(s) alongside content, which may result in invalid results. The short-term resolution is to logout and then login again. Some comments I've seen suggest you might try API key rotation." -Category AuthenticationError -ErrorAction Continue
+                    break
+                }
                 default { Write-Error $BWError -ErrorAction Stop; break }
             }
         }
@@ -208,8 +215,9 @@ $($errparse  | Format-Table ID, Name | Out-String )
             if($ps.ExitCode -eq 0) { return $true } else { return $false }
         }
 
-        if ( $ps.StartInfo.ArgumentList.Contains('--raw') ) { return $Result }
-
+        # Help output tends to get truncated as the brackets can look kinda like JSON.
+        if ( $ps.StartInfo.ArgumentList.Contains('--raw') -or
+             $ps.StartInfo.ArgumentList.Contains('help') ) { return $Result }
 
         if ( $JsonResult -is [array] ) {
             $JsonResult.ForEach({
