@@ -4,7 +4,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion = '1.0.1'
+    ModuleVersion = '1.0.2'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Core")
@@ -19,10 +19,10 @@
     CompanyName = 'Industrial Info Resources, Inc.'
 
     # Copyright statement for this module
-    Copyright = '© 2023 Industrial Info Resources, Inc. All rights reserved.'
+    Copyright = '© 2024 Industrial Info Resources, Inc. All rights reserved.'
 
     # Description of the functionality provided by this module
-    Description = 'Bitwarden/Vaultwarden extension for the PowerShell SecretManager allowing you to Get, Set, and Remove secrets in a standardized way. Supports storing and retrieving PowerShell Objects as secrets.  Targets automated usage.'
+    Description = 'Bitwarden/Vaultwarden extension for the PowerShell SecretManager allowing you to Get, Set, and Remove secrets in a standardized way. Supports storing and retrieving PowerShell Objects as secrets. Can be used for automated secret retrieval/management.'
 
     # Minimum version of the PowerShell engine required by this module
     PowerShellVersion = '7.0'
