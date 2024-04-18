@@ -13,9 +13,9 @@ elseif ( $BitwardenCLI = Get-Command -Name bw.exe -CommandType Application -Erro
     if( $BitwardenCLI.Version -eq '0.0.0.0' -and (Get-Command scoop -ErrorAction Ignore) ) {
         $CurrentVersion = (scoop list bitwarden-cli 6> $null).Version ?? $BitwardenCLI.Version
     }
-    #? WinGet install version has invalid version numbers, and the winget cli is slow. Therefore, ask bw.exe what version it is.
+    #? WinGet shims have the wrong version, and the winget cli has output that is difficult to parse reliably. Therefore, ask bw.exe what version it is.
     elseif( $BitwardenCLI.Source -like "*\WinGet\Links\bw.exe" ) {
-        $CurrentVersion = bw --version
+        $CurrentVersion = .$BitwardenCLI.Source --version
     }
     else {
         $CurrentVersion = $BitwardenCLI.Version
@@ -178,7 +178,7 @@ $($errparse  | Format-Table ID, Name | Out-String )
                     }
                 }
                 '*mac failed.*' {
-                    Write-Error "bitwarden-cli is returning 'mac failed.' error(s) alongside content, which may result in invalid results. The short-term resolution is to logout and then login again. Some comments I've seen suggest you might try API key rotation." -Category AuthenticationError -ErrorAction Continue
+                    Write-Warning "bitwarden-cli is returning 'mac failed.' error(s) alongside content, which may result in invalid results. The short-term resolution is to logout and then login again. Some comments I've seen suggest you might try API key rotation."
                     break
                 }
                 default { Write-Error $BWError -ErrorAction Stop; break }

@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2022 Industrial Info Resources, Inc.
+Copyright (c) 2022-2024 Industrial Info Resources, Inc.
 Copyright (c) 2021 Shannon Brooks
 Copyright (c) 2020 Gaston Paquette
 

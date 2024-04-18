@@ -2,7 +2,7 @@
 .SYNOPSIS
     Converts a PSCustomObject to a HashTable.
 .NOTES
-    This is mainly intended to help workaround how the -AsHashTable parameter in ConvertFrom-JSON was added in PowerShell 6.0.
+    In PowerShell 7.3+, "ConvertFrom-Json -AsHashtable" outputs an [OrderedHashtable] object. Unfortunately, Get-Secret does not allow you to return an OrderedHashtable, so this function is used to create a regular, unordered variant.
 .EXAMPLE
     $json | ConvertFrom-Json | ConvertTo-HashTable
     Parses JSON string and outputs a HashTable.
