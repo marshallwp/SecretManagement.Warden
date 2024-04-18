@@ -119,9 +119,8 @@ This module has been published to the PowerShell Gallery.  To install it and its
 ```pwsh
 Install-Module -Name SecretManagement.Warden
 ```
-
-Alternatively, manually install Microsoft.PowerShell.SecretManagement using the command: `Install-Module -Name Microsoft.PowerShell.SecretManagement`.
-Next, download the latest [release](https://gitlab.industrialinfo.com/wmarshall/SecretManagement.Warden/-/releases) (Do not clone the repo; code is only signed during the release process).  Open the downloaded file, open the only directory therein, and extract the contents of that subdirectory to the directory:
+### Manual Install
+Alternatively, manually install its Microsoft.PowerShell.SecretManagement dependency then download the latest [release](https://gitlab.industrialinfo.com/wmarshall/SecretManagement.Warden/-/releases) (Do not clone the repo; code is only signed during the release process).  Open the downloaded file, open the only directory therein, and extract the contents of that subdirectory to the directory:
 
 * `$HOME\Documents\PowerShell\Modules\SecretManagement.Warden` (Windows)
 * `$HOME/.local/share/powershell/Modules/SecretManagement.Warden` (Linux or Mac)
