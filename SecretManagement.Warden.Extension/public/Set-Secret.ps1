@@ -19,7 +19,7 @@ function Set-Secret
     $IsNewItem = $false
 
     # If OldSecret does not exist, assume this is a new secret and retrieve a secret template.
-    if( ! $OldSecret ) {
+    if( !$OldSecret ) {
         $IsNewItem = $true
 
         switch( $Secret.GetType().Name ) {
