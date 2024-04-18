@@ -4,7 +4,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion = '1.0.3'
+    ModuleVersion = '1.1.0'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Core")
@@ -101,7 +101,14 @@
             IconUri = 'https://raw.githubusercontent.com/BinaryWizard904/SecretManagement.Warden/main/images/warden_extension_logo_85x85.png'
 
             # ReleaseNotes of this module
-            # ReleaseNotes = ''
+            ReleaseNotes = "### Code Changes
+- Changed how the version of winget-installed bitwarden-cli is checked to use the full path of the bw.exe command.
+### Documentation Changes
+- Updated Installation section of README.md
+- Updated NOTES section of the help for ConvertTo-Hashtable.
+- Updated license copyright year range.
+### Breaking Changes
+- The `"mac failed.`" error message was demoted to a warning. I have not seen it cause an issue in a very long time, but I'm not sure why it stopped."
 
             # Prerelease string of this module
             # Prerelease = ''
