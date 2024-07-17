@@ -4,7 +4,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion = '1.1.0'
+    ModuleVersion = '1.1.1'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Core")
@@ -40,7 +40,7 @@
     # ClrVersion = ''
 
     # Processor architecture (None, X86, Amd64) required by this module
-    ProcessorArchitecture = 'Amd64'
+    ProcessorArchitecture = 'None'
 
     # Modules that must be imported into the global environment prior to importing this module
     RequiredModules = @(
@@ -101,14 +101,21 @@
             IconUri = 'https://raw.githubusercontent.com/BinaryWizard904/SecretManagement.Warden/main/images/warden_extension_logo_85x85.png'
 
             # ReleaseNotes of this module
-            ReleaseNotes = "### Code Changes
-- Changed how the version of winget-installed bitwarden-cli is checked to use the full path of the bw.exe command.
-### Documentation Changes
-- Updated Installation section of README.md
-- Updated NOTES section of the help for ConvertTo-Hashtable.
-- Updated license copyright year range.
-### Breaking Changes
-- The `"mac failed.`" error message was demoted to a warning. I have not seen it cause an issue in a very long time, but I'm not sure why it stopped."
+            ReleaseNotes = "### Changes
+- Warning added for bw.exe versions 2024.6.1 & 2024.7.0. These versions have issues with the unlock command.
+- Processor architecture requirement was dropped. When it was added, the CLI was only available for AMD64
+  processors.  Bitwarden has since released an ARM64 version available via NPM.
+- When a Get-Secret command fails due to multiple results, those results are now gathered via a bw list command
+  instead of a bw get loop.  Vastly improves performance and reduces hangtime.
+  ### Bugfixes
+- winget-installed bw.exe version check now supports both machine and user scoped installs.
+- Get-Secret secure note functionality works again. Broken by a plurality typo.
+- Set-Secret secure note functionality works again. It now uses AdditionalParameters properties instead of
+  missing variables.
+- Set-Secret can edit secrets now.
+    - Extant secrets were not being converted from JSON for processing.
+    - The ItemType in secrets beign edited wasn't being mapped to the BitwardenItemType enum.
+- Set-Secret no longer throws an error when using a string or secure string input to create a login.  Caused by typo."
 
             # Prerelease string of this module
             # Prerelease = ''

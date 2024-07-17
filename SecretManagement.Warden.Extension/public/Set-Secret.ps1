@@ -58,6 +58,10 @@ function Set-Secret
             }
         }
     }
+    else {
+        # OldSecret.type is retrieved as a number; map it to our enum so it works in the next step.
+        $OldSecret.type = [BitwardenItemType]$OldSecret.type
+    }
 
     # Do things differently based on what type of secret we're editing.
     switch($OldSecret.type) {
@@ -111,7 +115,7 @@ function Set-Secret
                     # If this is a new item, clear out all the default values.
                     if($IsNewItem) {
                         ($OldSecret.login | Get-Member -MemberType NoteProperty).Name | Where-Object { $_ -ine $Field } | ForEach-Object {
-                            if($_ -ine "URIs") { $OldSecret.login.$_ = $null } else { $OldSecret.logon.uris = $() }
+                            if($_ -ine "URIs") { $OldSecret.login.$_ = $null } else { $OldSecret.login.$_ = $() }
                         }
                     }
                     break
@@ -131,20 +135,20 @@ function Set-Secret
                 "SecureString" { $OldSecret.notes = ConvertFrom-SecureString $Secret -AsPlainText; break }
                 "HashTable" {
                     $ObjTemplate = "PowerShellObjectRepresentation: {0}`n{1}"
-                    switch($ExportObjectsToSecureNotesAs) {
+                    switch($AdditionalParameters.ExportObjectsToSecureNotesAs) {
                         "CliXml" {
                             $tmp = New-TemporaryFile
-                            $Secret | Export-Clixml -Depth $MaximumObjectDepth -Path $tmp
+                            $Secret | Export-Clixml -Depth $AdditionalParameters.MaximumObjectDepth -Path $tmp
                             $OldSecret.notes = $ObjTemplate -f "CliXml", (Get-Content -Path $tmp -Raw)
                             Remove-Item $tmp -Force
                             break
                         }
                         "JSON" {
-                            $OldSecret.notes = $ObjTemplate -f "JSON", ($Secret | ConvertTo-Json -Depth $MaximumObjectDepth -Compress)
+                            $OldSecret.notes = $ObjTemplate -f "JSON", ($Secret | ConvertTo-Json -Depth $AdditionalParameters.MaximumObjectDepth -Compress)
                             break
                         }
                         default {
-                            $ex = New-Object System.NotSupportedException "$ExportObjectsToSecureNotesAs is not a supported means of representing a PowerShell Object."
+                            $ex = New-Object System.NotSupportedException "$($AdditionalParameters.ExportObjectsToSecureNotesAs) is not a supported means of representing a PowerShell Object."
                             Write-Error -Exception $ex -Category NotImplemented -ErrorId "InvalidObjectRepresentation" -RecommendedAction "Change the Vault Parameter: ExportObjectsToSecureNotesAs to a supported value." -ErrorAction Stop
                             break
                         }
@@ -214,7 +218,7 @@ function Set-Secret
     }
 
     if( $IsNewItem ) { [System.Collections.Generic.List[string]]$CmdParams = @("create","item") }
-                else { [System.Collections.Generic.List[string]]$CmdParams = @("edit","item"); $CmdParams.Add($Name) }
+                else { [System.Collections.Generic.List[string]]$CmdParams = @("edit","item"); $CmdParams.Add($OldSecret.id) }
 
     $NewSecret = $OldSecret | ConvertTo-Json -Depth 4 -Compress | ConvertTo-BWEncoding
     $CmdParams.Add( $NewSecret )
