@@ -14,7 +14,8 @@ elseif ( $BitwardenCLI = Get-Command -Name bw.exe -CommandType Application -Erro
         $CurrentVersion = (scoop list bitwarden-cli 6> $null).Version ?? $BitwardenCLI.Version
     }
     #? WinGet shims have the wrong version, and the winget cli has output that is difficult to parse reliably. Therefore, ask bw.exe what version it is.
-    elseif( $BitwardenCLI.Source -like "*\WinGet\Links\bw.exe" ) {
+    elseif( $BitwardenCLI.Source -like "*\WinGet\Links\bw.exe" -or <# Machine Scope #>
+            $BitwardenCLI.Source -like "*\Winget\Packages\*\bw.exe" <# User Scope #> ) {
         $CurrentVersion = .$BitwardenCLI.Source --version
     }
     else {
@@ -34,6 +35,9 @@ if ( $BitwardenCLI -and $CurrentVersion -lt $MinSupportedVersion ) {
 }
 elseif ( $BitwardenCLI -and $CurrentVersion -eq '2023.12.1') {
     Write-Warning "Your Bitwarden CLI is version $CurrentVersion. This version of the CLI has a known issue affecting bw list, which is used to check if the vault is unlocked due to bug: https://github.com/bitwarden/clients/issues/2729. It is `e[3mstrongly`e[23m recomended you move to another version. Otherwise you will need to constantly logout and login again."
+}
+elseif ( $BitwardenCLI -and $CurrentVersion -in ('2024.6.1','2024.7.0')) {
+    Write-Warning "Your Bitwarden CLI is version $CurrentVersion. Versions 2024.6.1 & 2024.7.0 of the CLI have a known issue with the unlock command on some systems.  It is reccomnded that you move to another version.  See: https://github.com/bitwarden/clients/issues/9919"
 }
 
 
@@ -156,10 +160,16 @@ function Invoke-BitwardenCLI {
                     break
                 }
                 'More than one result was found*' {
-                    $errparse = @()
-                    $BWError.Split("`n") | Select-Object -Skip 1 | ForEach-Object {
-                        $errparse += Invoke-BitwardenCLI get item $_
+                    # Get the search term from the argument list by excluding commands and arguments
+                    $searchTerm = $ps.StartInfo.ArgumentList | Where-Object {
+                        $_ -notin ($__Commands.Keys) -and
+                        $_ -notin ($__Commands[$ps.StartInfo.ArgumentList[0]] -split ' ') -and
+                        $_ -notin ($__CommandAutoComplete[$ps.StartInfo.ArgumentList[0]] -split ' ') -and
+                        $_ -notin ($__CommonParams -split ' ')
                     }
+
+                    # Using list is way faster than looping get.
+                    $errparse = Invoke-BitwardenCLI list items --search $searchTerm
                     $msg = @"
 More than one result was found. Try getting a specific object by `id` instead.
 The following objects were found:

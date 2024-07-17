@@ -33,5 +33,5 @@ function Get-FullSecret {
         return $null
     }
 
-    return $Result
+    return $Result | ConvertFrom-Json
 }
