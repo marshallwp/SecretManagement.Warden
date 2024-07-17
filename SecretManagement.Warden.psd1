@@ -107,7 +107,7 @@
   processors.  Bitwarden has since released an ARM64 version available via NPM.
 - When a Get-Secret command fails due to multiple results, those results are now gathered via a bw list command
   instead of a bw get loop.  Vastly improves performance and reduces hangtime.
-  ### Bugfixes
+### Bugfixes
 - winget-installed bw.exe version check now supports both machine and user scoped installs.
 - Get-Secret secure note functionality works again. Broken by a plurality typo.
 - Set-Secret secure note functionality works again. It now uses AdditionalParameters properties instead of
