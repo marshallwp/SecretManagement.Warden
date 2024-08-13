@@ -20,7 +20,7 @@ Download and Install
 </tr>
 <tr>
 	<td>
-		<a href='ms-windows-store://pdp/?ProductId=9mz1snwt0n5d'>
+		<a href='https://www.microsoft.com/store/apps/9MZ1SNWT0N5D'>
 			<img src='https://developer.microsoft.com/store/badges/images/English_get-it-from-MS.png' alt='Get PowerShell from the Microsoft Store' width="142px" height="52px"/>
 		</a>
 	</td>
