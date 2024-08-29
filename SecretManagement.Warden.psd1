@@ -4,7 +4,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion = '1.1.1'
+    ModuleVersion = '1.1.2'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Core")
@@ -92,30 +92,21 @@
             Tags = 'SecretManagement', 'Secrets', 'BitWarden', 'Vaultwarden', 'MacOS', 'Linux', 'Windows'
 
             # A URL to the license for this module.
-            LicenseUri = 'https://github.com/BinaryWizard904/SecretManagement.Warden/blob/main/LICENSE.txt'
+            LicenseUri = 'https://github.com/marshallwp/SecretManagement.Warden/blob/main/LICENSE.txt'
 
             # A URL to the main website for this project.
-            ProjectUri = 'https://github.com/BinaryWizard904/SecretManagement.Warden'
+            ProjectUri = 'https://github.com/marshallwp/SecretManagement.Warden'
 
             # A URL to an icon representing this module.
-            IconUri = 'https://raw.githubusercontent.com/BinaryWizard904/SecretManagement.Warden/main/images/warden_extension_logo_85x85.png'
+            IconUri = 'https://raw.githubusercontent.com/marshallwp/SecretManagement.Warden/main/images/warden_extension_logo_85x85.png'
 
             # ReleaseNotes of this module
             ReleaseNotes = "### Changes
-- Warning added for bw.exe versions 2024.6.1 & 2024.7.0. These versions have issues with the unlock command.
-- Processor architecture requirement was dropped. When it was added, the CLI was only available for AMD64
-  processors.  Bitwarden has since released an ARM64 version available via NPM.
-- When a Get-Secret command fails due to multiple results, those results are now gathered via a bw list command
-  instead of a bw get loop.  Vastly improves performance and reduces hangtime.
-### Bugfixes
-- winget-installed bw.exe version check now supports both machine and user scoped installs.
-- Get-Secret secure note functionality works again. Broken by a plurality typo.
-- Set-Secret secure note functionality works again. It now uses AdditionalParameters properties instead of
-  missing variables.
-- Set-Secret can edit secrets now.
-    - Extant secrets were not being converted from JSON for processing.
-    - The ItemType in secrets beign edited wasn't being mapped to the BitwardenItemType enum.
-- Set-Secret no longer throws an error when using a string or secure string input to create a login.  Caused by typo."
+            - Update repository location due to username change.
+            - Add bw version 2024.7.1 to the warning list.
+            - Update module installation section of README.md to:
+                - Provide example usage for Install-PSResource.
+                - Add a link to the PowerShell Galery page."
 
             # Prerelease string of this module
             # Prerelease = ''
