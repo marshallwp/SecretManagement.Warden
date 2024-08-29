@@ -115,8 +115,10 @@ While the prompt is the only _secure_ way to use `bw login` directly, you _can_ 
 
 ## Module Installation
 
-This module has been published to the PowerShell Gallery.  To install it and its PowerShell dependencies from there run:
+This module has been published to the [PowerShell Gallery](https://www.powershellgallery.com/packages/SecretManagement.Warden).  To install it and its PowerShell dependencies from there run:
 ```pwsh
+Install-PSResource -Name SecretManagement.Warden
+# OR
 Install-Module -Name SecretManagement.Warden
 ```
 ### Manual Install
