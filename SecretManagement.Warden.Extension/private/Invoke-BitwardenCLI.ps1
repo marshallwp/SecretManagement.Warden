@@ -2,6 +2,8 @@
 # . '..\classes\BitwardenPasswordHistory.ps1'
 # . '.\ConvertTo-BWEncoding.ps1'
 
+#region Version Check
+# *Version check is performed ONCE during module import.
 [version]$MinSupportedVersion = '2022.8.0'
 [version]$CurrentVersion
 # check if we should use a specific bw.exe
@@ -27,19 +29,19 @@ else {
     elseif ( $IsMacOS ) { $platform = "macos" }
     else { $platform = "linux" }
 
-    Write-Error "No Bitwarden CLI found in your path, either specify `$env:BITWARDEN_CLI_PATH or put bw.exe in your path.  If the CLI is not installed, you can install it using scoop, chocolatey, npm, snap, or winget. You can also download it directly from: https://vault.bitwarden.com/download/?app=cli&platform=$platform" -ErrorAction Stop
+    Write-Error "No Bitwarden CLI found in your path, either specify `$env:BITWARDEN_CLI_PATH or put bw.exe in your path. If the CLI is not installed, you can install it using scoop, chocolatey, npm, snap, or winget. You can also download it directly from: https://vault.bitwarden.com/download/?app=cli&platform=$platform" -ErrorAction Stop
 }
 
 if ( $BitwardenCLI -and $CurrentVersion -lt $MinSupportedVersion ) {
     Write-Warning "Your Bitwarden CLI is version $CurrentVersion and is out of date. Please upgrade to at least version $MinSupportedVersion."
 }
 elseif ( $BitwardenCLI -and $CurrentVersion -eq '2023.12.1') {
-    Write-Warning "Your Bitwarden CLI is version $CurrentVersion. This version of the CLI has a known issue affecting bw list, which is used to check if the vault is unlocked due to bug: https://github.com/bitwarden/clients/issues/2729. It is `e[3mstrongly`e[23m recomended you move to another version. Otherwise you will need to constantly logout and login again."
+    Write-Warning "Your Bitwarden CLI is version $CurrentVersion. This version of the CLI has a known issue affecting bw list, which is used to check if the vault is unlocked due to bug: https://github.com/bitwarden/clients/issues/2729. It is `e[3mstrongly`e[23m recommended you move to another version. Otherwise you will need to constantly logout and login again."
 }
-elseif ( $BitwardenCLI -and $CurrentVersion -in ('2024.6.1','2024.7.0')) {
-    Write-Warning "Your Bitwarden CLI is version $CurrentVersion. Versions 2024.6.1 & 2024.7.0 of the CLI have a known issue with the unlock command on some systems.  It is reccomnded that you move to another version.  See: https://github.com/bitwarden/clients/issues/9919"
+elseif ( $BitwardenCLI -and $CurrentVersion -in ('2024.6.1','2024.7.0','2024.7.1')) {
+    Write-Warning "Your Bitwarden CLI is version $CurrentVersion. Versions 2024.6.1 — 2024.7.1 of the CLI have a known issue with the unlock command due to bug: https://github.com/bitwarden/clients/issues/9919. It is `e[3mstrongly`e[23m recommended that you move to another version."
 }
-
+#endregion Version Check
 
 $__Commands = @{
     login          = '--apikey --check --raw --method --code --sso  --help'
