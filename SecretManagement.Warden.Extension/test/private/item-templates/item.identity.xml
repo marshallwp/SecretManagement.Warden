@@ -1,0 +1,28 @@
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04">
+  <Obj RefId="0">
+    <TN RefId="0">
+      <T>System.Management.Automation.PSCustomObject</T>
+      <T>System.Object</T>
+    </TN>
+    <MS>
+      <S N="title">Mr</S>
+      <S N="firstName">John</S>
+      <S N="middleName">William</S>
+      <S N="lastName">Doe</S>
+      <S N="address1">123 Any St</S>
+      <S N="address2">Apt #123</S>
+      <Nil N="address3" />
+      <S N="city">New York</S>
+      <S N="state">NY</S>
+      <S N="postalCode">10001</S>
+      <S N="country">US</S>
+      <S N="company">Acme Inc.</S>
+      <S N="email">john@company.com</S>
+      <S N="phone">5555551234</S>
+      <S N="ssn">000-123-4567</S>
+      <S N="username">jdoe</S>
+      <S N="passportNumber">US-123456789</S>
+      <S N="licenseNumber">D123-12-123-12333</S>
+    </MS>
+  </Obj>
+</Objs>
