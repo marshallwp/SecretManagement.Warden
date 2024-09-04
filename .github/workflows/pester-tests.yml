@@ -8,7 +8,7 @@ on:
 
 jobs:
   pester:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
@@ -22,7 +22,7 @@ jobs:
     #     key: ${{ runner.os }}-Pester-SecretManagement
 
     - name: Install Bitwarden CLI Dependency
-      run: winget install -e Bitwarden.CLI --source winget
+      run: npm i @bitwarden/cli -g
 
     - name: Install Pester
       shell: pwsh
@@ -32,7 +32,6 @@ jobs:
       shell: pwsh
       working-directory: .
       run: |
-        $env:BITWARDEN_CLI_PATH = /snap/bw
         # Run Pester tests with Code Coverage
         $config = New-PesterConfiguration
         $config.Run.Path = "."
