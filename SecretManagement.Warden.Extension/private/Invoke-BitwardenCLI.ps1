@@ -11,11 +11,11 @@ if ( $env:BITWARDEN_CLI_PATH -and ($BitwardenCLI = Get-Command $env:BITWARDEN_CL
     $CurrentVersion = $BitwardenCLI.Version
 }
 elseif ( $BitwardenCLI = Get-Command -Name bw.exe -CommandType Application -ErrorAction Ignore ) {
-    #? Scoop shims eliminate version numbers, so we ask scoop for the true version.
+    # ?Scoop shims eliminate version numbers, so we ask scoop for the true version.
     if( $BitwardenCLI.Version -eq '0.0.0.0' -and (Get-Command scoop -ErrorAction Ignore) ) {
         $CurrentVersion = (scoop list bitwarden-cli 6> $null).Version ?? $BitwardenCLI.Version
     }
-    #? WinGet shims have the wrong version, and the winget cli has output that is difficult to parse reliably. Therefore, ask bw.exe what version it is.
+    # ?WinGet shims have the wrong version, and the winget cli has output that is difficult to parse reliably. Therefore, ask bw.exe what version it is.
     elseif( $BitwardenCLI.Source -like "*\WinGet\Links\bw.exe" -or <# Machine Scope #>
             $BitwardenCLI.Source -like "*\Winget\Packages\*\bw.exe" <# User Scope #> ) {
         $CurrentVersion = .$BitwardenCLI.Source --version
@@ -266,7 +266,7 @@ $($errparse  | Format-Table ID, Name | Out-String )
                 $env:BW_SESSION = $Result.Trim().Split(' ')[-1]
                 return $Result[0]
             }
-            #? Is the Result an empty JSON array?  Then return an empty array.
+            # ?Is the Result an empty JSON array?  Then return an empty array.
             elseif ( $Result -eq '[]' ) {
                 return ,@()
             }

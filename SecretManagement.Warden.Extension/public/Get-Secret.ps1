@@ -23,7 +23,7 @@ function Get-Secret {
     Sync-BitwardenVault $AdditionalParameters.ResyncCacheIfOlderThan
 
     [System.Collections.Generic.List[string]]$CmdParams = @("get","item")
-    $CmdParams.Add( $Name ) #* Do not combine with the above line.  For some reason that causes the function to fail in production.
+    $CmdParams.Add( $Name ) # *Do not combine with the above line.  For some reason that causes the function to fail in production.
 
     if ( $AdditionalParameters.ContainsKey('organizationid') ) {
         $CmdParams.Add( '--organizationid' )
@@ -38,7 +38,7 @@ function Get-Secret {
         return $null
     }
 
-    switch ( $Result.type ) {
+    switch ( [BitwardenItemType]$Result.type ) {
         "SecureNote" {
             $ObjType = ($Result.notes | Select-String -Pattern "(?<=PowerShellObjectRepresentation: )[^\n]*").Matches | Select-Object -First 1 -ExpandProperty Groups | Select-Object -First 1 -ExpandProperty Value
             if( !$ObjType ) {
@@ -64,7 +64,7 @@ function Get-Secret {
         }
         { "Login","Card","Identity" -icontains $_ } {
             # Output login as a hashtable. This allows us to support credentials that lack a username and therefore cannot output a PSCredential.
-            #* Unlike Get-SecretInfo, Get-Secret does not support ordered hashtables.
+            # *Unlike Get-SecretInfo, Get-Secret does not support ordered hashtables.
             return $Result.$_ | ConvertTo-Hashtable
             break
         }

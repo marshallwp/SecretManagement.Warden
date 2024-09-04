@@ -14,7 +14,6 @@ function Merge-Defaults {
         [Parameter(Mandatory=$true)]
         [ValidateNotNull()]
         [hashtable]$AdditionalParameters,
-
         [string]$BaseDirectory = "$PSScriptRoot\.."
     )
     $config = Import-LocalizedData -SupportedCommand New-TimeSpan -BaseDirectory $BaseDirectory -FileName "SecretManagement.Warden.Extension.Config.psd1"

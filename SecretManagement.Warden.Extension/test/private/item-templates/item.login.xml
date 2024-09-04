@@ -1,0 +1,44 @@
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04">
+  <Obj RefId="0">
+    <TN RefId="0">
+      <T>System.Management.Automation.PSCustomObject</T>
+      <T>System.Object</T>
+    </TN>
+    <MS>
+      <Obj N="fido2Credentials" RefId="1">
+        <TN RefId="1">
+          <T>System.Object[]</T>
+          <T>System.Array</T>
+          <T>System.Object</T>
+        </TN>
+        <LST>
+          <Obj RefId="2">
+            <TNRef RefId="0" />
+            <MS>
+              <S N="credentialId">keyId</S>
+              <S N="keyType">keyType</S>
+              <S N="keyAlgorithm">keyAlgorithm</S>
+              <S N="keyCurve">keyCurve</S>
+              <S N="keyValue">keyValue</S>
+              <S N="rpId">rpId</S>
+              <S N="userHandle">userHandle</S>
+              <S N="userName">userName</S>
+              <S N="counter">counter</S>
+              <S N="rpName">rpName</S>
+              <S N="userDisplayName">userDisplayName</S>
+              <S N="discoverable">false</S>
+              <Nil N="creationDate" />
+            </MS>
+          </Obj>
+        </LST>
+      </Obj>
+      <Obj N="uris" RefId="3">
+        <TNRef RefId="1" />
+        <LST />
+      </Obj>
+      <S N="username">jdoe</S>
+      <S N="password">myp@ssword123</S>
+      <S N="totp">JBSWY3DPEHPK3PXP</S>
+    </MS>
+  </Obj>
+</Objs>

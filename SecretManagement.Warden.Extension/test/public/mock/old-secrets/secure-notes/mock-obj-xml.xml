@@ -1,0 +1,50 @@
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04">
+  <Obj RefId="0">
+    <TN RefId="0">
+      <T>Bitwarden.SecureNote</T>
+      <T>System.Management.Automation.PSCustomObject</T>
+      <T>System.Object</T>
+    </TN>
+    <MS>
+      <Nil N="passwordHistory" />
+      <DT N="revisionDate">2024-09-03T20:01:46.797Z</DT>
+      <DT N="creationDate">2024-09-03T20:01:46.796Z</DT>
+      <Nil N="deletedDate" />
+      <S N="object">item</S>
+      <S N="id">b5c3eebb-871e-42c3-9e88-0b26711b9a96</S>
+      <Nil N="organizationId" />
+      <Nil N="folderId" />
+      <Obj N="type" RefId="1">
+        <TN RefId="1">
+          <T>BitwardenItemType</T>
+          <T>System.Enum</T>
+          <T>System.ValueType</T>
+          <T>System.Object</T>
+        </TN>
+        <ToString>SecureNote</ToString>
+        <I32>2</I32>
+      </Obj>
+      <I64 N="reprompt">0</I64>
+      <S N="name">XML-Test-Obj</S>
+      <S N="notes">PowerShellObjectRepresentation: CliXml_x000A_&lt;Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04"&gt;_x000D__x000A_  &lt;Obj RefId="0"&gt;_x000D__x000A_    &lt;TN RefId="0"&gt;_x000D__x000A_      &lt;T&gt;System.Collections.Hashtable&lt;/T&gt;_x000D__x000A_      &lt;T&gt;System.Object&lt;/T&gt;_x000D__x000A_    &lt;/TN&gt;_x000D__x000A_    &lt;DCT&gt;_x000D__x000A_      &lt;En&gt;_x000D__x000A_        &lt;S N="Key"&gt;Name&lt;/S&gt;_x000D__x000A_        &lt;S N="Value"&gt;Test&lt;/S&gt;_x000D__x000A_      &lt;/En&gt;_x000D__x000A_      &lt;En&gt;_x000D__x000A_        &lt;S N="Key"&gt;Status&lt;/S&gt;_x000D__x000A_        &lt;Obj N="Value" RefId="1"&gt;_x000D__x000A_          &lt;TN RefId="1"&gt;_x000D__x000A_            &lt;T&gt;BitwardenOrganizationUserStatus&lt;/T&gt;_x000D__x000A_            &lt;T&gt;System.Enum&lt;/T&gt;_x000D__x000A_            &lt;T&gt;System.ValueType&lt;/T&gt;_x000D__x000A_            &lt;T&gt;System.Object&lt;/T&gt;_x000D__x000A_          &lt;/TN&gt;_x000D__x000A_          &lt;ToString&gt;Invited&lt;/ToString&gt;_x000D__x000A_          &lt;I32&gt;0&lt;/I32&gt;_x000D__x000A_        &lt;/Obj&gt;_x000D__x000A_      &lt;/En&gt;_x000D__x000A_      &lt;En&gt;_x000D__x000A_        &lt;S N="Key"&gt;ItemType&lt;/S&gt;_x000D__x000A_        &lt;Obj N="Value" RefId="2"&gt;_x000D__x000A_          &lt;TN RefId="2"&gt;_x000D__x000A_            &lt;T&gt;BitwardenItemType&lt;/T&gt;_x000D__x000A_            &lt;T&gt;System.Enum&lt;/T&gt;_x000D__x000A_            &lt;T&gt;System.ValueType&lt;/T&gt;_x000D__x000A_            &lt;T&gt;System.Object&lt;/T&gt;_x000D__x000A_          &lt;/TN&gt;_x000D__x000A_          &lt;ToString&gt;Identity&lt;/ToString&gt;_x000D__x000A_          &lt;I32&gt;4&lt;/I32&gt;_x000D__x000A_        &lt;/Obj&gt;_x000D__x000A_      &lt;/En&gt;_x000D__x000A_    &lt;/DCT&gt;_x000D__x000A_  &lt;/Obj&gt;_x000D__x000A_&lt;/Objs&gt;</S>
+      <B N="favorite">false</B>
+      <Obj N="secureNote" RefId="2">
+        <TN RefId="2">
+          <T>System.Management.Automation.PSCustomObject</T>
+          <T>System.Object</T>
+        </TN>
+        <MS>
+          <I64 N="type">0</I64>
+        </MS>
+      </Obj>
+      <Obj N="collectionIds" RefId="3">
+        <TN RefId="3">
+          <T>System.Object[]</T>
+          <T>System.Array</T>
+          <T>System.Object</T>
+        </TN>
+        <LST />
+      </Obj>
+    </MS>
+  </Obj>
+</Objs>
