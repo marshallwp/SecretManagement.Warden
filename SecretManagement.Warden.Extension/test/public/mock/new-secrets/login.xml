@@ -1,0 +1,80 @@
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04">
+  <Obj RefId="0">
+    <TN RefId="0">
+      <T>Deserialized.System.Management.Automation.PSCustomObject</T>
+      <T>Deserialized.System.Object</T>
+    </TN>
+    <MS>
+      <Obj N="passwordHistory" RefId="1">
+        <TN RefId="1">
+          <T>Deserialized.System.Object[]</T>
+          <T>Deserialized.System.Array</T>
+          <T>Deserialized.System.Object</T>
+        </TN>
+        <LST />
+      </Obj>
+      <Nil N="revisionDate" />
+      <Nil N="creationDate" />
+      <Nil N="deletedDate" />
+      <Nil N="organizationId" />
+      <Nil N="collectionIds" />
+      <Nil N="folderId" />
+      <Obj N="type" RefId="2">
+        <TN RefId="2">
+          <T>BitwardenItemType</T>
+          <T>System.Enum</T>
+          <T>System.ValueType</T>
+          <T>System.Object</T>
+        </TN>
+        <ToString>Login</ToString>
+        <I32>1</I32>
+      </Obj>
+      <S N="name">Login</S>
+      <S N="notes">Some notes about this item.</S>
+      <B N="favorite">false</B>
+      <Obj N="fields" RefId="3">
+        <TNRef RefId="1" />
+        <LST />
+      </Obj>
+      <Obj N="login" RefId="4">
+        <TNRef RefId="0" />
+        <MS>
+          <Obj N="fido2Credentials" RefId="5">
+            <TNRef RefId="1" />
+            <LST>
+              <Obj RefId="6">
+                <TNRef RefId="0" />
+                <MS>
+                  <S N="credentialId">keyId</S>
+                  <S N="keyType">keyType</S>
+                  <S N="keyAlgorithm">keyAlgorithm</S>
+                  <S N="keyCurve">keyCurve</S>
+                  <S N="keyValue">keyValue</S>
+                  <S N="rpId">rpId</S>
+                  <S N="userHandle">userHandle</S>
+                  <S N="userName">userName</S>
+                  <S N="counter">counter</S>
+                  <S N="rpName">rpName</S>
+                  <S N="userDisplayName">userDisplayName</S>
+                  <S N="discoverable">false</S>
+                  <Nil N="creationDate" />
+                </MS>
+              </Obj>
+            </LST>
+          </Obj>
+          <Obj N="uris" RefId="7">
+            <TNRef RefId="1" />
+            <LST />
+          </Obj>
+          <S N="username">jdoe</S>
+          <S N="password">myp@ssword123</S>
+          <S N="totp">JBSWY3DPEHPK3PXP</S>
+        </MS>
+      </Obj>
+      <Nil N="secureNote" />
+      <Nil N="card" />
+      <Nil N="identity" />
+      <I64 N="reprompt">0</I64>
+    </MS>
+  </Obj>
+</Objs>

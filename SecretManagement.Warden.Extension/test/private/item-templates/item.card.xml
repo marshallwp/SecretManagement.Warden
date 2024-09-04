@@ -1,0 +1,16 @@
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04">
+  <Obj RefId="0">
+    <TN RefId="0">
+      <T>System.Management.Automation.PSCustomObject</T>
+      <T>System.Object</T>
+    </TN>
+    <MS>
+      <S N="cardholderName">John Doe</S>
+      <S N="brand">visa</S>
+      <S N="number">4242424242424242</S>
+      <S N="expMonth">04</S>
+      <S N="expYear">2023</S>
+      <S N="code">123</S>
+    </MS>
+  </Obj>
+</Objs>

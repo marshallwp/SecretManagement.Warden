@@ -16,7 +16,7 @@ function Sync-BitwardenVault {
 
     # Stores the cache file in a subdirectory of the SecretManagement vault registry location:
     # https://github.com/PowerShell/SecretManagement/#extension-vault-registry-file-location
-    $CacheLocation = $IsWindows ? "$env:LocalAppData\Microsoft\PowerShell\secretmanagement\warden-ext\LastSyncedTime.txt" : "$HOME/.secretmanagement/warden-ext/LastSyncedTime.txt"
+    $CacheLocation = Get-CacheLocation
 
     # Get Last Synced time from file or the Bitwarden CLI (much slower)
     if(Test-Path -Path $CacheLocation -PathType Leaf) {
@@ -32,6 +32,6 @@ function Sync-BitwardenVault {
         # If so, sync the vault.
         Invoke-BitwardenCLI sync --quiet
         # And update the cache.
-        Get-Date -Format "o" | Out-File -FilePath $CacheLocation -NoNewline
+        Get-Date -AsUTC -Format "o" | Out-File -FilePath $CacheLocation -NoNewline
     }
 }

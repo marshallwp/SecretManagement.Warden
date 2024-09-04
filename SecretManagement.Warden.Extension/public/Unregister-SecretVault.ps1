@@ -9,7 +9,7 @@ function Unregister-SecretVault
     )
 
     # Removes the bitwarden-ext directory and all contents from the computer.
-    $BitwardenExtDir = $IsWindows ? "$env:LocalAppData\Microsoft\PowerShell\secretmanagement\warden-ext" : "$HOME/.secretmanagement/warden-ext"
+    $BitwardenExtDir = Get-CacheLocation | Split-Path -Parent
     if(Test-Path -Path $BitwardenExtDir -PathType Container) {
         Remove-Item -Path $BitwardenExtDir -Recurse
     }

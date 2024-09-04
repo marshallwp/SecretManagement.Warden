@@ -1,0 +1,51 @@
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04">
+  <Obj RefId="0">
+    <TN RefId="0">
+      <T>System.Management.Automation.PSCustomObject</T>
+      <T>System.Object</T>
+    </TN>
+    <MS>
+      <Obj N="passwordHistory" RefId="1">
+        <TN RefId="1">
+          <T>System.Object[]</T>
+          <T>System.Array</T>
+          <T>System.Object</T>
+        </TN>
+        <LST />
+      </Obj>
+      <Nil N="revisionDate" />
+      <Nil N="creationDate" />
+      <Nil N="deletedDate" />
+      <Nil N="organizationId" />
+      <Nil N="collectionIds" />
+      <Nil N="folderId" />
+      <Obj N="type" RefId="2">
+        <TN RefId="2">
+          <T>BitwardenItemType</T>
+          <T>System.Enum</T>
+          <T>System.ValueType</T>
+          <T>System.Object</T>
+        </TN>
+        <ToString>SecureNote</ToString>
+        <I32>2</I32>
+      </Obj>
+      <S N="name">SecureNote</S>
+      <S N="notes">Some notes about this item.</S>
+      <B N="favorite">false</B>
+      <Obj N="fields" RefId="3">
+        <TNRef RefId="1" />
+        <LST />
+      </Obj>
+      <Nil N="login" />
+      <Obj N="secureNote" RefId="4">
+        <TNRef RefId="0" />
+        <MS>
+          <I64 N="type">0</I64>
+        </MS>
+      </Obj>
+      <Nil N="card" />
+      <Nil N="identity" />
+      <I64 N="reprompt">0</I64>
+    </MS>
+  </Obj>
+</Objs>

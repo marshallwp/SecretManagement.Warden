@@ -1,0 +1,37 @@
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04">
+  <Obj RefId="0">
+    <TN RefId="0">
+      <T>System.Management.Automation.PSCustomObject</T>
+      <T>System.Object</T>
+    </TN>
+    <MS>
+      <Obj N="passwordHistory" RefId="1">
+        <TN RefId="1">
+          <T>System.Object[]</T>
+          <T>System.Array</T>
+          <T>System.Object</T>
+        </TN>
+        <LST />
+      </Obj>
+      <Nil N="revisionDate" />
+      <Nil N="creationDate" />
+      <Nil N="deletedDate" />
+      <Nil N="organizationId" />
+      <Nil N="collectionIds" />
+      <Nil N="folderId" />
+      <I64 N="type">1</I64>
+      <S N="name">Item name</S>
+      <S N="notes">Some notes about this item.</S>
+      <B N="favorite">false</B>
+      <Obj N="fields" RefId="2">
+        <TNRef RefId="1" />
+        <LST />
+      </Obj>
+      <Nil N="login" />
+      <Nil N="secureNote" />
+      <Nil N="card" />
+      <Nil N="identity" />
+      <I64 N="reprompt">0</I64>
+    </MS>
+  </Obj>
+</Objs>

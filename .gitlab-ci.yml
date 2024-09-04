@@ -1,0 +1,31 @@
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TITLE =~ /^(\[Draft\]|\(Draft\)|Draft:)/
+      when: never
+
+# UBI is RedHat's free Universal Base Image.
+image: mcr.microsoft.com/powershell/test-deps:ubi-9
+
+before_script:
+  - Install-PSResource -Name Pester,Microsoft.PowerShell.SecretManagement -Repository PSGallery -TrustRepository
+
+tests:
+  stage: test
+  script:
+    - |
+      $config = New-PesterConfiguration
+      $config.Run.Path = "."
+      $config.CodeCoverage.Enabled = $true
+      $config.CodeCoverage.OutputFormat = 'JaCoCo'
+      $config.CodeCoverage.OutputPath = 'coverage.xml'
+      $config.TestResult.Enabled = $true
+      $config.TestResult.OutputFormat = "JUnitXml"
+      $config.TestResult.OutputPath = "testResults.xml"
+      Invoke-Pester -Configuration $config
+  artifacts:
+    reports:
+      coverage_report:
+        path: coverage.xml
+        coverage_format: cobertura
+      junit: testResults.xml
+  coverage: /Covered (\d+\.\d+%)/

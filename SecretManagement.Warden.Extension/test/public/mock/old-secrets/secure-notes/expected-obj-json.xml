@@ -1,0 +1,23 @@
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04">
+  <Obj RefId="0">
+    <TN RefId="0">
+      <T>System.Management.Automation.OrderedHashtable</T>
+      <T>System.Collections.Hashtable</T>
+      <T>System.Object</T>
+    </TN>
+    <DCT>
+      <En>
+        <S N="Key">Name</S>
+        <S N="Value">John Doe</S>
+      </En>
+      <En>
+        <S N="Key">Product</S>
+        <S N="Value">Example Product 1</S>
+      </En>
+      <En>
+        <S N="Key">CustomerID</S>
+        <I64 N="Value">12345</I64>
+      </En>
+    </DCT>
+  </Obj>
+</Objs>

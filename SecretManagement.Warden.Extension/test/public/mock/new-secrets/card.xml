@@ -1,0 +1,56 @@
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04">
+  <Obj RefId="0">
+    <TN RefId="0">
+      <T>Deserialized.System.Management.Automation.PSCustomObject</T>
+      <T>Deserialized.System.Object</T>
+    </TN>
+    <MS>
+      <Obj N="passwordHistory" RefId="1">
+        <TN RefId="1">
+          <T>Deserialized.System.Object[]</T>
+          <T>Deserialized.System.Array</T>
+          <T>Deserialized.System.Object</T>
+        </TN>
+        <LST />
+      </Obj>
+      <Nil N="revisionDate" />
+      <Nil N="creationDate" />
+      <Nil N="deletedDate" />
+      <Nil N="organizationId" />
+      <Nil N="collectionIds" />
+      <Nil N="folderId" />
+      <Obj N="type" RefId="2">
+        <TN RefId="2">
+          <T>BitwardenItemType</T>
+          <T>System.Enum</T>
+          <T>System.ValueType</T>
+          <T>System.Object</T>
+        </TN>
+        <ToString>Card</ToString>
+        <I32>3</I32>
+      </Obj>
+      <S N="name">Card</S>
+      <S N="notes">Some notes about this item.</S>
+      <B N="favorite">false</B>
+      <Obj N="fields" RefId="3">
+        <TNRef RefId="1" />
+        <LST />
+      </Obj>
+      <Nil N="login" />
+      <Nil N="secureNote" />
+      <Obj N="card" RefId="4">
+        <TNRef RefId="0" />
+        <MS>
+          <S N="cardholderName">John Doe</S>
+          <S N="brand">visa</S>
+          <S N="number">4242424242424242</S>
+          <S N="expMonth">04</S>
+          <S N="expYear">2023</S>
+          <S N="code">123</S>
+        </MS>
+      </Obj>
+      <Nil N="identity" />
+      <I64 N="reprompt">0</I64>
+    </MS>
+  </Obj>
+</Objs>

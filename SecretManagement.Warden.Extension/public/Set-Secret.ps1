@@ -91,7 +91,7 @@ function Set-Secret
                     }
                     else {
                         $ex = New-Object System.Management.Automation.PSInvalidCastException "Input [HashTable]Secret could not be cast to any part of a Bitwarden Login."
-                        Write-Error -Exception $ex -Category InvalidOperation -CategoryReason "Hashtable contains neither UserName nor Password." -ErrorAction Stop
+                        Write-Error -Exception $ex -Category InvalidOperation -CategoryReason "Hashtable does not contain UserName, Password, URIs, or TOTP." -ErrorAction Stop
                     }
                     break
                 }
@@ -193,7 +193,7 @@ function Set-Secret
             switch($Secret.GetType().Name) {
                 "HashTable" {
                     $identFields = "address1","address2","address3","city","company","country","email","firstName","lastName","licenseNumber","middleName","passportNumber","phone","postalCode","ssn","state","title","userName"
-                    if ( Test-KeysInHashtable $Secret.Keys $identFields ) {
+                    if ( Test-KeysInHashtable $Secret $identFields ) {
                         $identFields | ForEach-Object {
                             if($Secret.$_ -or $IsNewItem) {
                                 $OldSecret.identity.$_ = if($Secret.$_ -is [SecureString])
