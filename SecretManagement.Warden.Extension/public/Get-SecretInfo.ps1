@@ -34,7 +34,7 @@ function Get-SecretInfo {
     $Results = Invoke-BitwardenCLI @CmdParams
 
     foreach ( $secretInfo in $Results ) {
-        if ( $secretInfo.type -eq [BitwardenItemType]::SecureNote -and !($Result.notes | Select-String -Pattern "(?<=PowerShellObjectRepresentation: )[^\n]*") ) {
+        if ( $secretInfo.type -eq [BitwardenItemType]::SecureNote -and !($secretInfo.notes | Select-String -Pattern "(?<=PowerShellObjectRepresentation: )[^\n]*") ) {
             $type = [Microsoft.PowerShell.SecretManagement.SecretType]::SecureString
         }
         else {

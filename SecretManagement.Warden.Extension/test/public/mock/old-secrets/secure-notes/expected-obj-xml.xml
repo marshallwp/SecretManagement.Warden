@@ -1,0 +1,40 @@
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04">
+  <Obj RefId="0">
+    <TN RefId="0">
+      <T>Deserialized.System.Collections.Hashtable</T>
+      <T>Deserialized.System.Object</T>
+    </TN>
+    <DCT>
+      <En>
+        <S N="Key">Status</S>
+        <Obj N="Value" RefId="1">
+          <TN RefId="1">
+            <T>Deserialized.BitwardenOrganizationUserStatus</T>
+            <T>Deserialized.System.Enum</T>
+            <T>Deserialized.System.ValueType</T>
+            <T>Deserialized.System.Object</T>
+          </TN>
+          <ToString>Invited</ToString>
+          <I32>0</I32>
+        </Obj>
+      </En>
+      <En>
+        <S N="Key">ItemType</S>
+        <Obj N="Value" RefId="2">
+          <TN RefId="2">
+            <T>Deserialized.BitwardenItemType</T>
+            <T>Deserialized.System.Enum</T>
+            <T>Deserialized.System.ValueType</T>
+            <T>Deserialized.System.Object</T>
+          </TN>
+          <ToString>Identity</ToString>
+          <I32>4</I32>
+        </Obj>
+      </En>
+      <En>
+        <S N="Key">Name</S>
+        <S N="Value">Test</S>
+      </En>
+    </DCT>
+  </Obj>
+</Objs>

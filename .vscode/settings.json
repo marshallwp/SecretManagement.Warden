@@ -9,5 +9,6 @@
 	"files.trimTrailingWhitespace": true,
 	// Ensuring there is always one empty line at the end of *.ps1 files prevents PowerShell Code Signing from overwriting the last line of code in a file.
 	"files.trimFinalNewlines": true,
-	"files.insertFinalNewline": true
+	"files.insertFinalNewline": true,
+	"powershell.pester.outputVerbosity": "Detailed"
 }
