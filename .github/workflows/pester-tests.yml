@@ -22,9 +22,6 @@ jobs:
     #     key: ${{ runner.os }}-Pester-SecretManagement
 
     - name: Install Bitwarden CLI Dependency
-      run: npm i @bitwarden/cli
-
-    - name: Install Bitwarden CLI Dependency
       if: steps.cacher.outputs.cache-hit != 'true'
       run: sudo snap install bw
 
@@ -37,6 +34,7 @@ jobs:
       shell: pwsh
       working-directory: .
       run: |
+        $env:BITWARDEN_CLI_PATH = /snap/bw/bw
         # Run Pester tests with Code Coverage
         $config = New-PesterConfiguration
         $config.Run.Path = "."
