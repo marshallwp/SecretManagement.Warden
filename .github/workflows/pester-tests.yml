@@ -27,6 +27,7 @@ jobs:
       run: Install-PSResource -Name Pester,Microsoft.PowerShell.SecretManagement -Repository PSGallery -Scope CurrentUser -TrustRepository
 
     - name: Run Pester Tests
+      shell: pwsh
       working-directory: .
       run: |
         # Run Pester tests with Code Coverage
