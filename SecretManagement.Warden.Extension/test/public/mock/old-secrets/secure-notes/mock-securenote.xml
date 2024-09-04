@@ -1,0 +1,50 @@
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04">
+  <Obj RefId="0">
+    <TN RefId="0">
+      <T>Bitwarden.SecureNote</T>
+      <T>System.Management.Automation.PSCustomObject</T>
+      <T>System.Object</T>
+    </TN>
+    <MS>
+      <Nil N="passwordHistory" />
+      <DT N="revisionDate">2024-09-03T20:03:24.783Z</DT>
+      <DT N="creationDate">2024-09-03T20:03:24.779Z</DT>
+      <Nil N="deletedDate" />
+      <S N="object">item</S>
+      <S N="id">f6c97ce7-953e-4c06-a12e-45e1b16be4df</S>
+      <Nil N="organizationId" />
+      <Nil N="folderId" />
+      <Obj N="type" RefId="1">
+        <TN RefId="1">
+          <T>BitwardenItemType</T>
+          <T>System.Enum</T>
+          <T>System.ValueType</T>
+          <T>System.Object</T>
+        </TN>
+        <ToString>SecureNote</ToString>
+        <I32>2</I32>
+      </Obj>
+      <I64 N="reprompt">0</I64>
+      <S N="name">My Test Note</S>
+      <S N="notes">Lorem ipsum odor amet, consectetuer adipiscing elit. Habitasse rhoncus scelerisque laoreet efficitur felis non pharetra velit lacinia. Nullam diam aenean vel felis; laoreet et. Mus venenatis tellus ante nascetur nisi. Suscipit aliquam fermentum convallis praesent curabitur. Facilisi eros rhoncus praesent facilisi iaculis lectus elit. Netus integer felis arcu dolor lacinia cras egestas dictum? Ante per iaculis congue vitae bibendum rutrum sem. Augue dapibus class ornare, montes nam taciti bibendum semper senectus.</S>
+      <B N="favorite">false</B>
+      <Obj N="secureNote" RefId="2">
+        <TN RefId="2">
+          <T>System.Management.Automation.PSCustomObject</T>
+          <T>System.Object</T>
+        </TN>
+        <MS>
+          <I64 N="type">0</I64>
+        </MS>
+      </Obj>
+      <Obj N="collectionIds" RefId="3">
+        <TN RefId="3">
+          <T>System.Object[]</T>
+          <T>System.Array</T>
+          <T>System.Object</T>
+        </TN>
+        <LST />
+      </Obj>
+    </MS>
+  </Obj>
+</Objs>

@@ -1,0 +1,67 @@
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04">
+  <Obj RefId="0">
+    <TN RefId="0">
+      <T>Bitwarden.Identity</T>
+      <T>System.Management.Automation.PSCustomObject</T>
+      <T>System.Object</T>
+    </TN>
+    <MS>
+      <Nil N="passwordHistory" />
+      <DT N="revisionDate">2024-09-03T19:43:10.232Z</DT>
+      <DT N="creationDate">2024-09-03T19:43:10.229Z</DT>
+      <Nil N="deletedDate" />
+      <S N="object">item</S>
+      <S N="id">7d6ab3c5-f28d-416d-b947-fded30d70ac1</S>
+      <Nil N="organizationId" />
+      <Nil N="folderId" />
+      <Obj N="type" RefId="1">
+        <TN RefId="1">
+          <T>BitwardenItemType</T>
+          <T>System.Enum</T>
+          <T>System.ValueType</T>
+          <T>System.Object</T>
+        </TN>
+        <ToString>Identity</ToString>
+        <I32>4</I32>
+      </Obj>
+      <I64 N="reprompt">0</I64>
+      <S N="name">John Doe</S>
+      <Nil N="notes" />
+      <B N="favorite">false</B>
+      <Obj N="identity" RefId="2">
+        <TN RefId="2">
+          <T>System.Management.Automation.PSCustomObject</T>
+          <T>System.Object</T>
+        </TN>
+        <MS>
+          <S N="title">Mr</S>
+          <S N="firstName">John</S>
+          <Nil N="middleName" />
+          <S N="lastName">Doe</S>
+          <S N="address1">123 Happy Accident Dr.</S>
+          <Nil N="address2" />
+          <Nil N="address3" />
+          <S N="city">Smile</S>
+          <S N="state">TX</S>
+          <S N="postalCode">12345</S>
+          <S N="country">USA</S>
+          <S N="company">Example Co.</S>
+          <Nil N="email" />
+          <Nil N="phone" />
+          <S N="ssn">123-456-7890</S>
+          <S N="username">jdoe</S>
+          <Nil N="passportNumber" />
+          <Nil N="licenseNumber" />
+        </MS>
+      </Obj>
+      <Obj N="collectionIds" RefId="3">
+        <TN RefId="3">
+          <T>System.Object[]</T>
+          <T>System.Array</T>
+          <T>System.Object</T>
+        </TN>
+        <LST />
+      </Obj>
+    </MS>
+  </Obj>
+</Objs>
