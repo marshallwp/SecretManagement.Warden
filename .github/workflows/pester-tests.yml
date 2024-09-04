@@ -34,7 +34,7 @@ jobs:
       shell: pwsh
       working-directory: .
       run: |
-        $env:BITWARDEN_CLI_PATH = /snap/bw/bw
+        $env:BITWARDEN_CLI_PATH = /snap/bw
         # Run Pester tests with Code Coverage
         $config = New-PesterConfiguration
         $config.Run.Path = "."
