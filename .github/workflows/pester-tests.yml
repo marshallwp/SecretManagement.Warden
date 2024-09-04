@@ -21,6 +21,10 @@ jobs:
         path: ~/.local/share/powershell/Modules
         key: ${{ runner.os }}-Pester-SecretManagement
 
+    - name: Install Bitwarden CLI Dependency
+      if: steps.cacher.outputs.cache-hit != 'true'
+      run: sudo snap install bw
+
     - name: Install Pester
       if: steps.cacher.outputs.cache-hit != 'true'
       shell: pwsh
