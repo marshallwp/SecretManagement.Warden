@@ -8,7 +8,7 @@ on:
 
 jobs:
   pester:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
     - name: Checkout code
@@ -22,11 +22,9 @@ jobs:
     #     key: ${{ runner.os }}-Pester-SecretManagement
 
     - name: Install Bitwarden CLI Dependency
-      if: steps.cacher.outputs.cache-hit != 'true'
-      run: sudo snap install bw
+      run: winget install -e Bitwarden.CLI --source winget
 
     - name: Install Pester
-      if: steps.cacher.outputs.cache-hit != 'true'
       shell: pwsh
       run: Install-PSResource -Name Pester,Microsoft.PowerShell.SecretManagement -Repository PSGallery -Scope CurrentUser -TrustRepository
 
