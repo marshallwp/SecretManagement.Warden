@@ -14,12 +14,15 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Setup PowerShell Module Cache
-      id: cacher
-      uses: actions/cache@v3
-      with:
-        path: ~/.local/share/powershell/Modules
-        key: ${{ runner.os }}-Pester-SecretManagement
+    # - name: Setup PowerShell Module Cache
+    #   id: cacher
+    #   uses: actions/cache@v3
+    #   with:
+    #     path: ~/.local/share/powershell/Modules
+    #     key: ${{ runner.os }}-Pester-SecretManagement
+
+    - name: Install Bitwarden CLI Dependency
+      run: npm i @bitwarden/cli
 
     - name: Install Bitwarden CLI Dependency
       if: steps.cacher.outputs.cache-hit != 'true'
