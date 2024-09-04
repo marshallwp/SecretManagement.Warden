@@ -4,7 +4,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion = '1.1.2'
+    ModuleVersion = '1.1.3'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Core")
@@ -101,12 +101,7 @@
             IconUri = 'https://raw.githubusercontent.com/marshallwp/SecretManagement.Warden/main/images/warden_extension_logo_85x85.png'
 
             # ReleaseNotes of this module
-            ReleaseNotes = "### Changes
-            - Update repository location due to username change.
-            - Add bw version 2024.7.1 to the warning list.
-            - Update module installation section of README.md to:
-                - Provide example usage for Install-PSResource.
-                - Add a link to the PowerShell Galery page."
+            ReleaseNotes = "Added Pester Tests for Manifests, Classes, and most Private functions."
 
             # Prerelease string of this module
             # Prerelease = ''
