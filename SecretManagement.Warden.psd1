@@ -101,9 +101,8 @@
             IconUri = 'https://raw.githubusercontent.com/marshallwp/SecretManagement.Warden/main/images/warden_extension_logo_85x85.png'
 
             # ReleaseNotes of this module
-            ReleaseNotes = "## Breaking Changes
+            ReleaseNotes = "## Changes
 - Replaced System.DirectoryServices exception types with System.Management.Automation ones. The former were only available on Windows.
-## Changes
 - Updated Get-Secret's invalid BitwardenItemType error message text.
 - Version check for explicitly defined Bitwarden CLIs will now query the CLI for its version if the file version would fail the check.
 ## Testing
