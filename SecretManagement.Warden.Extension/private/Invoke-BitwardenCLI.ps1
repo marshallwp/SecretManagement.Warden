@@ -157,7 +157,7 @@ function Invoke-BitwardenCLI {
         if ($BWError) {
             switch -Wildcard ($BWError) {
                 'Not found.' {
-                    $ex = New-Object System.DirectoryServices.AccountManagement.NoMatchingPrincipalException "Not found."
+                    $ex = New-Object System.Management.Automation.ItemNotFoundException "Not found."
                     Write-Error $ex -Category ObjectNotFound -ErrorAction Stop
                     break
                 }
@@ -177,7 +177,7 @@ More than one result was found. Try getting a specific object by `id` instead.
 The following objects were found:
 $($errparse  | Format-Table ID, Name | Out-String )
 "@
-                    $ex = New-Object System.DirectoryServices.AccountManagement.MultipleMatchesException $msg
+                    $ex = New-Object System.Reflection.AmbiguousMatchException $msg
                     Write-Error -Exception $ex -Category InvalidResult -ErrorId "MultipleMatchesReturned" -ErrorAction Stop
                     break
                 }
@@ -213,7 +213,7 @@ $($errparse  | Format-Table ID, Name | Out-String )
             $JsonResult = $JsonResult | Where-Object { $_.organizationId -eq $org }
 
             if(!$JsonResult) {
-                $ex = New-Object System.DirectoryServices.AccountManagement.NoMatchingPrincipalException "Not found."
+                $ex = New-Object System.Management.Automation.ItemNotFoundException "Not found."
                 Write-Error $ex -Category ObjectNotFound -ErrorAction Stop
             }
             elseif ( $ps.StartInfo.ArgumentList.Contains('--raw') ) {

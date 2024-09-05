@@ -29,7 +29,7 @@ function Get-FullSecret {
         $Result = Invoke-BitwardenCLI @CmdParams
     }
     # Ignore just errors about not finding anything.
-    catch [System.Management.Automation.ItemNotFoundException],[System.DirectoryServices.AccountManagement.NoMatchingPrincipalException] {
+    catch [System.Management.Automation.ItemNotFoundException] {
         return $null
     }
 

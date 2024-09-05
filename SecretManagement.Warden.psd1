@@ -101,7 +101,7 @@
             IconUri = 'https://raw.githubusercontent.com/marshallwp/SecretManagement.Warden/main/images/warden_extension_logo_85x85.png'
 
             # ReleaseNotes of this module
-            ReleaseNotes = "Added Pester Tests for Manifests, Classes, and most Private functions."
+            ReleaseNotes = "Replaced all System.DirectoryServices.* Exception Types to improve compatability with non-Windows platforms"
 
             # Prerelease string of this module
             # Prerelease = ''
