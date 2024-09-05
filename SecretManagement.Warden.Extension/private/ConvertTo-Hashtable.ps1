@@ -6,6 +6,9 @@
 .EXAMPLE
     $json | ConvertFrom-Json | ConvertTo-HashTable
     Parses JSON string and outputs a HashTable.
+.EXAMPLE
+    ConvertTo-HashTable ($json | ConvertFrom-Json)
+    Parses JSON string and outputs a HashTable.
 #>
 function ConvertTo-HashTable
 {

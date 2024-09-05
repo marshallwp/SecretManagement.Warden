@@ -12,7 +12,7 @@ Describe "Get-FullSecret" {
     }
     It "Returns '`$null' for non-existent secret." {
         Mock Invoke-BitwardenCLI {
-            $ex = New-Object System.DirectoryServices.AccountManagement.NoMatchingPrincipalException "Not found."
+            $ex = New-Object System.Management.Automation.ItemNotFoundException "Not found."
             Write-Error $ex -Category ObjectNotFound -ErrorAction Stop
         }
         Get-FullSecret -Name '00000000-0000-0000-0000-000000000000' | Should -BeNullOrEmpty
