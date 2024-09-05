@@ -113,6 +113,7 @@ jobs:
         $config = New-PesterConfiguration
         $config.Run.Path = "."
         $config.CodeCoverage.Enabled = $true
+        $config.CodeCoverage.Path = @("SecretManagement.Warden.Extension")
         # $config.CodeCoverage.OutputFormat = 'JaCoCo'
         $config.CodeCoverage.OutputPath = "coverage.xml"
         $config.TestResult.Enabled = $true
@@ -151,5 +152,5 @@ jobs:
         reporttypes: MarkdownSummaryGithub
 
     - name: Publish Coverage In Build Summary
-      shell: pwsh
-      run: Get-Content ./SummaryGithub.md >> $GITHUB_STEP_SUMMARY # Adjust path and filename if necessary
+      shell: bash
+      run: cat ./SummaryGithub.md >> $GITHUB_STEP_SUMMARY # Adjust path and filename if necessary
