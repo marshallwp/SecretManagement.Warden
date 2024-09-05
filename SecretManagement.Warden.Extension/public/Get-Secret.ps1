@@ -34,7 +34,7 @@ function Get-Secret {
         $Result = Invoke-BitwardenCLI @CmdParams
     }
     # Per SecretManagement Readme, if a secret is not found, Get-Secret should return null, not an error.
-    catch [System.Management.Automation.ItemNotFoundException],[System.DirectoryServices.AccountManagement.NoMatchingPrincipalException] {
+    catch [System.Management.Automation.ItemNotFoundException] {
         return $null
     }
 
@@ -68,6 +68,6 @@ function Get-Secret {
             return $Result.$_ | ConvertTo-Hashtable
             break
         }
-        default {throw [System.NotImplementedException]"Somehow you got to a place that doesn't exist."; break}
+        default {throw [System.NotImplementedException]"The $_ BitwardenItemType is not supported."; break}
     }
 }

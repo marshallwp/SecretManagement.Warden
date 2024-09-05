@@ -1,0 +1,50 @@
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04">
+  <Obj RefId="0">
+    <TN RefId="0">
+      <T>Bitwarden.SecureNote</T>
+      <T>System.Management.Automation.PSCustomObject</T>
+      <T>System.Object</T>
+    </TN>
+    <MS>
+      <Nil N="passwordHistory" />
+      <DT N="revisionDate">2024-09-03T19:58:34.257Z</DT>
+      <DT N="creationDate">2024-09-03T19:58:34.254Z</DT>
+      <Nil N="deletedDate" />
+      <S N="object">item</S>
+      <S N="id">361a554c-d79e-4e79-bf2e-aff656528ec3</S>
+      <Nil N="organizationId" />
+      <Nil N="folderId" />
+      <Obj N="type" RefId="1">
+        <TN RefId="1">
+          <T>BitwardenItemType</T>
+          <T>System.Enum</T>
+          <T>System.ValueType</T>
+          <T>System.Object</T>
+        </TN>
+        <ToString>SecureNote</ToString>
+        <I32>2</I32>
+      </Obj>
+      <I64 N="reprompt">0</I64>
+      <S N="name">JSON-Test-Obj</S>
+      <S N="notes">PowerShellObjectRepresentation: INI_x000A_[Test]_x000A_Name = John Doe_x000A_Product = Example Product 1_x000A_CustomerID = 12345</S>
+      <B N="favorite">false</B>
+      <Obj N="secureNote" RefId="2">
+        <TN RefId="2">
+          <T>System.Management.Automation.PSCustomObject</T>
+          <T>System.Object</T>
+        </TN>
+        <MS>
+          <I64 N="type">0</I64>
+        </MS>
+      </Obj>
+      <Obj N="collectionIds" RefId="3">
+        <TN RefId="3">
+          <T>System.Object[]</T>
+          <T>System.Array</T>
+          <T>System.Object</T>
+        </TN>
+        <LST />
+      </Obj>
+    </MS>
+  </Obj>
+</Objs>
