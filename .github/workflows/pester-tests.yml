@@ -95,6 +95,7 @@ jobs:
       shell: pwsh
       working-directory: .
       run: |
+        Import-Module Microsoft.PowerShell.SecretManagement
         $env:BITWARDEN_CLI_PATH = "/opt/bitwarden-cli/bw"
         # Run Pester tests with Code Coverage
         $config = New-PesterConfiguration
