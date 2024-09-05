@@ -15,7 +15,7 @@ BeforeAll {
 Describe "Get-Secret" {
     It "Returns '`$null' for non-existent secret." {
         Mock Invoke-BitwardenCLI {
-            $ex = New-Object System.DirectoryServices.AccountManagement.NoMatchingPrincipalException "Not found."
+            $ex = New-Object System.Management.Automation.ItemNotFoundException "Not found."
             Write-Error $ex -Category ObjectNotFound -ErrorAction Stop
         }
         Get-Secret -Name '00000000-0000-0000-0000-000000000000' -AdditionalParameters @{} | Should -BeNullOrEmpty
@@ -90,4 +90,18 @@ Describe "Get-Secret" {
             Compare-Object -ReferenceObject $Expected -DifferenceObject $Result | Should -BeNullOrEmpty
         }
     }
+
+    Context "Throw Errors On" {
+        It "Invalid PowerShellObjectRepresentation value" {
+            $mock = Import-Clixml -Path (Join-Path $PSScriptRoot "mock" "old-secrets" "secure-notes" "mock-obj-invalid.xml")
+            Mock Invoke-BitwardenCLI { return $mock }
+            {Get-Secret -Name $mock.id -AdditionalParameters @{}} | Should -Throw "*is not a supported means of representing a PowerShell Object.*"
+        }
+        It "Invalid BitwardenItemType" {
+            $mock = Import-Clixml -Path (Join-Path $PSScriptRoot "mock" "old-secrets" "mock-undefined.xml")
+            Mock Invoke-BitwardenCLI { return $mock }
+            {Get-Secret -Name $mock.id -AdditionalParameters @{}} | Should -Throw "The * is not supported."
+        }
+    }
+
 }

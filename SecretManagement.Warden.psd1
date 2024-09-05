@@ -4,7 +4,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion = '1.1.3'
+    ModuleVersion = '1.1.4'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Core")
@@ -101,7 +101,11 @@
             IconUri = 'https://raw.githubusercontent.com/marshallwp/SecretManagement.Warden/main/images/warden_extension_logo_85x85.png'
 
             # ReleaseNotes of this module
-            ReleaseNotes = "Added Pester Tests for Manifests, Classes, and most Private functions."
+            ReleaseNotes = "## Changes
+- Replaced System.DirectoryServices exception types with System.Management.Automation ones to improve compatability with non-Windows platforms
+- Version check for explicitly defined bitwarden clis will now query the cli for its version if the file version would fail the check.
+## Testing
+- GitHub workflow is now working."
 
             # Prerelease string of this module
             # Prerelease = ''
