@@ -42,6 +42,13 @@ Describe "ConvertTo-Hashtable" {
 
             It "Conversion Preserves Keys and Values" {
                 $Example = .$Cmd
+
+                # Test parameter-input of Multiple-Objects differently; it should output an array of hashtables.
+                if($IptWay -eq "Parameter" -and $Name -eq "Multiple Objects") {
+                    [hashtable[]]$exArray
+                    foreach($tbl in $Example) { $exArray += $tbl }
+                    $Example = $exArray
+                }
                 Compare-Object -ReferenceObject $Case -DifferenceObject ([PSCustomObject]$Example) |
                     Should -BeNullOrEmpty
             }

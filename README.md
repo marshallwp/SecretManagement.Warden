@@ -1,5 +1,8 @@
 # SecretManagement extension for BitWarden
-[![Run Pester Tests](https://github.com/marshallwp/SecretManagement.Warden/actions/workflows/pester-tests.yml/badge.svg)](https://github.com/marshallwp/SecretManagement.Warden/actions/workflows/pester-tests.yml)
+[![Run Pester Tests](https://github.com/marshallwp/SecretManagement.Warden/actions/workflows/pester-tests.yml/badge.svg?branch=main)](https://github.com/marshallwp/SecretManagement.Warden/actions/workflows/pester-tests.yml)
+[![PSGallery Downloads](https://img.shields.io/powershellgallery/dt/SecretManagement.Warden?label=PSGallery%20Downloads
+)](https://www.powershellgallery.com/packages/SecretManagement.Warden)
+
 
 This module is an extension vault for the [Microsoft.PowerShell.SecretManagement](https://www.powershellgallery.com/packages/Microsoft.PowerShell.SecretManagement) module. It wraps around the official [Bitwarden CLI](https://github.com/bitwarden/clients/tree/master/apps/cli) to interface with Bitwarden and Vaultwarden instances. This module works over all supported PowerShell platforms on Windows, Linux, and macOS.
 
