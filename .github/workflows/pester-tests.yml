@@ -113,7 +113,7 @@ jobs:
         $config = New-PesterConfiguration
         $config.Run.Path = "."
         $config.CodeCoverage.Enabled = $true
-        $config.CodeCoverage.OutputFormat = JaCoCo
+        $config.CodeCoverage.OutputFormat = 'JaCoCo'
         $config.CodeCoverage.OutputPath = "coverage.xml"
         $config.TestResult.Enabled = $true
         $config.TestResult.OutputFormat = 'NUnit2.5'
