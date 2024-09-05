@@ -116,23 +116,24 @@ jobs:
         $config.CodeCoverage.OutputPath = "coverage.xml"
         $config.TestResult.Enabled = $true
         $config.TestResult.OutputPath = "Unit.Tests.xml"
-        $config.Output.Verbosity = "Detailed"
+        # $config.Output.Verbosity = "Detailed"
+        $config.Output.CIFormat = "GithubActions"
         Invoke-Pester -Configuration $config
 
-    - name: Setup .NET Core # Required to execute ReportGenerator
-      if: runner.os == 'Linux'
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.x
-        dotnet-quality: 'ga'
+    # - name: Setup .NET Core # Required to execute ReportGenerator
+    #   if: runner.os == 'Linux'
+    #   uses: actions/setup-dotnet@v4
+    #   with:
+    #     dotnet-version: 8.x
+    #     dotnet-quality: 'ga'
     
-    - name: ReportGenerator
-      if: runner.os == 'Linux'
-      uses: danielpalme/ReportGenerator-GitHub-Action@5.3.9
-      with:
-        reports: coverage.xml
-        targetdir: .
-        reporttypes: MarkdownSummaryGithub
+    # - name: ReportGenerator
+    #   if: runner.os == 'Linux'
+    #   uses: danielpalme/ReportGenerator-GitHub-Action@5.3.9
+    #   with:
+    #     reports: coverage.xml
+    #     targetdir: .
+    #     reporttypes: MarkdownSummaryGithub
 
     - name: Upload test results
       if: ${{ always() }}
@@ -146,11 +147,11 @@ jobs:
       if: runner.os == 'Linux'
       uses: actions/upload-artifact@v4
       with:
-        name: code-coverage-report
+        name: ${{ runner.os }}-code-coverage
         path: coverage.xml
         retention-days: 7
 
-    - name: Publish Coverage In Build Summary
-      if: runner.os == 'Linux'
-      run: cat ./SummaryGithub.md >> $GITHUB_STEP_SUMMARY # Adjust path and filename if necessary
-      shell: bash
+    # - name: Publish Coverage In Build Summary
+    #   if: runner.os == 'Linux'
+    #   run: cat ./SummaryGithub.md >> $GITHUB_STEP_SUMMARY # Adjust path and filename if necessary
+    #   shell: bash
