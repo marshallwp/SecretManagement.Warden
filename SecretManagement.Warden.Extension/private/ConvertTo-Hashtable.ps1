@@ -29,7 +29,7 @@ function ConvertTo-HashTable
                 foreach ($object in $InputObject) { ConvertTo-HashTable $object }
             )
 
-            Write-Output $collection
+            Write-Output $collection -NoEnumerate
         }
         elseif ($InputObject -is [PSObject] -and $InputObject -isnot [SecureString])
         {

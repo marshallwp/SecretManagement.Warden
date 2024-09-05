@@ -10,7 +10,7 @@ jobs:
   pester:
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest]
+        os: [windows-latest, ubuntu-latest, macos-latest]
         include:
           - os: windows-latest
             bw_dir: C:\Users\runneradmin\AppData\Local\bitwarden-cli
@@ -18,6 +18,9 @@ jobs:
           - os: ubuntu-latest
             bw_dir: /opt/bitwarden-cli
             pwsh_modules: /home/runner/.local/share/powershell/Modules
+          - os: macos-latest
+            bw_dir: /usr/local/bin/bitwarden-cli
+            pwsh_modules: /Users/runner/.local/share/powershell/Modules
     runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout code
@@ -25,14 +28,14 @@ jobs:
 
     - name: Setup Bitwraden CLI Cache
       id: bwcacher
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ${{ matrix.bw_dir }}
         key: ${{ runner.os }}-BitwardenCLI
 
     - name: Setup PowerShell Module Cache
       id: cacher
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ${{ matrix.pwsh_modules }}
         key: ${{ runner.os }}-Pester-SecretManagement
@@ -100,28 +103,21 @@ jobs:
             $Downloads.OutFile | Remove-Item
         }
 
-    - name: Run Pester Tests
+    - name: Run Pester Tests with Code Coverage
       shell: pwsh
       working-directory: .
       run: |
         Import-Module Microsoft.PowerShell.SecretManagement
         $env:BITWARDEN_CLI_PATH = (Get-ChildItem -Path "${{ matrix.bw_dir }}" -Filter "bw*" -File).FullName
-        # Run Pester tests with Code Coverage
+        # Run Pester tests
         $config = New-PesterConfiguration
         $config.Run.Path = "."
-        $config.CodeCoverage.Enabled = $IsWindows
+        $config.CodeCoverage.Enabled = $true
         $config.CodeCoverage.OutputPath = "coverage.xml"
         $config.TestResult.Enabled = $true
         $config.TestResult.OutputPath = "Unit.Tests.xml"
         $config.Output.Verbosity = "Detailed"
         Invoke-Pester -Configuration $config
-
-    - name: Upload code coverage report
-      if: ${{ matrix.os }} == 'windows-latest'
-      uses: actions/upload-artifact@v4
-      with:
-        name: code-coverage-report
-        path: coverage.xml
 
     - name: Upload test results
       if: ${{ always() }}
@@ -129,3 +125,21 @@ jobs:
       with:
         name: ${{ runner.os }}-Unit-Tests
         path: Unit.Tests.xml
+        retention-days: 7
+
+    - name: Setup .NET Core # Required to execute ReportGenerator
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.x
+        dotnet-quality: 'ga'
+
+    - name: ReportGenerator
+      uses: danielpalme/ReportGenerator-GitHub-Action@5.3.9
+      with:
+        reports: coverage.xml
+        targetdir: .
+        reporttypes: MarkdownSummaryGithub
+
+    - name: Publish Coverage In Build Summary
+      shell: bash
+      run: cat ./SummaryGithub.md >> $GITHUB_STEP_SUMMARY # Adjust path and filename if necessary

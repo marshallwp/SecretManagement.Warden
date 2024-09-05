@@ -101,11 +101,20 @@
             IconUri = 'https://raw.githubusercontent.com/marshallwp/SecretManagement.Warden/main/images/warden_extension_logo_85x85.png'
 
             # ReleaseNotes of this module
-            ReleaseNotes = "## Changes
-- Replaced System.DirectoryServices exception types with System.Management.Automation ones to improve compatability with non-Windows platforms
-- Version check for explicitly defined bitwarden clis will now query the cli for its version if the file version would fail the check.
+            ReleaseNotes = "## Breaking Changes
+- Replaced System.DirectoryServices exception types with System.Management.Automation ones. The former were only available on Windows.
+## Changes
+- Updated Get-Secret's invalid BitwardenItemType error message text.
+- Version check for explicitly defined Bitwarden CLIs will now query the CLI for its version if the file version would fail the check.
 ## Testing
-- GitHub workflow is now working."
+- GitHub workflow to run Pester tests on Windows, Linux, and MacOS is now working.
+- Added tests:
+  - Added test to ensure Get-CacheLocation returns the correct filename.
+  - Ensuring Get-Secret throws errors when appropriate.
+  - Testing ConvertTo-Hashtable both when piped to and when data is supplied as a parameter.
+## Documentation
+- Added test results badge to README.
+- Added PSGallery Downloads badge to README."
 
             # Prerelease string of this module
             # Prerelease = ''
