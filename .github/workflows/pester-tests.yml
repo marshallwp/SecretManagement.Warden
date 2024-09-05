@@ -10,7 +10,7 @@ jobs:
   pester:
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest]
+        os: [windows-latest, ubuntu-latest, macos-latest]
         include:
           - os: windows-latest
             bw_dir: C:\Users\runneradmin\AppData\Local\bitwarden-cli
@@ -18,6 +18,9 @@ jobs:
           - os: ubuntu-latest
             bw_dir: /opt/bitwarden-cli
             pwsh_modules: /home/runner/.local/share/powershell/Modules
+          - os: macos-latest
+            bw_dir: /usr/local/bin/bitwarden-cli
+            pwsh_modules: /Users/runner/.local/share/powershell/Modules
     runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout code
@@ -116,6 +119,13 @@ jobs:
         $config.Output.Verbosity = "Detailed"
         Invoke-Pester -Configuration $config
 
+    - name: Upload test results
+      if: ${{ always() }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ runner.os }}-Unit-Tests
+        path: Unit.Tests.xml
+
     - name: Upload code coverage report
       if: runner.os == 'Windows'
       uses: actions/upload-artifact@v4
@@ -123,9 +133,13 @@ jobs:
         name: code-coverage-report
         path: coverage.xml
 
-    - name: Upload test results
-      if: ${{ always() }}
-      uses: actions/upload-artifact@v4
+    - name: jacoco-reporter
+      if: runner.os == 'Windows'
+      uses: PavanMudigonda/jacoco-reporter@v5.0
       with:
-        name: ${{ runner.os }}-Unit-Tests
-        path: Unit.Tests.xml
+        coverage_results_path: coverage.xml
+        output_level: 'detailed'
+        # Minimum allowed coverage percentage as an integer.
+        # minimum_coverage: # optional
+        # Fail the action when the minimum coverage was not met.
+        # fail_below_threshold: # optional          
