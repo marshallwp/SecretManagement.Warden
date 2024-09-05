@@ -109,9 +109,9 @@
 ## Testing
 - GitHub workflow to run Pester tests on Windows, Linux, and MacOS is now working.
 - Added tests:
-  - Added test to ensure Get-CacheLocation returns the correct filename.
+  - Ensure Get-CacheLocation returns the correct filename.
   - Ensuring Get-Secret throws errors when appropriate.
-  - Testing ConvertTo-Hashtable both when piped to and when data is supplied as a parameter.
+  - ConvertTo-Hashtable is now has tests for parameter-supplied data.
 ## Documentation
 - Added test results badge to README.
 - Added PSGallery Downloads badge to README."
