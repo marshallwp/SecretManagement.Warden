@@ -4,7 +4,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion = '1.1.3'
+    ModuleVersion = '1.1.4'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Core")
@@ -101,7 +101,19 @@
             IconUri = 'https://raw.githubusercontent.com/marshallwp/SecretManagement.Warden/main/images/warden_extension_logo_85x85.png'
 
             # ReleaseNotes of this module
-            ReleaseNotes = "Added Pester Tests for Manifests, Classes, and most Private functions."
+            ReleaseNotes = "## Changes
+- Replaced System.DirectoryServices exception types with System.Management.Automation ones. The former were only available on Windows.
+- Updated Get-Secret's invalid BitwardenItemType error message text.
+- Version check for explicitly defined Bitwarden CLIs will now query the CLI for its version if the file version would fail the check.
+## Testing
+- GitHub workflow to run Pester tests on Windows, Linux, and MacOS is now working.
+- Added tests:
+  - Ensure Get-CacheLocation returns the correct filename.
+  - Ensuring Get-Secret throws errors when appropriate.
+  - ConvertTo-Hashtable is now has tests for parameter-supplied data.
+## Documentation
+- Added test results badge to README.
+- Added PSGallery Downloads badge to README."
 
             # Prerelease string of this module
             # Prerelease = ''
