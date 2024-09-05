@@ -103,7 +103,7 @@ jobs:
             $Downloads.OutFile | Remove-Item
         }
 
-    - name: Run Pester Tests
+    - name: Run Pester Tests with Code Coverage
       shell: pwsh
       working-directory: .
       run: |
@@ -112,7 +112,8 @@ jobs:
         # Run Pester tests
         $config = New-PesterConfiguration
         $config.Run.Path = "."
-        $config.CodeCoverage.Enabled = $false
+        $config.CodeCoverage.Enabled = $true
+        $config.CodeCoverage.OutputPath = "coverage.xml"
         $config.TestResult.Enabled = $true
         $config.TestResult.OutputPath = "Unit.Tests.xml"
         $config.Output.Verbosity = "Detailed"
@@ -125,21 +126,6 @@ jobs:
         name: ${{ runner.os }}-Unit-Tests
         path: Unit.Tests.xml
         retention-days: 7
-
-    - name: Run Pester Code Coverage
-      shell: pwsh
-      working-directory: .
-      run: |
-        Import-Module Microsoft.PowerShell.SecretManagement
-        $env:BITWARDEN_CLI_PATH = (Get-ChildItem -Path "${{ matrix.bw_dir }}" -Filter "bw*" -File).FullName
-        # Run Pester Code Coverage
-        $config = New-PesterConfiguration
-        $config.Run.Path = "."
-        $config.CodeCoverage.Enabled = $true
-        $config.CodeCoverage.OutputPath = "coverage.xml"
-        $config.TestResult.Enabled = $false
-        $config.Output.Verbosity = "Detailed"
-        Invoke-Pester -Configuration $config
 
     - name: Setup .NET Core # Required to execute ReportGenerator
       uses: actions/setup-dotnet@v4
