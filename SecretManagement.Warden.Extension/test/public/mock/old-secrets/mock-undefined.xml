@@ -1,0 +1,55 @@
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04">
+  <Obj RefId="0">
+    <TN RefId="0">
+      <T>Bitwarden.Undefined</T>
+      <T>System.Management.Automation.PSCustomObject</T>
+      <T>System.Object</T>
+    </TN>
+    <MS>
+      <Nil N="passwordHistory" />
+      <DT N="revisionDate">2024-09-03T19:39:08.518Z</DT>
+      <DT N="creationDate">2024-09-03T19:39:08.507Z</DT>
+      <Nil N="deletedDate" />
+      <S N="object">item</S>
+      <S N="id">d229e6b7-7aee-43ca-ba4c-ae0503a2b1f5</S>
+      <Nil N="organizationId" />
+      <Nil N="folderId" />
+      <Obj N="type" RefId="1">
+        <TN RefId="1">
+          <T>BitwardenItemType</T>
+          <T>System.Enum</T>
+          <T>System.ValueType</T>
+          <T>System.Object</T>
+        </TN>
+        <ToString>Undefined</ToString>
+        <I32>0</I32>
+      </Obj>
+      <I64 N="reprompt">0</I64>
+      <S N="name">Example</S>
+      <Nil N="notes" />
+      <B N="favorite">false</B>
+      <Obj N="card" RefId="2">
+        <TN RefId="2">
+          <T>System.Management.Automation.PSCustomObject</T>
+          <T>System.Object</T>
+        </TN>
+        <MS>
+          <S N="cardholderName">John Doe</S>
+          <Nil N="brand" />
+          <S N="number">12345678910</S>
+          <S N="expMonth">1</S>
+          <S N="expYear">2001</S>
+          <S N="code">1234</S>
+        </MS>
+      </Obj>
+      <Obj N="collectionIds" RefId="3">
+        <TN RefId="3">
+          <T>System.Object[]</T>
+          <T>System.Array</T>
+          <T>System.Object</T>
+        </TN>
+        <LST />
+      </Obj>
+    </MS>
+  </Obj>
+</Objs>
