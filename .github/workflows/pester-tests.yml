@@ -34,7 +34,7 @@ jobs:
       id: cacher
       uses: actions/cache@v3
       with:
-        path: ${{ pwsh_modules }}
+        path: ${{ matrix.pwsh_modules }}
         key: ${{ runner.os }}-Pester-SecretManagement
 
     - name: Install PowerShell Dependencies
