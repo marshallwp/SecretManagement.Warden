@@ -8,7 +8,16 @@ on:
 
 jobs:
   pester:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+        include:
+          - os: windows-latest
+            bw_dir: C:\Users\runneradmin\AppData\Local\bitwarden-cli
+            pwsh_modules: C:\Users\runneradmin\Documents\PowerShell\Modules
+          - os: ubuntu-latest
+            bw_dir: /opt/bitwarden-cli
+            pwsh_modules: /home/runner/.local/share/powershell/Modules
 
     steps:
     - name: Checkout code
@@ -18,14 +27,14 @@ jobs:
       id: bwcacher
       uses: actions/cache@v3
       with:
-        path: /opt/bitwarden-cli
+        path: ${{ matrix.bw_dir }}
         key: ${{ runner.os }}-BitwardenCLI
 
     - name: Setup PowerShell Module Cache
       id: cacher
       uses: actions/cache@v3
       with:
-        path: ~/.local/share/powershell/Modules
+        path: ${{ pwsh_modules }}
         key: ${{ runner.os }}-Pester-SecretManagement
 
     - name: Install PowerShell Dependencies
@@ -51,12 +60,12 @@ jobs:
             @{
                 Name = "Binary"
                 Uri = "https://github.com/bitwarden/clients/releases/download/cli-v$version/bw-$os-$version.zip"
-                OutFile = "/tmp/bw-$os-$version.zip"
+                OutFile = New-TemporaryFile
             },
             @{
                 Name = "Checksum"
                 Uri = "https://github.com/bitwarden/clients/releases/download/cli-v$version/bw-$os-sha256-$version.txt"
-                OutFile = "/tmp/bw-$os-sha256-$version.txt"
+                OutFile = New-TemporaryFile
             }
         )
 
@@ -82,11 +91,11 @@ jobs:
         "@ -f $hash.Hash, $checksum
         }
         else {
-            if(!(Test-Path -Path "/opt/bitwarden-cli" -PathType Container)) {
-              New-Item -Path "/opt/bitwarden" -ItemType Directory
+            if(!(Test-Path -Path "${{ matrix.bw_dir }}" -PathType Container)) {
+              New-Item -Path "${{ matrix.bw_dir }}" -ItemType Directory
             }
             # Extract bw from the downloaded zip file.
-            Expand-Archive -Path ($Downloads | Where-Object {$_.Name -eq "Binary"}).OutFile -DestinationPath "/opt/bitwarden-cli"
+            Expand-Archive -Path ($Downloads | Where-Object {$_.Name -eq "Binary"}).OutFile -DestinationPath "${{ matrix.bw_dir }}"
             # Cleanup Downloaded Files
             $Downloads.OutFile | Remove-Item
         }
@@ -96,7 +105,7 @@ jobs:
       working-directory: .
       run: |
         Import-Module Microsoft.PowerShell.SecretManagement
-        $env:BITWARDEN_CLI_PATH = "/opt/bitwarden-cli/bw"
+        $env:BITWARDEN_CLI_PATH = (Get-ChildItem -Path "${{ matrix.bw_dir }}" -Filter "bw*" -File).FullName
         # Run Pester tests with Code Coverage
         $config = New-PesterConfiguration
         $config.Run.Path = "."
