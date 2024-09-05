@@ -123,8 +123,8 @@ jobs:
       if: runner.os == 'Linux'
       uses: PavanMudigonda/jacoco-reporter@v5.0
       with:
-        coverage_results_path: coverage.xml
-        output_level: 'detailed'
+        coverage_results_path: ./coverage.xml
+        # output_level: 'detailed'
         github_token: ${{ secrets.GITHUB_TOKEN }}
         # Minimum allowed coverage percentage as an integer.
         # minimum_coverage: # optional
