@@ -18,7 +18,7 @@ jobs:
           - os: ubuntu-latest
             bw_dir: /opt/bitwarden-cli
             pwsh_modules: /home/runner/.local/share/powershell/Modules
-
+    runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
