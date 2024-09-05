@@ -1,0 +1,120 @@
+name: Run Pester Tests
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  pester:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Bitwraden CLI Cache
+      id: bwcacher
+      uses: actions/cache@v3
+      with:
+        path: /opt/bitwarden-cli
+        key: ${{ runner.os }}-BitwardenCLI
+
+    - name: Setup PowerShell Module Cache
+      id: cacher
+      uses: actions/cache@v3
+      with:
+        path: ~/.local/share/powershell/Modules
+        key: ${{ runner.os }}-Pester-SecretManagement
+
+    - name: Install PowerShell Dependencies
+      if: steps.cacher.outputs.cache-hit != 'true'
+      shell: pwsh
+      run: Install-PSResource -Name Pester,Microsoft.PowerShell.SecretManagement -Repository PSGallery -Scope CurrentUser -TrustRepository
+
+    - name: Install Bitwarden CLI
+      if: steps.bwcacher.outputs.cache-hit != 'true'
+      shell: pwsh
+      run: |
+        # Get Latest Version Number
+        $res = Invoke-RestMethod "https://github.com/bitwarden/clients/releases.atom"
+        $version = ($res.id | Select-String -Pattern "(?<=\/cli-v)([\d.]+)").Matches[0].Value
+
+        # Determine OS string.
+        if($IsWindows) { $os = "windows"}
+        elseif($IsMacOS) { $os = "macos"}
+        elseif($IsLinux) { $os = "linux"}
+
+        # Download file list
+        $Downloads = @(
+            @{
+                Name = "Binary"
+                Uri = "https://github.com/bitwarden/clients/releases/download/cli-v$version/bw-$os-$version.zip"
+                OutFile = "/tmp/bw-$os-$version.zip"
+            },
+            @{
+                Name = "Checksum"
+                Uri = "https://github.com/bitwarden/clients/releases/download/cli-v$version/bw-$os-sha256-$version.txt"
+                OutFile = "/tmp/bw-$os-sha256-$version.txt"
+            }
+        )
+
+        # Download files in parallel.
+        $jobs = @()
+        foreach ($Download in $Downloads) {
+            $jobs += Start-ThreadJob -Name $Download.Name -ScriptBlock {
+                $params = $using:Download
+                Invoke-WebRequest -Uri $params.Uri -OutFile $params.OutFile
+            }
+        }
+        Write-Host "Downloading Bitwarden"
+        Receive-Job -Job $jobs -Wait
+
+        $hash = Get-FileHash -Path ($Downloads | Where-Object {$_.Name -eq "Binary"}).OutFile -Algorithm SHA256
+        $checksum = Get-Content -Path ($Downloads | Where-Object {$_.Name -eq "Checksum"}).OutFile
+
+        if($hash.Hash -ine $checksum) {
+            Write-Error @"
+        The SHA256 Hash of the Downloaded Bitwarden CLI Doesn't Match The Provided Checksum!
+            Hash: {0}
+        Checksum: {1}
+        "@ -f $hash.Hash, $checksum
+        }
+        else {
+            if(!(Test-Path -Path "/opt/bitwarden-cli" -PathType Container)) {
+              New-Item -Path "/opt/bitwarden" -ItemType Directory
+            }
+            # Extract bw from the downloaded zip file.
+            Expand-Archive -Path ($Downloads | Where-Object {$_.Name -eq "Binary"}).OutFile -DestinationPath "/opt/bitwarden-cli"
+            # Cleanup Downloaded Files
+            $Downloads.OutFile | Remove-Item
+        }
+
+    - name: Run Pester Tests
+      shell: pwsh
+      working-directory: .
+      run: |
+        $env:BITWARDEN_CLI_PATH = "/opt/bitwarden-cli/bw"
+        # Run Pester tests with Code Coverage
+        $config = New-PesterConfiguration
+        $config.Run.Path = "."
+        $config.CodeCoverage.Enabled = $true
+        $config.CodeCoverage.OutputPath = "coverage.xml"
+        $config.TestResult.Enabled = $true
+        $config.TestResult.OutputPath = "Unit.Tests.xml"
+        Invoke-Pester -Configuration $config
+
+    - name: Upload code coverage report
+      if: ${{ always() }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: code-coverage-report
+        path: coverage.xml
+
+    - name: Upload test results
+      if: ${{ always() }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ runner.os }}-Unit-Tests
+        path: Unit.Tests.xml
