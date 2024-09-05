@@ -21,12 +21,14 @@ jobs:
     #     path: ~/.local/share/powershell/Modules
     #     key: ${{ runner.os }}-Pester-SecretManagement
 
-    - name: Install Bitwarden CLI Dependency
-      run: npm i @bitwarden/cli -g
+    # - name: Install Bitwarden CLI Dependency
+    #   run: npm i @bitwarden/cli -g
 
-    - name: Install Pester
+    - name: Install Dependencies
       shell: pwsh
-      run: Install-PSResource -Name Pester,Microsoft.PowerShell.SecretManagement -Repository PSGallery -Scope CurrentUser -TrustRepository
+      run: |
+        sudo snap install bw
+        Install-PSResource -Name Pester,Microsoft.PowerShell.SecretManagement -Repository PSGallery -Scope CurrentUser -TrustRepository
 
     - name: Run Pester Tests
       shell: pwsh
