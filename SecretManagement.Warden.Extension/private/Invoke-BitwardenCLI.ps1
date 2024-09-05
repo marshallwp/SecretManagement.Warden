@@ -9,6 +9,10 @@
 # check if we should use a specific bw.exe
 if ( $env:BITWARDEN_CLI_PATH -and ($BitwardenCLI = Get-Command $env:BITWARDEN_CLI_PATH -CommandType Application -ErrorAction SilentlyContinue) ) {
     $CurrentVersion = $BitwardenCLI.Version
+    # ?Query the CLI for version number if the file version would fail the test. Workaround for how the file version is not always the cli version.
+    if($CurrentVersion -lt $MinSupportedVersion) {
+        $CurrentVersion = .$env:BITWARDEN_CLI_PATH --version
+    }
 }
 elseif ( $BitwardenCLI = Get-Command -Name bw.exe -CommandType Application -ErrorAction Ignore ) {
     # ?Scoop shims eliminate version numbers, so we ask scoop for the true version.
