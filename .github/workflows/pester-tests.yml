@@ -112,7 +112,7 @@ jobs:
         # Run Pester tests with Code Coverage
         $config = New-PesterConfiguration
         $config.Run.Path = "."
-        $config.CodeCoverage.Enabled = $IsWindows
+        $config.CodeCoverage.Enabled = $IsLinux
         $config.CodeCoverage.OutputPath = "coverage.xml"
         $config.TestResult.Enabled = $true
         $config.TestResult.OutputPath = "Unit.Tests.xml"
@@ -127,14 +127,14 @@ jobs:
         path: Unit.Tests.xml
 
     - name: Upload code coverage report
-      if: runner.os == 'Windows'
+      if: runner.os == 'Linux'
       uses: actions/upload-artifact@v4
       with:
         name: code-coverage-report
         path: coverage.xml
 
     - name: jacoco-reporter
-      if: runner.os == 'Windows'
+      if: runner.os == 'Linux'
       uses: PavanMudigonda/jacoco-reporter@v5.0
       with:
         coverage_results_path: coverage.xml
@@ -142,4 +142,11 @@ jobs:
         # Minimum allowed coverage percentage as an integer.
         # minimum_coverage: # optional
         # Fail the action when the minimum coverage was not met.
-        # fail_below_threshold: # optional          
+        # fail_below_threshold: # optional
+
+    - name: Upload Code Coverage Markdown Report
+      if: runner.os == 'Linux'
+      uses: actions/upload-artifact@4
+      with:
+        name: code-coverage-report-markdown
+        path: coverage-results.md
