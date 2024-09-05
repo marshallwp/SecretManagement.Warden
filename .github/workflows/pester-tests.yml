@@ -119,6 +119,17 @@ jobs:
         $config.Output.Verbosity = "Detailed"
         Invoke-Pester -Configuration $config
 
+    - name: jacoco-reporter
+      if: runner.os == 'Linux'
+      uses: PavanMudigonda/jacoco-reporter@v5.0
+      with:
+        coverage_results_path: coverage.xml
+        output_level: 'detailed'
+        # Minimum allowed coverage percentage as an integer.
+        # minimum_coverage: # optional
+        # Fail the action when the minimum coverage was not met.
+        # fail_below_threshold: # optional
+
     - name: Upload test results
       if: ${{ always() }}
       uses: actions/upload-artifact@v4
@@ -133,20 +144,9 @@ jobs:
         name: code-coverage-report
         path: coverage.xml
 
-    - name: jacoco-reporter
-      if: runner.os == 'Linux'
-      uses: PavanMudigonda/jacoco-reporter@v5.0
-      with:
-        coverage_results_path: coverage.xml
-        output_level: 'detailed'
-        # Minimum allowed coverage percentage as an integer.
-        # minimum_coverage: # optional
-        # Fail the action when the minimum coverage was not met.
-        # fail_below_threshold: # optional
-
     - name: Upload Code Coverage Markdown Report
       if: runner.os == 'Linux'
-      uses: actions/upload-artifact@4
+      uses: actions/upload-artifact@v4
       with:
         name: code-coverage-report-markdown
         path: coverage-results.md
