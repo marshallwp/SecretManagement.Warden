@@ -28,14 +28,14 @@ jobs:
 
     - name: Setup Bitwraden CLI Cache
       id: bwcacher
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ${{ matrix.bw_dir }}
         key: ${{ runner.os }}-BitwardenCLI
 
     - name: Setup PowerShell Module Cache
       id: cacher
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ${{ matrix.pwsh_modules }}
         key: ${{ runner.os }}-Pester-SecretManagement
@@ -116,7 +116,7 @@ jobs:
         # $config.CodeCoverage.OutputFormat = 'JaCoCo'
         $config.CodeCoverage.OutputPath = "coverage.xml"
         $config.TestResult.Enabled = $true
-        $config.TestResult.OutputFormat = 'NUnit2.5'
+        # $config.TestResult.OutputFormat = 'NUnit2.5'
         $config.TestResult.OutputPath = "Unit.Tests.xml"
         $config.Output.Verbosity = "Detailed"
         Invoke-Pester -Configuration $config
@@ -130,7 +130,7 @@ jobs:
         retention-days: 7
 
     - name: Upload code coverage report
-      if: runner.os == 'Linux'
+      if: ${{ success() }}
       uses: actions/upload-artifact@v4
       with:
         name: ${{ runner.os }}-code-coverage
@@ -151,5 +151,5 @@ jobs:
         reporttypes: MarkdownSummaryGithub
 
     - name: Publish Coverage In Build Summary
-      run: cat ./SummaryGithub.md >> $GITHUB_STEP_SUMMARY # Adjust path and filename if necessary
-      shell: bash
+      shell: pwsh
+      run: Get-Content ./SummaryGithub.md >> $GITHUB_STEP_SUMMARY # Adjust path and filename if necessary
