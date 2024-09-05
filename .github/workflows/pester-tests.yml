@@ -92,7 +92,7 @@ jobs:
         }
         else {
             if(!(Test-Path -Path "${{ matrix.bw_dir }}" -PathType Container)) {
-              New-Item -Path "${{ matrix.bw_dir }}" -ItemType Directory
+              New-Item -Path "${{ matrix.bw_dir }}" -ItemType Directory | Out-Null
             }
             # Extract bw from the downloaded zip file.
             Expand-Archive -Path ($Downloads | Where-Object {$_.Name -eq "Binary"}).OutFile -DestinationPath "${{ matrix.bw_dir }}"
@@ -113,6 +113,7 @@ jobs:
         $config.CodeCoverage.OutputPath = "coverage.xml"
         $config.TestResult.Enabled = $true
         $config.TestResult.OutputPath = "Unit.Tests.xml"
+        $config.Output.Verbosity = "Detailed"
         Invoke-Pester -Configuration $config
 
     - name: Upload code coverage report
