@@ -29,14 +29,14 @@ jobs:
 
     - name: Setup Bitwraden CLI Cache
       id: bwcacher
-      uses: actions/cache@v4
+      uses: actions/cache@v3
       with:
         path: ${{ matrix.bw_dir }}
         key: ${{ runner.os }}-BitwardenCLI
 
     - name: Setup PowerShell Module Cache
       id: cacher
-      uses: actions/cache@v4
+      uses: actions/cache@v3
       with:
         path: ${{ matrix.pwsh_modules }}
         key: ${{ runner.os }}-Pester-SecretManagement
