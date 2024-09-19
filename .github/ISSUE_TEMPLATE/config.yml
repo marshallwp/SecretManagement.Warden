@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: PowerShell Support
+    url: https://github.com/PowerShell/PowerShell/blob/master/.github/SUPPORT.md
+    about: PowerShell Support Questions/Help
+  - name: Microsoft.PowerShell.SecretManagement Issues
+    url: https://github.com/PowerShell/SecretManagement/issues/new/choose
+    about: Report any issues with the base module here.

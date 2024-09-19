@@ -64,7 +64,6 @@ function Get-Secret {
         }
         { "Login","Card","Identity" -icontains $_ } {
             # Output login as a hashtable. This allows us to support credentials that lack a username and therefore cannot output a PSCredential.
-            # *Unlike Get-SecretInfo, Get-Secret does not support ordered hashtables.
             return $Result.$_ | ConvertTo-Hashtable
             break
         }
