@@ -36,4 +36,20 @@ Describe "ConvertTo-BWEncoding" {
             $sample | Should -Be $Expected
         }
     }
+
+    Context "Verbose Output" {
+        It "<InputType>: [Verbose] <Expected>" -ForEach @(
+            @{ InputType="Int32"; Case=32; Expected=@('Object is already a JSON string', 'Converting JSON to Base64 encoding') },
+            @{ InputType="String"; Case=$str; Expected="Converting JSON to Base64 encoding" },
+            @{ InputType="Base64"; Case=$strB64; Expected="Object is already Base64 encoded" },
+            @{ InputType="HashTable"; Case=$obj; Expected=@('Converting object to JSON', 'Converting JSON to Base64 encoding') },
+            @{ InputType="JSON"; Case=$json; Expected='Converting JSON to Base64 encoding' },
+            @{ InputType="JSON (Base64)"; Case=$jsonB64; Expected="Object is already Base64 encoded" }
+        ) {
+            $tmpFile = New-TemporaryFile
+            ConvertTo-BWEncoding $Case -Verbose 4> $tmpFile.FullName
+            Get-Content $tmpFile | Should -Be $Expected
+            Remove-Item $tmpFile
+        }
+    }
 }

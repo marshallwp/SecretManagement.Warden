@@ -7,6 +7,8 @@ BeforeAll {
     . (Join-Path $BasePath "classes" "BitwardenEnum.ps1")
 
     Mock Sync-BitwardenVault { }
+
+    Import-Module -Name Microsoft.PowerShell.SecretManagement
 }
 
 Describe "Get-SecretInfo" {
