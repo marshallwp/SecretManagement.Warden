@@ -6,6 +6,11 @@ workflow:
 default:
   # UBI is RedHat's free Universal Base Image.
   image: mcr.microsoft.com/powershell/test-deps:ubi-9
+  cache:
+    - key: test-cache
+      paths:
+        - /opt/bitwarden-cli/
+        - /home/runner/.local/share/powershell/Modules/
   before_script:
     - Install-PSResource -Name Pester,Microsoft.PowerShell.SecretManagement -Repository PSGallery -TrustRepository
     - |
@@ -82,6 +87,6 @@ tests:
     reports:
       coverage_report:
         path: coverage.xml
-        coverage_format: cobertura
+        coverage_format: jacoco
       junit: testResults.xml
   coverage: /Covered (\d+\.\d+%)/
