@@ -87,6 +87,8 @@ Lastly, the `SecretManagement` module can only handle unlock operations, not log
 ### (Recommended) Utilize API Key for Login
 This Module is designed for unattended usage and expects you to implement login via [API Key environmental variables](https://bitwarden.com/help/cli/#using-an-api-key).  If setup this way, the `SecretManagement.Warden` extension will use these credentials to silently resolve any "You are not logged in" errors.  NOTE: While this means you will effectively always be logged in, you will still need to unlock the vault with your password every session to gain access to secrets.
 
+This is also useful for troubleshooting, as it allows you to assume the user is logged in and that if `Test-SecretVault` returns `false` it's because the vault is either locked or inaccessible.
+
 To configure automatic API Key usage follow the steps below:
 
 1. Retrieve your personal API Key. (See [Get your personal API key](https://bitwarden.com/help/personal-api-key/#get-your-personal-api-key) for more details than the brief below).
@@ -132,10 +134,15 @@ Alternatively, manually install its Microsoft.PowerShell.SecretManagement depend
 * `$HOME\Documents\PowerShell\Modules\SecretManagement.Warden` (Windows)
 * `$HOME/.local/share/powershell/Modules/SecretManagement.Warden` (Linux or Mac)
 
+
+## Register The Secret Vault
 Then Register the vault with SecretManagement as usual, e.g. `Register-SecretVault -Name "warden" -ModuleName "SecretManagement.Warden"`
 
-### Optional Settings
-If you wish to use any non-default configurations, put them in a hashtable and pass that to `Register-SecretVault` with the `-VaultParameters` parameter.
+### Specifying Optional Settings
+If you wish to use any non-default configurations, put them in a hashtable and pass that to `Register-SecretVault` with the `-VaultParameters` parameter.  Optionally, you can set it as the default vault by also providing the `-DefaultVault` parameter, though this is assumed if you've never registered another vault.
+
+#### Registration Vault Parameters
+When registering the vault you can include a HashTable of vault parameters to configure client behavior.  These are passed to implementing functions as `$AdditionalParameters`.
 
 Example:
 ```pwsh
@@ -147,12 +154,7 @@ $VaultParameters = @{
 Register-SecretVault -Name "warden" -ModuleName SecretManagement.Warden -VaultParameters $VaultParameters
 ```
 
-Optionally, you can set it as the default vault by also providing the `-DefaultVault` parameter, though this is assumed if you've never registered another vault.
-
-### Registration Vault Parameters
-When registering the vault you can include a HashTable of vault parameters to configure client behavior.  These are passed to implementing functions as `$AdditionalParameters`.
-
-**Supported Vault Parameters**
+### Supported Vault Parameters
 
 | Name | Description | Type | Possible Values | Default |
 | ---- | ----------- | -----| --------------- | ------- |
@@ -172,8 +174,6 @@ As a last resort you can call the Bitwarden CLI directly to force the sync with 
 When you first register a vault using this extension, commands like `Test-SecretVault` or `Get-Secret` may report that it is unable to run on the registered vault.  This error message is incorrect, in actuality the vault is just locked.  To resolve the issue, run `Unlock-SecretVault`.  Future output from `Test-SecretVault` should correctly notify you that the vault is locked.
 
 `Unlock-SecretVault` will stall if you specified an invalid URL when configuring the location of the server.
-
-When automating usage of this Module use the API key for login.  This way you can assume the user is logged in and that if `Test-SecretVault` returns `false` it's because the vault is either locked or inaccessible.
 
 ## Special Thanks
 Special Thanks to @TylerLeonhardt for publishing a baseline for this module extension. Please check out his [`LastPass Extention`](https://github.com/TylerLeonhardt/SecretManagement.LastPass)
