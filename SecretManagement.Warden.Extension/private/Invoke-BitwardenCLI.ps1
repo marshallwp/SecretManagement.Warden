@@ -79,7 +79,7 @@ function Invoke-BitwardenCLI {
     }
     process {
         $ps = New-Object System.Diagnostics.Process
-        $ps.StartInfo.Filename = $BitwardenCLI
+        $ps.StartInfo.Filename = $BitwardenCLI.Source
 
         $args | ForEach-Object {
             Write-Verbose "Argument: $_"
