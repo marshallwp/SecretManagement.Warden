@@ -15,4 +15,19 @@ Foreach($import in @($Classes + $Public + $Private))
 # Export Public functions ($Public.BaseName) for WIP modules
 # Set variables visible to the module and its functions only
 
+# *Verify Existence of and Get CommandInfo for the Bitwarden CLI.
+# ?If the path is specified by $env:BITWARDEN_CLI_PATH then use that. Else search for it in the current session. If neither exists throw an error.
+if (!($env:BITWARDEN_CLI_PATH -and ($BitwardenCLI = Get-Command $env:BITWARDEN_CLI_PATH -CommandType Application -ErrorAction SilentlyContinue)) `
+    -and (!($BitwardenCLI = Get-Command -Name bw -CommandType Application -ErrorAction Ignore)))
+{
+    if( $IsWindows ) { $platform = "windows" }
+    elseif ( $IsMacOS ) { $platform = "macos" }
+    else { $platform = "linux" }
+
+    Write-Error "No Bitwarden CLI found in your path, either specify `$env:BITWARDEN_CLI_PATH or put bw.exe in your path. If the CLI is not installed, you can install it using scoop, chocolatey, npm, snap, or winget. You can also download it directly from: https://vault.bitwarden.com/download/?app=cli&platform=$platform" -ErrorAction Stop
+}
+
+# *Perform version check ONCE during module import.
+Test-CLIVersion -BitwardenCLI $BitwardenCLI -MinSupportedVersion '2022.8.0'
+
 Export-ModuleMember -Function $Public.Basename

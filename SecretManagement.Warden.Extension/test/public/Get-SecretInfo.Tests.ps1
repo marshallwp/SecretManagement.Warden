@@ -1,4 +1,6 @@
 BeforeAll {
+    Import-Module -Name Microsoft.PowerShell.SecretManagement
+
     $BasePath = Join-Path $PSScriptRoot ".." ".."
     . (Join-Path $BasePath "public" "Get-SecretInfo.ps1")
     . (Join-Path $BasePath "private" "Sync-BitwardenVault.ps1")
