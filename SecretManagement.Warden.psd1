@@ -4,7 +4,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion = '1.1.5'
+    ModuleVersion = '1.1.5-hotfix'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Core")
@@ -101,21 +101,9 @@
             IconUri = 'https://raw.githubusercontent.com/marshallwp/SecretManagement.Warden/main/images/warden_extension_logo_85x85.png'
 
             # ReleaseNotes of this module
-            ReleaseNotes = "## Code Changes
-- Moved version checks to the new Test-CLIVersion function so it can be tested.
-- Warnings are now localized to: Czech, German, Greek, French, and Spanish via machine translation.
-  Files at: 'SecretManagement.Warden.Extension\private\localization\<ISO639-code>\Test-CLIVersion.psd1'
-## Testing
-- GitHub workflow folder renamed from workflow to workflow*s*. 🤦🏻‍♂️
-- Limited code coverage to Linux runs to avoid clutter.
-- Testing added for Test-CLIVersion.ps1.
-  - Testing for querying the various package managers is included where they're faster.
-  - Testing for querying `bw` directly included for both directly specified instances and other package managers.
-## Documentation
-- Corrected code comments and help for ConvertTo-Hashtable.
-- Added PSScriptAnalyzer badge to README.md.
-- Improved badge styling consistency.
-- Tweaked the Dependencies portion of the README to be more concise and include Homebrew."
+            ReleaseNotes = "## Bugfix
+- Invoke-BitwardenCLI now uses the Source of CommandInfo objects to specify the location of the bitwarden CLI. Previously it didn't do this, which resulted in a search for the program name in the default working directory.  This was particularly problematic when using non-package manager installed copies.
+- Error text for Test-CLIVersion Parameter Validation on BitwardenCLI now refers to the correct datatype."
 
             # Prerelease string of this module
             # Prerelease = ''

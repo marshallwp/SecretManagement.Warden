@@ -17,7 +17,7 @@ function Test-CLIVersion {
         [ValidateScript({
             if($_.PSTypeNames -match '^(?:Deserialized\.)?System\.Management\.Automation\.CommandInfo$')
             { return $true }
-            else { throw "Cannot convert the `"$_`" value of type `"$iptType`" to type `"System.Management.Automation.ApplicationInfo`"." }
+            else { throw "Cannot convert the `"$_`" value of type `"$iptType`" to type `"System.Management.Automation.CommandInfo`"." }
         })]
         [PSObject]$BitwardenCLI,
         # Minimum Supported Version of the Bitwarden CLI.
@@ -85,7 +85,7 @@ function Test-CLIVersion {
     $Warnings = DATA {@{
         WarnOutdated        = "Your bitwarden-cli is version {0} and is out of date. Please upgrade to at least version {1}."
         WarnSpecificVersion = "Your bitwarden-cli is version {0}. This version of the CLI has a known issue affecting [{1}], which is used by [{2}]."
-        WarnVersionRange    = "Your bitwarden-cli is version {0}. Versions {1} – {2} of the CLI have a known issue affecting [{3}], which is used by [{4}]."
+        WarnVersionRange    = "Your bitwarden-cli is version {0}. Versions {1} - {2} of the CLI have a known issue affecting [{3}], which is used by [{4}]."
         See                 = "See: {0}."
         StrongAction        = "It is `e[3mstrongly`e[23m recommended that you move to another version."
     }}
