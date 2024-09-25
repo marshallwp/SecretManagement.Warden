@@ -4,7 +4,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion = '1.1.4'
+    ModuleVersion = '1.1.5'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Core")
@@ -101,19 +101,21 @@
             IconUri = 'https://raw.githubusercontent.com/marshallwp/SecretManagement.Warden/main/images/warden_extension_logo_85x85.png'
 
             # ReleaseNotes of this module
-            ReleaseNotes = "## Changes
-- Replaced System.DirectoryServices exception types with System.Management.Automation ones. The former were only available on Windows.
-- Updated Get-Secret's invalid BitwardenItemType error message text.
-- Version check for explicitly defined Bitwarden CLIs will now query the CLI for its version if the file version would fail the check.
+            ReleaseNotes = "## Code Changes
+- Moved version checks to the new Test-CLIVersion function so it can be tested.
+- Warnings are now localized to: Czech, German, Greek, French, and Spanish via machine translation.
+  Files at: 'SecretManagement.Warden.Extension\private\localization\<ISO639-code>\Test-CLIVersion.psd1'
 ## Testing
-- GitHub workflow to run Pester tests on Windows, Linux, and MacOS is now working.
-- Added tests:
-  - Ensure Get-CacheLocation returns the correct filename.
-  - Ensuring Get-Secret throws errors when appropriate.
-  - ConvertTo-Hashtable is now has tests for parameter-supplied data.
+- GitHub workflow folder renamed from workflow to workflow*s*. 🤦🏻‍♂️
+- Limited code coverage to Linux runs to avoid clutter.
+- Testing added for Test-CLIVersion.ps1.
+  - Testing for querying the various package managers is included where they're faster.
+  - Testing for querying `bw` directly included for both directly specified instances and other package managers.
 ## Documentation
-- Added test results badge to README.
-- Added PSGallery Downloads badge to README."
+- Corrected code comments and help for ConvertTo-Hashtable.
+- Added PSScriptAnalyzer badge to README.md.
+- Improved badge styling consistency.
+- Tweaked the Dependencies portion of the README to be more concise and include Homebrew."
 
             # Prerelease string of this module
             # Prerelease = ''

@@ -1,0 +1,4 @@
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04">
+  <S>Name  Version   Rev  Tracking       Publisher    Notes</S>
+  <S>bw    2024.9.0  71   latest/stable  bitwarden**  -</S>
+</Objs>
