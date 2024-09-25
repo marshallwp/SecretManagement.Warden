@@ -1,8 +1,7 @@
 # SecretManagement extension for BitWarden
+[![PSScriptAnalyzer](https://github.com/marshallwp/SecretManagement.Warden/actions/workflows/powershell.yml/badge.svg)](https://github.com/marshallwp/SecretManagement.Warden/actions/workflows/powershell.yml)
 [![Run Pester Tests](https://github.com/marshallwp/SecretManagement.Warden/actions/workflows/pester-tests.yml/badge.svg?branch=main)](https://github.com/marshallwp/SecretManagement.Warden/actions/workflows/pester-tests.yml)
-[![PSGallery Downloads](https://img.shields.io/powershellgallery/dt/SecretManagement.Warden?label=PSGallery%20Downloads
-)](https://www.powershellgallery.com/packages/SecretManagement.Warden)
-
+[![PSGallery Downloads](https://img.shields.io/powershellgallery/dt/SecretManagement.Warden?label=PSGallery%20Downloads&labelColor=%23333a41&color=%2334cf58)](https://www.powershellgallery.com/packages/SecretManagement.Warden)
 
 This module is an extension vault for the [Microsoft.PowerShell.SecretManagement](https://www.powershellgallery.com/packages/Microsoft.PowerShell.SecretManagement) module. It wraps around the official [Bitwarden CLI](https://github.com/bitwarden/clients/tree/master/apps/cli) to interface with Bitwarden and Vaultwarden instances. This module works over all supported PowerShell platforms on Windows, Linux, and macOS.
 
@@ -21,12 +20,20 @@ Download and Install
 <table style="text-align: center;">
 <tbody>
 <tr>
-	<th colspan="2">PowerShell 7+ From:</th>
+	<th colspan="3">PowerShell 7+ From:</th>
 </tr>
 <tr>
 	<td>
 		<a href='https://www.microsoft.com/store/apps/9MZ1SNWT0N5D'>
-			<img src='https://developer.microsoft.com/store/badges/images/English_get-it-from-MS.png' alt='Get PowerShell from the Microsoft Store' width="142px" height="52px"/>
+			<img src='https://developer.microsoft.com/store/badges/images/English_get-it-from-MS.png'
+				alt='Get PowerShell from the Microsoft Store' width="142px" height="52px"/>
+		</a>
+	</td>
+	<td>
+		<a href='https://snapcraft.io/powershell'>
+			<img src="https://snapcraft.io/static/images/badges/en/snap-store-black.svg"
+				height="52px"
+				alt='Get it from the Snap Store' />
 		</a>
 	</td>
 	<td>
@@ -39,33 +46,52 @@ Download and Install
 <table>
 <tbody>
 <tr>
-	<th scope="row" colspan="6">The Latest version of the Bitwarden CLI From:</th>
+	<th scope="row" colspan="7">The Latest version of the Bitwarden CLI From:</th>
 </tr>
 <tr>
 	<td>
 		<a href="https://www.npmjs.com/package/@bitwarden/cli">
-			<img src="https://raw.githubusercontent.com/npm/logos/master/npm%20logo/npm-logo-red.svg" alt='Get Bitwarden CLI from NPM' height="30px"/>
+			<img src="https://raw.githubusercontent.com/npm/logos/master/npm%20logo/npm-logo-red.svg"
+				height="30px"
+				alt='Get it from npm'/>
 		</a>
 	</td>
 	<td>
 		<a href="https://scoop.sh/#/apps?q=&quot;bitwarden-cli&quot;">
 			<div style="font-size: 20px; color: black; background: #d7d4db">
-				<img src="https://avatars.githubusercontent.com/u/16618068?s=52" style='vertical-align: middle'/> Scoop
+				<img src="https://avatars.githubusercontent.com/u/16618068?s=52"
+					style='vertical-align: middle'
+					alt='Get it from Scoop'/> Scoop
 			</div>
 		</a>
 	</td>
 	<td>
 		<a href="https://community.chocolatey.org/packages/bitwarden-cli">
-			<img src="https://chocolatey.org/assets/images/global-shared/logo-square.svg" height="52px"/>
+			<img src="https://chocolatey.org/assets/images/global-shared/logo-square.svg"
+				height="52px"
+				alt='Get it from Chocolatey'/>
 		</a>
 	</td>
 	<td>
 		<a href="https://snapcraft.io/bw">
-			<img src="https://snapcraft.io/static/images/badges/en/snap-store-black.svg" alt='Get Bitwarden CLI from the Snap Store' height="52px"/>
+			<img src="https://snapcraft.io/static/images/badges/en/snap-store-black.svg"
+				height="52px"
+				alt='Get it from the Snap Store'/>
 		</a>
 	</td>
-	<td><a href="https://learn.microsoft.com/en-us/windows/package-manager/winget/">winget</a><br>
-		<code>winget install -e Bitwarden.CLI --source winget</code>
+	<td>
+		<a href="https://winstall.app/apps/Bitwarden.CLI">
+			<img src="https://raw.githubusercontent.com/microsoft/winget-cli/refs/heads/master/.github/images/WindowsPackageManager_Assets/ICO/PNG/_48.png"
+				height="48px"
+				alt='Get it from winget'/> winget
+		</a>
+	</td>
+	<td>
+		<a href="https://formulae.brew.sh/formula/bitwarden-cli">
+			<img src="https://brew.sh/assets/img/homebrew.svg"
+				height="52px"
+				alt='Get it from Homebrew' />
+		</a>
 	</td>
 	<td>Direct Download<br>
 		<a href="https://vault.bitwarden.com/download/?app=cli&platform=windows">Windows</a> |
