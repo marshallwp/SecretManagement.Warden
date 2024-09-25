@@ -2,8 +2,8 @@ BeforeAll {
     $BasePath = Join-Path $PSScriptRoot ".." ".."
     . (Join-Path $BasePath "private" "Get-CacheLocation.ps1")
     . (Join-Path $BasePath "private" "Sync-BitwardenVault.ps1")
-    . (Join-Path $BasePath "private" "Invoke-BitwardenCLI.ps1")
     . (Join-Path $BasePath "private" "ConvertTo-BWEncoding.ps1")
+    . (Join-Path $BasePath "private" "Invoke-BitwardenCLI.ps1")
     . (Join-Path $BasePath "classes" "BitwardenEnum.ps1")
     . (Join-Path $BasePath "classes" "BitwardenPasswordHistory.ps1")
 }
