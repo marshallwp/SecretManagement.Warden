@@ -49,6 +49,7 @@ Describe "Test-CLIVersion" {
                 switch($Source) {
                     "brew"  {
                         function brew { return $null }
+                        $env:HOMEBREW_PREFIX = "/home/linuxbrew/.linuxbrew" # Sets HOMEBREW_PREFIX to what is expected from the Mocked bw.
                         Mock -CommandName "brew" -ParameterFilter {$args[0] -eq "list" -and $args[1] -eq "bitwarden-cli" -and $args[2] -eq "--versions"} `
                             -MockWith { return Import-Clixml -Path (Join-Path $PSScriptRoot "mock-cli" "response" "brew-list.xml")} -Verifiable
                      }
