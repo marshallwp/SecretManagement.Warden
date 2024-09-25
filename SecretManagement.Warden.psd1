@@ -4,7 +4,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion = '1.1.5-hotfix'
+    ModuleVersion = '1.1.5.1'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Core")
@@ -102,7 +102,7 @@
 
             # ReleaseNotes of this module
             ReleaseNotes = "## Bugfix
-- Invoke-BitwardenCLI now uses the Source of CommandInfo objects to specify the location of the bitwarden CLI. Previously it didn't do this, which resulted in a search for the program name in the default working directory.  This was particularly problematic when using non-package manager installed copies.
+- Invoke-BitwardenCLI now correctly uses the entire filePath when refering to explicitly specified CLIs instead of just the name.
 - Error text for Test-CLIVersion Parameter Validation on BitwardenCLI now refers to the correct datatype."
 
             # Prerelease string of this module
