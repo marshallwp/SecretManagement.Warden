@@ -1,9 +1,11 @@
 BeforeAll {
+    Import-Module -Name Microsoft.PowerShell.SecretManagement
+
     $BasePath = Join-Path $PSScriptRoot ".." ".."
     . (Join-Path $BasePath "private" "Get-FullSecret.ps1")
+    . (Join-Path $BasePath "private" "Invoke-BitwardenCLI.ps1")
     . (Join-Path $BasePath "private" "Merge-Defaults.ps1")
     . (Join-Path $BasePath "private" "Sync-BitwardenVault.ps1")
-    . (Join-Path $BasePath "private" "Invoke-BitwardenCLI.ps1")
 }
 
 Describe "Get-FullSecret" {

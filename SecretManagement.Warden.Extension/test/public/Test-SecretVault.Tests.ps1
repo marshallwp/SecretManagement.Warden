@@ -1,8 +1,9 @@
 BeforeAll {
-    . (Join-Path $PSScriptRoot ".." ".." "public" "Test-SecretVault.ps1")
-    . (Join-Path $PSScriptRoot ".." ".." "private" "Sync-BitwardenVault.ps1")
-    . (Join-Path $PSScriptRoot ".." ".." "private" "Merge-Defaults.ps1")
-    . (Join-Path $PSScriptRoot ".." ".." "private" "Invoke-BitwardenCLI")
+    $BasePath = Join-Path $PSScriptRoot ".." ".."
+    . (Join-Path $BasePath "public" "Test-SecretVault.ps1")
+    . (Join-Path $BasePath "private" "Sync-BitwardenVault.ps1")
+    . (Join-Path $BasePath "private" "Merge-Defaults.ps1")
+    . (Join-Path $BasePath "private" "Invoke-BitwardenCLI")
 
     Mock Sync-BitwardenVault { }
 }
