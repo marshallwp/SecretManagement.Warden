@@ -7,24 +7,25 @@ Describe "Test-CLIVersion" {
         [Version]$CurrentVersion = '2024.9.0'
         [Version]$NewerVersion   = '2024.10.0'
         [Version]$OlderVersion   = '2024.8.0'
-        $direct = Import-CliXml (Join-Path $PSScriptRoot "mock-cli" "bw-info" "direct.xml")
-        $bw_version = Import-CliXml (Join-Path $PSScriptRoot "mock-cli" "response" "bw-version.xml")
+
+        # Placing the conversion to string here is neccessary for some reason.
+        $bw_version = $CurrentVersion.ToString()
+        # Create template bw function for mocking
+        function bw {[Alias("bw.exe")][Alias("bw.ps1")]Param() throw "This should always be mocked!" }
     }
     Context "General" {
+        BeforeAll {
+            $direct = Import-CliXml (Join-Path $PSScriptRoot "mock-cli" "bw-info" "direct.xml")
+            Mock $direct -ParameterFilter {$args[0] -eq '--version'} -MockWith { return $bw_version }
+        }
         It "Does nothing for valid version" {
-            Mock $direct -MockWith { return $bw_version }
             Test-CLIVersion -BitwardenCLI $direct -MinSupportedVersion $OlderVersion -WarningVariable warn -WarningAction Ignore
             $warn | Should -BeNullOrEmpty
         }
         It "Warn when CurrentVersion < MinSupportedVersion" {
-            Mock $direct -ParameterFilter {$args[0] -eq '--version'} -MockWith { return $bw_version }
-
             Test-CliVersion -BitwardenCLI $direct -MinSupportedVersion $NewerVersion -WarningVariable warn -WarningAction Ignore
             $warn | Should -Be "Your bitwarden-cli is version $CurrentVersion and is out of date. Please upgrade to at least version $NewerVersion."
         }
-        # It "Warn when CurrentVersion On Blacklist" {
-
-        # }
     }
 
     Context "<Source>" -ForEach @(
@@ -43,6 +44,7 @@ Describe "Test-CLIVersion" {
             }
             elseif ($From -eq "pkg-mgr") {
                 Mock -CommandName "Get-Command" -ParameterFilter {$Name -eq $Source} -MockWith { return $true }
+                Mock -CommandName $Mocked -ParameterFilter {$args[0] -eq "--version"} -MockWith { return $bw_version }
 
                 switch($Source) {
                     "brew"  {
@@ -69,6 +71,7 @@ Describe "Test-CLIVersion" {
             }
         }
         It "Queries the <From> for its version when CurrentVersion < MinSupportedVersion" {
+            # Change the Mocked version to an outdated one.  Only works because all mocks are deserialized objects.
             Test-CLIVersion -BitwardenCLI $Mocked -MinSupportedVersion $NewerVersion -WarningAction Ignore | Should -InvokeVerifiable
         }
         It "Does not run <From> query if file version is acceptable" {
