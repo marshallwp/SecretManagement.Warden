@@ -83,7 +83,21 @@ function Set-Secret
                             $OldSecret.login.password = if($Secret.Password -is [SecureString])
                                 { ConvertFrom-SecureString $Secret.Password -AsPlainText } else { [string]$Secret.Password }
                         }
-                        if($Secret.uris) { $OldSecret.login.uris = @([string]$Secret.uris) } elseif($IsNewItem) { $OldSecret.login.uris = @() }
+                        # Each entry inthe uris array must be a hashtable with both 'uri' and 'match' properties.
+                        # Fortuously, "default" is a valid match type, so we can use that when it's missing.
+                        if($Secret.uris) {
+                            $uris = @()
+                            foreach($x in $Secret.uris) {
+                                if(($x -is [System.Collections.HashTable]) -and (Test-KeysInHashtable $x -Keys @('uri','match') -MatchAll)) { $uris += $x }
+                                elseif($x -is [string]) { $uris += @{uri = $x; match = "default"} }
+                                else {
+                                    $ex = New-Object System.Management.Automation.PSInvalidCastException "Input [HashTable]Secret could not be cast to any part of a Bitwarden Login."
+                                    Write-Error -Exception $ex -Category InvalidOperation -CategoryReason "URIs must be provided as either an array of uris, or an array of hashtables with both a 'uri' and 'match' property." -ErrorAction Stop
+                                }
+                            }
+                            $OldSecret.login.uris = $uris
+                        }
+                        elseif($IsNewItem) { $OldSecret.login.uris = @() }
                         if($Secret.totp -or $IsNewItem) {
                             $OldSecret.login.totp = if($Secret.totp -is [SecureString])
                                 { ConvertFrom-SecureString $Secret.totp -AsPlainText } else { [string]$Secret.totp }

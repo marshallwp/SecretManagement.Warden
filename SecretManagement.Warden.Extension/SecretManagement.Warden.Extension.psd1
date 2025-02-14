@@ -1,5 +1,5 @@
 @{
-    ModuleVersion = '1.1.5.1'
+    ModuleVersion = '1.1.6'
     RootModule = 'SecretManagement.Warden.Extension.psm1'
     FunctionsToExport = @(
         'Get-Secret',
