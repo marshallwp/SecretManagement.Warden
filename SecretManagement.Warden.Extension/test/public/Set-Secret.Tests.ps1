@@ -2,6 +2,7 @@ BeforeAll {
     $BasePath = Join-Path $PSScriptRoot ".." ".."
     . (Join-Path $BasePath "public" "Set-Secret.ps1")
     . (Join-Path $BasePath "private" "ConvertTo-BWEncoding.ps1")
+    . (Join-Path $BasePath "private" "ConvertTo-HashTable.ps1")
     . (Join-Path $BasePath "private" "Get-FullSecret.ps1")
     . (Join-Path $BasePath "private" "Invoke-BitwardenCLI")
     . (Join-Path $BasePath "private" "Merge-Defaults.ps1")
@@ -233,6 +234,25 @@ Describe "Set-Secret"{
                     $Secret = @{UserName="New User"}
                     Set-Secret -Secret $Secret -Name $Name -AdditionalParameters @{} |
                         Should -Invoke -CommandName Invoke-BitwardenCLI -ParameterFilter {$args[0] -eq "edit"} -Times 1
+                }
+                It "Saves the Expected URI string to Login" {
+                    $uri = "https://www.example.com"
+                    $Secret = @{uris = @($uri)}
+                    Set-Secret -Secret $Secret -Name $Name -AdditionalParameters @{} |
+                        Should -Invoke -CommandName Invoke-BitwardenCLI -ParameterFilter {
+                            ([System.Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($args[3])) |
+                                ConvertFrom-Json).login.uris[0].uri -eq $uri
+                        } -Times 1
+                }
+                It "Saves the Expected URI HashTable to Login" {
+                    $Secret = @{uris=@(,@{uri="https://www.example.com"; match="host"})}
+                    Set-Secret -Secret $Secret -Name $Name -AdditionalParameters @{} |
+                        Should -Invoke -CommandName Invoke-BitwardenCLI -ParameterFilter {
+                           $Sample = [System.Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($args[3])) | ConvertFrom-Json | ConvertTo-HashTable
+
+                           $Secret.uris[0].uri -eq $Sample.login.uris[0].uri -and
+                           $Secret.uris[0].match -eq $Sample.login.uris[0].match
+                        } -Times 1
                 }
             }
         }

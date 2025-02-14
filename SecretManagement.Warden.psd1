@@ -4,7 +4,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion = '1.1.5.1'
+    ModuleVersion = '1.1.6'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Core")
@@ -19,7 +19,7 @@
     CompanyName = 'Industrial Info Resources, Inc.'
 
     # Copyright statement for this module
-    Copyright = '© 2024 Industrial Info Resources, Inc. All rights reserved.'
+    Copyright = '© 2025 Industrial Info Resources, Inc. All rights reserved.'
 
     # Description of the functionality provided by this module
     Description = 'Bitwarden/Vaultwarden extension for the PowerShell SecretManager allowing you to Get, Set, and Remove secrets in a standardized way. Supports storing and retrieving PowerShell Objects as secrets. Can be used for automated secret retrieval/management.'
@@ -102,8 +102,7 @@
 
             # ReleaseNotes of this module
             ReleaseNotes = "## Bugfix
-- Invoke-BitwardenCLI now correctly uses the entire filePath when refering to explicitly specified CLIs instead of just the name.
-- Error text for Test-CLIVersion Parameter Validation on BitwardenCLI now refers to the correct datatype."
+- Set-Secret no now properly handles URIs.  They will no longer be set to null."
 
             # Prerelease string of this module
             # Prerelease = ''
