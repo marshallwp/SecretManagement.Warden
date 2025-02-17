@@ -2,7 +2,7 @@ BeforeAll {
     $BasePath = Join-Path $PSScriptRoot ".." ".."
     . (Join-Path $BasePath "public" "Set-Secret.ps1")
     . (Join-Path $BasePath "private" "ConvertTo-BWEncoding.ps1")
-    . (Join-Path $BasePath "private" "ConvertTo-HashTable.ps1")
+    . (Join-Path $BasePath "private" "ConvertTo-Hashtable.ps1")
     . (Join-Path $BasePath "private" "Get-FullSecret.ps1")
     . (Join-Path $BasePath "private" "Invoke-BitwardenCLI")
     . (Join-Path $BasePath "private" "Merge-Defaults.ps1")
