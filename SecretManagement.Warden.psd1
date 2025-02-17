@@ -4,7 +4,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion = '1.1.6'
+    ModuleVersion = '1.1.6.1'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Core")
@@ -102,7 +102,10 @@
 
             # ReleaseNotes of this module
             ReleaseNotes = "## Bugfix
-- Set-Secret no now properly handles URIs.  They will no longer be set to null."
+- Set-Secret now properly handles URIs.  They will no longer be set to null.
+
+## Trivial
+- Version number changed to v1.1.6.1 to workaround accidental publishing of unsigned v1.1.6 to PSGallery."
 
             # Prerelease string of this module
             # Prerelease = ''
