@@ -102,7 +102,10 @@
 
             # ReleaseNotes of this module
             ReleaseNotes = "## Bugfix
-- Implemented workaround for SecretManagement converting ResyncCacheIfOlderThan values specified via VaultParameters to HashTables."
+- Implemented workaround for SecretManagement converting ResyncCacheIfOlderThan values specified via VaultParameters to HashTables.
+
+## Documentation
+- Added documentation on dealing with bitwarden-cli rejecting your self-signed certificates."
 
             # Prerelease string of this module
             # Prerelease = ''

@@ -127,12 +127,20 @@ To configure automatic API Key usage follow the steps below:
 	[Environment]::SetEnvironmentVariable("BW_CLIENTID",'MyClientID',"User")
 	[Environment]::SetEnvironmentVariable("BW_CLIENTSECRET",'SuperSecret',"User")
 	```
+#### Trusting Self-Signed Certificates
+If your warden server is using a certificate that isn't signed by a widely known public certificate authority (say because it's self-signed or signed by your own Root CA), you'll need to [perform additional steps](https://bitwarden.com/help/certificates/#trust-a-self-signed-certificate) to get the CLI to trust it.
+
+In brief:
+* If you're using Windows, open `certmgr.msc` and import the public cert into *Trusted Root Certification Authorities* section.
+* If you're using Linux, you'll need to ensure the environment variable `NODE_EXTRA_CA_CERTS` is set to the file path of a PEM file containing one or more trusted certificates. See: [Node.js Documentation](https://nodejs.org/api/cli.html#node_extra_ca_certsfile)
 
 #### Verify Proper Configuration
 Check that everything is setup correctly by running the command: `bw login --check`  If the cli tells you that you are logged in everything is working.  If not, try the following troubleshooting steps.
 
 * Open a PowerShell session.
-* Run `bw login --apikey`.  If an error about the server is returned, you likely made a typo when specifying the server URL.  Fix this by re-running `bw config server "https://your.bw.domain.com"`
+* Run `bw login --apikey`.
+  * If you receive the error: `FetchError: request to https://your.bw.domain.com/identity/connect/token failed, reason: unable to get local issuer certificate`, bitwarden-cli is rejecting the certificate of your warden server. Fix this by going through the steps detailed in [Trusting Self-Signed Certificates](#trusting-self-signed-certificates).
+  * If you receive the error: `request to https://your.bw.domain.com/identity/connect/token failed, reason: getaddrinfo ENOTFOUND warden.industrialinfo.comm`, you likely made a typo when specifying the server URL. Fix this by re-running `bw config server "https://your.bw.domain.com"`
 * Run `gci env:BW_CLIENT*`. This should return at least two entries: **BW_CLIENTID** and **BW_CLIENTSECRET**.  If either are missing, go through the steps detailed in [Utilize API Key for Login](#recommended-utilize-api-key-for-login) again.
 
 ### (Not Recommended) Use Bitwarden CLI to Login
