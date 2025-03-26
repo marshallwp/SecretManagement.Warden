@@ -4,7 +4,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion = '1.1.6.1'
+    ModuleVersion = '1.1.7'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Core")
@@ -102,10 +102,7 @@
 
             # ReleaseNotes of this module
             ReleaseNotes = "## Bugfix
-- Set-Secret now properly handles URIs.  They will no longer be set to null.
-
-## Trivial
-- Version number changed to v1.1.6.1 to workaround accidental publishing of unsigned v1.1.6 to PSGallery."
+- Implemented workaround for SecretManagement converting ResyncCacheIfOlderThan values specified via VaultParameters to HashTables."
 
             # Prerelease string of this module
             # Prerelease = ''

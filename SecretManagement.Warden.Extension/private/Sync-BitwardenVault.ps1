@@ -10,9 +10,15 @@
 #>
 function Sync-BitwardenVault {
     Param(
-        [TimeSpan]$ResyncCacheIfOlderThan,
+        [ValidateScript({$_ -is [TimeSpan] -or $_ -is [Hashtable]}, ErrorMessage = "Must be either a TimeSpan or Hashtable representation of the same.")]
+        $ResyncCacheIfOlderThan,
         [switch]$Force
     )
+
+    # Convert a Hashtable representation of the TimeSpan back to a TimeSpan.
+    if($ResyncCacheIfOlderThan -is [Hashtable]) {
+        $ResyncCacheIfOlderThan = New-TimeSpan -Seconds $ResyncCacheIfOlderThan.TotalSeconds
+    }
 
     # Stores the cache file in a subdirectory of the SecretManagement vault registry location:
     # https://github.com/PowerShell/SecretManagement/#extension-vault-registry-file-location
