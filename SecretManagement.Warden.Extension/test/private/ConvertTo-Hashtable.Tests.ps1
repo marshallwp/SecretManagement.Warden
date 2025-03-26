@@ -8,16 +8,16 @@ Describe "ConvertTo-Hashtable" {
         @{Name="Null Array"; Case=@($null)}
     ) {
         It "Piped Input Returns `$null" {
-            $Case | ConvertTo-HashTable | Should -BeNullOrEmpty
+            $Case | ConvertTo-Hashtable | Should -BeNullOrEmpty
         }
         It "Parameter Input Returns `$null" {
-            ConvertTo-HashTable $Case | Should -BeNullOrEmpty
+            ConvertTo-Hashtable $Case | Should -BeNullOrEmpty
         }
     }
 
     Context "Input by <IptWay>" -ForEach @(
-        @{IptWay="Pipe";      Cmd=[ScriptBlock]{$Case | ConvertTo-HashTable}},
-        @{IptWay="Parameter"; Cmd=[ScriptBlock]{ConvertTo-HashTable $Case}}
+        @{IptWay="Pipe";      Cmd=[ScriptBlock]{$Case | ConvertTo-Hashtable}},
+        @{IptWay="Parameter"; Cmd=[ScriptBlock]{ConvertTo-Hashtable $Case}}
     ) {
         Context "Output from <Name>" -ForEach @(
             @{Name="Null"; Case=$null},

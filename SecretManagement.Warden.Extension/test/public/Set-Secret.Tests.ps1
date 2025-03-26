@@ -248,7 +248,7 @@ Describe "Set-Secret"{
                     $Secret = @{uris=@(,@{uri="https://www.example.com"; match="host"})}
                     Set-Secret -Secret $Secret -Name $Name -AdditionalParameters @{} |
                         Should -Invoke -CommandName Invoke-BitwardenCLI -ParameterFilter {
-                           $Sample = [System.Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($args[3])) | ConvertFrom-Json | ConvertTo-HashTable
+                           $Sample = [System.Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($args[3])) | ConvertFrom-Json | ConvertTo-Hashtable
 
                            $Secret.uris[0].uri -eq $Sample.login.uris[0].uri -and
                            $Secret.uris[0].match -eq $Sample.login.uris[0].match

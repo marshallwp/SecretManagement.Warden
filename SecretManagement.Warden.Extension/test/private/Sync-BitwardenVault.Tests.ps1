@@ -3,23 +3,26 @@ BeforeAll {
     . (Join-Path $BasePath "private" "Get-CacheLocation.ps1")
     . (Join-Path $BasePath "private" "Sync-BitwardenVault.ps1")
     . (Join-Path $BasePath "private" "ConvertTo-BWEncoding.ps1")
-    . (Join-Path $BasePath "private" "ConvertTo-Hashtable.ps1")
     . (Join-Path $BasePath "private" "Invoke-BitwardenCLI.ps1")
     . (Join-Path $BasePath "classes" "BitwardenEnum.ps1")
     . (Join-Path $BasePath "classes" "BitwardenPasswordHistory.ps1")
 }
 
 Describe "Sync-BitwardenVault" {
+    BeforeDiscovery {
+        . (Join-Path $PSScriptRoot ".." ".." "private" "ConvertTo-Hashtable.ps1")
+    }
     BeforeAll {
         $PesterCacheLocation = Join-Path $TestDrive "LastSyncedTime.txt"
         # Mock performing a vault sync
         Mock Invoke-BitwardenCLI { return $true } -ParameterFilter { $args[0] -eq "sync" -and $args[1] -eq "--quiet" }
         # Mock getting cache location.
         Mock Get-CacheLocation { return $PesterCacheLocation }
+
     }
     Context "<Name>" -ForEach @(
         @{Name="ResyncCacheIfOlderThan param as TimeSpan"; ResyncCacheIfOlderThan = New-TimeSpan -Hours 3},
-        @{Name="ResyncCacheIfOlderThan param as Hashtable"; ResyncCacheIfOlderThan = New-TimeSpan -Hours 3 | ConvertTo-Hashtable;}
+        @{Name="ResyncCacheIfOlderThan param as Hashtable"; ResyncCacheIfOlderThan = New-TimeSpan -Hours 3 | ConvertTo-Hashtable}
     ) {
         Context "First Run"  {
             BeforeAll {
