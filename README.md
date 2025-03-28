@@ -108,6 +108,13 @@ After installing the bitwarden-cli, use native [config](https://bitwarden.com/he
 bw config server "https://your.bw.domain.com"
 ```
 
+>[!TIP]
+>### Trusting Self-Signed Certificates
+>If your warden server is using a certificate that isn't signed by a widely known public certificate authority (say because it's self-signed or signed by your own Root CA), you'll need to [perform additional steps](https://bitwarden.com/help/certificates/#trust-a-self-signed-certificate) to get the bitwarden-cli to trust it.
+>
+>In brief: You need to ensure the environment variable `NODE_EXTRA_CA_CERTS` is set to the file path of a PEM file containing the public cert of the self-signed certificate or self-signed Root CA.  It may also contain other certs. See: [Node.js Documentation](https://nodejs.org/api/cli.html#node_extra_ca_certsfile)
+
+
 Lastly, the `SecretManagement` module can only handle unlock operations, not login operations.  As such you will need to login before you can utilize this extension.
 
 ### (Recommended) Utilize API Key for Login
@@ -127,28 +134,22 @@ To configure automatic API Key usage follow the steps below:
 	[Environment]::SetEnvironmentVariable("BW_CLIENTID",'MyClientID',"User")
 	[Environment]::SetEnvironmentVariable("BW_CLIENTSECRET",'SuperSecret',"User")
 	```
-#### Trusting Self-Signed Certificates
-If your warden server is using a certificate that isn't signed by a widely known public certificate authority (say because it's self-signed or signed by your own Root CA), you'll need to [perform additional steps](https://bitwarden.com/help/certificates/#trust-a-self-signed-certificate) to get the CLI to trust it.
-
-In brief:
-* If you're using Windows, open `certmgr.msc` and import the public cert into *Trusted Root Certification Authorities* section.
-* If you're using Linux, you'll need to ensure the environment variable `NODE_EXTRA_CA_CERTS` is set to the file path of a PEM file containing one or more trusted certificates. See: [Node.js Documentation](https://nodejs.org/api/cli.html#node_extra_ca_certsfile)
 
 #### Verify Proper Configuration
 Check that everything is setup correctly by running the command: `bw login --check`  If the cli tells you that you are logged in everything is working.  If not, try the following troubleshooting steps.
 
 * Open a PowerShell session.
 * Run `bw login --apikey`.
-  * If you receive the error: `FetchError: request to https://your.bw.domain.com/identity/connect/token failed, reason: unable to get local issuer certificate`, bitwarden-cli is rejecting the certificate of your warden server. Fix this by going through the steps detailed in [Trusting Self-Signed Certificates](#trusting-self-signed-certificates).
-  * If you receive the error: `request to https://your.bw.domain.com/identity/connect/token failed, reason: getaddrinfo ENOTFOUND warden.industrialinfo.comm`, you likely made a typo when specifying the server URL. Fix this by re-running `bw config server "https://your.bw.domain.com"`
-* Run `gci env:BW_CLIENT*`. This should return at least two entries: **BW_CLIENTID** and **BW_CLIENTSECRET**.  If either are missing, go through the steps detailed in [Utilize API Key for Login](#recommended-utilize-api-key-for-login) again.
+  * If you receive the error: `FetchError: request to https://your.bw.domain.com/identity/connect/token failed, reason: unable to get local issuer certificate`, bitwarden-cli is rejecting the certificate of your warden server. See the [Trusting Self-Signed Certificates](#trusting-self-signed-certificates) tip for how to fix this.
+  * If you receive the error: `request to https://your.bw.domain.com/identity/connect/token failed, reason: getaddrinfo ENOTFOUND your.bw.domain.com`, you likely made a typo when specifying the server URL. Fix this by re-running `bw config server "https://your.bw.domain.com"`
+* Run `gci env:BW_CLIENT*`. This should return at least two entries: **BW_CLIENTID** and **BW_CLIENTSECRET**.  If either are missing, go through the steps detailed in the [Utilize API Key for Login](#recommended-utilize-api-key-for-login) section again.
 
 ### (Not Recommended) Use Bitwarden CLI to Login
 If running interactively you can run `bw login` to bring up a login prompt.  Unlike API Keys, this will only last a single session.
 
 While the prompt is the only _secure_ way to use `bw login` directly, you _can_ automate it to run insecurely via `bw login [email] [password] --method <method> --code <code>` as described [here](https://bitwarden.com/help/cli/#using-email-and-password).
 
-> REMEMBER:
+> [!CAUTION]
 > * All commands you run will be saved to session history. While this is cleared every time you close the terminal, it is still preferable to avoid adding secrets to it in the first place.
 > * All commands that do not contain the words: `password`, `asplaintext`, `token`, `apikey`, or `secret` will be saved into the [PSReadLine History](https://docs.microsoft.com/en-us/powershell/module/psreadline/about/about_psreadline?view=powershell-7.2#command-history) file.
 >   * This one can be really bad as the file is stored unencrypted long-term and `bw login` does not contain any exclusion words.
