@@ -10,4 +10,9 @@ Describe 'Extension Module Manifest Tests' {
 	It 'Exports Functions' {
 		$Script:ModuleInformation.ExportedFunctions.Count | Should -BeGreaterThan 0
 	}
+    It 'Release Notes Updated' {
+        $LatestReleaseNotes = (Find-PSResource -Name SecretManagement.Warden).ReleaseNotes
+        $ReleaseNotesUpdated = $Script:ParentModuleInformation.PrivateData.PSData.ReleaseNotes -ine $LatestReleaseNotes
+        $ReleaseNotesUpdated | Should -BeTrue -Because "Release Notes must be updated for new releases"
+    }
 }
