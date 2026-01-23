@@ -234,6 +234,9 @@ $($errparse  | Format-Table ID, Name | Out-String )
             }
         }
     }
+    end {
+        $ps.Dispose()
+    }
 }
 
 $BitwardenCLIArgumentCompleter = {

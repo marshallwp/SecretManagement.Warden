@@ -31,7 +31,7 @@ Download and Install
 	</td>
 	<td>
 		<a href='https://snapcraft.io/powershell'>
-			<img src="https://snapcraft.io/static/images/badges/en/snap-store-black.svg"
+			<img src="https://snapcraft.io/static/images/badges/en/snap-store-black.svg?sanitize=true"
 				height="52px"
 				alt='Get it from the Snap Store' />
 		</a>
@@ -51,7 +51,7 @@ Download and Install
 <tr>
 	<td>
 		<a href="https://www.npmjs.com/package/@bitwarden/cli">
-			<img src="https://raw.githubusercontent.com/npm/logos/master/npm%20logo/npm-logo-red.svg"
+			<img src="https://raw.githubusercontent.com/npm/logos/refs/heads/master/npm%20logo/npm-logo-red.png"
 				height="30px"
 				alt='Get it from npm'/>
 		</a>
@@ -67,14 +67,14 @@ Download and Install
 	</td>
 	<td>
 		<a href="https://community.chocolatey.org/packages/bitwarden-cli">
-			<img src="https://chocolatey.org/assets/images/global-shared/logo-square.svg"
+			<img src="https://img.chocolatey.org/logos/chocolatey.png"
 				height="52px"
 				alt='Get it from Chocolatey'/>
 		</a>
 	</td>
 	<td>
 		<a href="https://snapcraft.io/bw">
-			<img src="https://snapcraft.io/static/images/badges/en/snap-store-black.svg"
+			<img src="https://snapcraft.io/static/images/badges/en/snap-store-black.svg?sanitize=true"
 				height="52px"
 				alt='Get it from the Snap Store'/>
 		</a>
@@ -88,9 +88,9 @@ Download and Install
 	</td>
 	<td>
 		<a href="https://formulae.brew.sh/formula/bitwarden-cli">
-			<img src="https://brew.sh/assets/img/homebrew.svg"
+			<img src="https://raw.githubusercontent.com/Homebrew/brew.sh/refs/heads/main/assets/img/brew.png"
 				height="52px"
-				alt='Get it from Homebrew' />
+				alt='Get it from Homebrew' /> Brew
 		</a>
 	</td>
 	<td>Direct Download<br>
