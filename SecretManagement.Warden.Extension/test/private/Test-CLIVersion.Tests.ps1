@@ -4,12 +4,14 @@ BeforeAll {
 
 Describe "Test-CLIVersion" {
     BeforeAll {
-        [Version]$CurrentVersion = '2024.9.0'
-        [Version]$NewerVersion   = '2024.10.0'
-        [Version]$OlderVersion   = '2024.8.0'
+        [Version]$CurrentVersion   = '2024.9.0'
+        [Version]$NewerVersion     = '2024.10.0'
+        [Version]$OlderVersion     = '2024.8.0'
+        [Version]$MaliciousVersion = '2026.4.0'
 
         # Placing the conversion to string here is neccessary for some reason.
         $bw_version = $CurrentVersion.ToString()
+        $malicious_version = $MaliciousVersion.ToString()
         # Create template bw function for mocking
         function bw {[Alias("bw.exe")][Alias("bw.ps1")]Param() throw "This should always be mocked!" }
     }
@@ -25,6 +27,11 @@ Describe "Test-CLIVersion" {
         It "Warn when CurrentVersion < MinSupportedVersion" {
             Test-CliVersion -BitwardenCLI $direct -MinSupportedVersion $NewerVersion -WarningVariable warn -WarningAction Ignore
             $warn | Should -Be "Your bitwarden-cli is version $CurrentVersion and is out of date. Please upgrade to at least version $NewerVersion."
+        }
+        It "Throws an error when CurrentVersion = MaliciousVersion" {
+            Mock $direct -ParameterFilter {$args[0] -eq '--version'} -MockWith { return $malicious_version }
+            { Test-CliVersion -BitwardenCLI $direct -MinSupportedVersion $CurrentVersion } |
+                Should -Throw "Your bitwarden-cli is version $MaliciousVersion, a known compromised version.*"
         }
     }
 

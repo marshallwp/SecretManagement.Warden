@@ -4,7 +4,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion = '1.1.8'
+    ModuleVersion = '1.1.9'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Core")
@@ -101,8 +101,7 @@
             IconUri = 'https://raw.githubusercontent.com/marshallwp/SecretManagement.Warden/main/images/warden_extension_logo_85x85.png'
 
             # ReleaseNotes of this module
-            ReleaseNotes = "## Testing
-- Added a test to flag outdated Release Notes in the module manifest."
+            ReleaseNotes = "fix(version check): SecretManagement.Warden now throws an error during import if user is running a malicious version of bitwarden-cli."
 
             # Prerelease string of this module
             # Prerelease = ''

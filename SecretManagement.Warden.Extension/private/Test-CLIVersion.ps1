@@ -83,6 +83,7 @@ function Test-CLIVersion {
     # Default Warning Message templates. Will be used if a localized variant cannot be found in the localization subdirectory.
     #culture="en-US"
     $Warnings = DATA {@{
+        ErrorMalicious      = "Your bitwarden-cli is version {0}, a known compromised version."
         WarnOutdated        = "Your bitwarden-cli is version {0} and is out of date. Please upgrade to at least version {1}."
         WarnSpecificVersion = "Your bitwarden-cli is version {0}. This version of the CLI has a known issue affecting [{1}], which is used by [{2}]."
         WarnVersionRange    = "Your bitwarden-cli is version {0}. Versions {1} - {2} of the CLI have a known issue affecting [{3}], which is used by [{4}]."
@@ -105,6 +106,11 @@ function Test-CLIVersion {
                                  ($Warnings.See -f 'https://github.com/bitwarden/clients/issues/9919'),
                                   $Warnings.StrongAction
         Write-Warning $warn
+    }
+    elseif ( $CurrentVersion -eq '2026.4.0' ) {
+        $err = "{0} {1}" -f ($Warnings.ErrorMalicious -f $CurrentVersion),
+                             $Warnings.StrongAction
+        throw $err
     }
 #endregion Version Warnings
 }
