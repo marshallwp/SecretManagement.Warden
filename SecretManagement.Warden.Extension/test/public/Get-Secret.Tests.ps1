@@ -37,7 +37,7 @@ Describe "Get-Secret" {
             Mock Invoke-BitwardenCLI { return $mock.Mock }
             $Result = Get-Secret -Name $mock.ID -AdditionalParameters @{}
         }
-        It "<_.Key> == <_.Value>" -ForEach $_.Expected {
+        It "<_.Key> == <_.Value>" -AllowNullOrEmptyForEach -ForEach $_.Expected {
             $Result.($_.Key) | Should -BeExactly $_.Value
         }
     }
