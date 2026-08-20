@@ -209,7 +209,10 @@ $($errparse  | Format-Table ID, Name | Out-String )
                         $_.login | Add-Member -MemberType NoteProperty -Name Credential -Value ([PSCredential]::new( $_.login.username, $pass ))
                     }
 
-                    $_.login.uris.ForEach({ [BitwardenUriMatchType]$_.match = [int]$_.match })
+                    $_.login.uris.ForEach({
+                        [BitwardenUriMatchType]$matchType = [int]${_}?.match
+                        $_ | Add-Member -MemberType NoteProperty -Name match -Value $matchType -Force
+                    })
                 }
 
                 if ( $_.passwordHistory ) {
